@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set environment variables
-          run: |
+        run: |
             echo "PR_TITLE=[Test] Add report file $(date +%d-%m-%Y)" >> $GITHUB_ENV
             echo "PR_BODY=This PR was auto-generated on $(date +%d-%m-%Y) by [create-pull-request](https://github.com/peter-evans/create-pull-request)." >> $GITHUB_ENV
       - name: send telegram message on push
