@@ -10,11 +10,11 @@ jobs:
         id: weather
         uses: vadimdez/weather-action@11
         with:
-          lat: "52.521737"
-          long: "13.413117"
+          lat: "56.296505"
+          long: "43.936058"
       - name: send telegram message on push
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: ${{ join(steps.weather.outputs.*, '\n') }}
+          message: ${{ join(steps.weather.outputs.*, ' in ') }}
