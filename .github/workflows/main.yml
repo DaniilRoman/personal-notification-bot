@@ -1,5 +1,6 @@
-name: telegram message
+name: telegram notify
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 5 * * *'
 jobs:
@@ -7,15 +8,24 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Get weather
-        id: weather
-        uses: vadimdez/weather-action@11
+      - name: Check out this repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          lat: "56.296505"
-          long: "43.936058"
-      - name: send telegram message on push
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: ${{ join(steps.weather.outputs.*, ' in ') }}
+          python-version: '3.8'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install deps
+        run: pipenv install
+
+      - name: Run Python script
+        run: pipenv run python main.py
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
+          YANDEX_WHETHER_KEY: ${{ secrets.YANDEX_WHETHER_KEY }}
+          EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}
