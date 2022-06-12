@@ -3,10 +3,8 @@ import requests
 import telepot
 from yaweather import YaWeather, Russia
 
-MY_ID = config("MY_ID")
-API_KEY = config("API_KEY")
-
-
+TELEGRAM_TO = config("TELEGRAM_TO")
+TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
 YANDEX_WHETHER_KEY = config("YANDEX_WHETHER_KEY")
 EXCHANGERATE_API_KEY = config("EXCHANGERATE_API_KEY")
 
@@ -36,9 +34,9 @@ def getCurencies():
 
 
 def send_telegram_message(msg):
-    bot = telepot.Bot(API_KEY)
+    bot = telepot.Bot(TELEGRAM_TOKEN)
     bot.getMe()
-    bot.sendMessage(MY_ID, msg)
+    bot.sendMessage(TELEGRAM_TO, msg)
 
 
 if __name__ == "__main__":
