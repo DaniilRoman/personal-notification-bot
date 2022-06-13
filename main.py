@@ -40,8 +40,8 @@ def send_telegram_message(msg):
 
 
 if __name__ == "__main__":
-    msg = getWeather()
-    msg += "\n"
-    msg += getCurencies()
+    # msg = getWeather()
+    # msg += "\n"
+    msg = getCurencies()
     print(msg)
     send_telegram_message(msg)
