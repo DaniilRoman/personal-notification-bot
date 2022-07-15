@@ -11,9 +11,9 @@ jobs:
       - name: Get weather
         id: weather
         uses: vadimdez/weather-action@11
-        with: # Nizhny Novgorod
-          lat: "56.296505"
-          long: "43.936058"
+        with: # Berlin
+          lat: "52.520008"
+          long: "13.404954"
       - name: send telegram message on push
         uses: appleboy/telegram-action@master
         with:
