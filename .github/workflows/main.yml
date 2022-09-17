@@ -8,19 +8,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Get weather
-        id: weather
-        uses: vadimdez/weather-action@11
-        with: # Berlin
-          lat: "52.520008"
-          long: "13.404954"
-      - name: send telegram message on push
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Weather ${{ join(steps.weather.outputs.*, ' in ') }}
-
       - name: Check out this repository
         uses: actions/checkout@v2
 
@@ -40,5 +27,5 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
-          YANDEX_WHETHER_KEY: ${{ secrets.YANDEX_WHETHER_KEY }}
+          OPEN_WHEATHER_API_KEY: ${{ secrets.OPEN_WHEATHER_API_KEY }}
           EXCHANGERATE_API_KEY: ${{ secrets.EXCHANGERATE_API_KEY }}

@@ -7,7 +7,7 @@ name = "pypi"
 requests = "*"
 telepot = "*"
 python-decouple = "*"
-yaweather = "*"
+feedparser = "*"
 
 [dev-packages]
 
