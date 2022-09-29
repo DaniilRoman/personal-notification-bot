@@ -3,9 +3,10 @@ import logging
 from decouple import config
 import telepot
 
-from modules.blogs import getBlogUpdates
-from modules.currency import getCurencies
-from modules.weather import getWeather
+from modules.blogs import blog_updates
+from modules.currency import curencies
+from modules.herthaTickets import hertha_tickets
+from modules.weather import weather
 
 TELEGRAM_TO = config("TELEGRAM_TO")
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
@@ -24,9 +25,10 @@ def send_telegram_message(msg):
 
 if __name__ == "__main__":
     metrics = [
-        getWeather(OPEN_WHEATHER_API_KEY),
-        getCurencies(EXCHANGERATE_API_KEY),
-        getBlogUpdates()
+        weather(OPEN_WHEATHER_API_KEY),
+        curencies(EXCHANGERATE_API_KEY),
+        blog_updates(),
+        hertha_tickets()
     ]
     res_msg = "\n\n".join(metrics)
     send_telegram_message(res_msg)

@@ -2,7 +2,7 @@ import requests
 import logging
 
 
-def _getCurencies(EXCHANGERATE_API_KEY):
+def _curencies(EXCHANGERATE_API_KEY):
     currencies_msg = "Currencies:\n"
     currencies = ["USD", "EUR"]
     for c in currencies:
@@ -13,9 +13,10 @@ def _getCurencies(EXCHANGERATE_API_KEY):
         currencies_msg += f'{c}: {data["conversion_rates"]["RUB"]} RUB\n'
     return currencies_msg
 
-def getCurencies(token):
+
+def curencies(token):
     try:
-        return _getCurencies(token)
+        return _curencies(token)
     except:
         logging.exception("Couldn't get currency")
         return "Couldn't get currency"

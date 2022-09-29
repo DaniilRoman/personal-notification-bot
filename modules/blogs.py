@@ -5,7 +5,7 @@ import logging
 import feedparser
 
 
-def _getBlogUpdates():
+def _blog_updates():
     feed_list = [
         "https://vladmihalcea.com/blog/feed/",
         "https://piotrminkowski.com/feed/",
@@ -38,9 +38,10 @@ def _getBlogUpdates():
 
     return "\n".join(res)
 
-def getBlogUpdates():
+
+def blog_updates():
     try:
-        return _getBlogUpdates()
+        return _blog_updates()
     except:
         logging.exception("Couldn't get blog posts")
         return "Couldn't get blog posts"

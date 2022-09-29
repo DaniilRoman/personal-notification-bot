@@ -8,6 +8,7 @@ requests = "*"
 telepot = "*"
 python-decouple = "*"
 feedparser = "*"
+bs4 = "*"
 
 [dev-packages]
 

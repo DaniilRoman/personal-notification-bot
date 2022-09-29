@@ -6,7 +6,8 @@ import logging
 def _timestamp_to_date(timestamp):
     return datetime.fromtimestamp(timestamp).time()
 
-def _getWeather(token):
+
+def _weather(token):
     # Berlin Koepenick
     lat = 52.4514534
     lon = 13.5699097
@@ -29,10 +30,9 @@ def _getWeather(token):
     return f"Today in {city_name} temp: {temp_str}. \nWeather: {precipitation}. \nSunset at {sunset_time}"
 
 
-def getWeather(token):
+def weather(token):
     try:
-        return _getWeather(token)
+        return _weather(token)
     except:
         logging.exception("Couldn't get weather")
         return "Couldn't get weather"
-
