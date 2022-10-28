@@ -13,7 +13,8 @@ def _blog_updates():
         "https://slack.engineering/feed/",
         "https://engineering.fb.com/feed/",
         "https://engineering.atspotify.com/feed/",
-        "https://engineering.zalando.com/atom.xml"
+        "https://engineering.zalando.com/atom.xml",
+        "https://blog.twitter.com/engineering/en_us/blog.rss"
     ]
 
     res = []
