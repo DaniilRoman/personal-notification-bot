@@ -46,6 +46,7 @@ __feed_list = [
     "https://medium.com/feed/paypal-tech",
     "https://medium.com/feed/strava-engineering",
     "https://engineering.linkedin.com/blog.rss.html",
+    "https://www.reddit.com/r/RedditEng/.rss"
 
     # Company blogs to delete
     "https://engineering.fb.com/feed/",
