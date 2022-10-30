@@ -2,43 +2,100 @@ from datetime import datetime, timedelta
 from time import mktime
 
 import logging
+from typing import List
+
 import feedparser
+
+__blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories"]
+
+__feed_list = [
+    # Personal blogs
+    "https://vladmihalcea.com/blog/feed/",
+    "https://piotrminkowski.com/feed/",
+    "https://blog.alexellis.io/rss/",
+
+    # Interesting company blogs
+    "https://spring.io/blog.atom",
+    "https://blog.jetbrains.com/kotlin/category/server/feed/",
+    "https://aws.amazon.com/blogs/aws/feed/",
+    "https://medium.com/feed/netcracker",
+    "https://habr.com/ru/rss/company/just_ai/blog/?fl=ru",
+
+    "https://slack.engineering/feed/",
+    "https://engineering.atspotify.com/feed/",
+    "https://engineering.zalando.com/atom.xml",
+    "https://github.blog/category/engineering/feed/",
+    "https://netflixtechblog.com/feed",
+    "https://eng.lyft.com/feed",
+    "https://stackoverflow.blog/engineering/feed/",
+    "https://medium.com/feed/tinder",
+    "https://medium.com/feed/bbc-product-technology",
+    "https://open.nytimes.com/feed",
+
+    # Others company bogs
+    "https://blog.twitter.com/engineering/en_us/blog.rss",
+    "https://www.uber.com/en-DE/blog/engineering/rss",
+    "https://medium.com/feed/miro-engineering",
+    "https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
+    "https://habr.com/ru/rss/company/avito/blog/?fl=ru",
+    "https://habr.com/ru/rss/company/lamoda/blog/?fl=ru",
+    "https://habr.com/ru/rss/company/nspk/blog/?fl=ru",
+    "https://canvatechblog.com/feed",
+    "https://deliveroo.engineering/feed",
+    "https://tech.ebayinc.com/rss",
+    "https://medium.com/feed/paypal-tech",
+    "https://medium.com/feed/strava-engineering",
+    "https://engineering.linkedin.com/blog.rss.html",
+
+    # Company blogs to delete
+    "https://engineering.fb.com/feed/",
+]
+
+
+def __none_blacklist_labels(parsed_article):
+    if any(black_list_label == parsed_article.title.lower() for black_list_label in __blacklist_labels):
+        return False
+    if parsed_article.get("tags") is not None:
+        for tag in parsed_article.tags:
+            if any(black_list_label == tag.term.lower() for black_list_label in __blacklist_labels):
+                return False
+
+    return True
+
+
+def __add_new_article_to_res_list(feed, res: List[str]):
+    logging.info(f"Start process {feed}")
+    parsed = feedparser.parse(feed)
+    logging.info(f"Parsed {feed}")
+
+    if len(parsed.entries) == 0:
+        logging.error(f"Cannot parce {feed}")
+        return
+
+    last_article = parsed.entries[0]
+    title = last_article.title
+    link = last_article.link
+
+    if last_article.get("published_parsed") is None:
+        article_published = datetime.fromtimestamp(mktime(parsed.updated_parsed)).date()
+    else:
+        article_published = datetime.fromtimestamp(mktime(last_article.published_parsed)).date()
+    prev_day = datetime.today().date() - timedelta(days=1)
+
+    if article_published == prev_day:
+        if __none_blacklist_labels(last_article):
+            res.append(f"{title} {link}")
+        else:
+            logging.info(f"Filtered by topic: {title} {link}")
 
 
 def _blog_updates():
-    feed_list = [
-        "https://vladmihalcea.com/blog/feed/",
-        "https://piotrminkowski.com/feed/",
-        "https://blog.alexellis.io/rss/",
-        "https://slack.engineering/feed/",
-        "https://engineering.fb.com/feed/",
-        "https://engineering.atspotify.com/feed/",
-        "https://engineering.zalando.com/atom.xml",
-#         "https://blog.twitter.com/engineering/en_us/blog.rss", # article_published = datetime.fromtimestamp(mktime(last_article.published_parsed)).date() // TypeError: Tuple or struct_time argument required
-        "https://www.uber.com/en/blog/berlin/engineering/rss",
-        "https://github.blog/category/engineering/feed/",
-        "https://medium.com/feed/miro-engineering"
-    ]
-
     res = []
-    for feed in feed_list:
-        logging.info(f"Start process {feed}")
-        parsed = feedparser.parse(feed)
-        logging.info(f"Parsed {feed}")
-
-        if len(parsed.entries) == 0:
-            logging.error(f"Cannot parce {feed}")
-            continue
-
-        last_article = parsed.entries[0]
-        title = last_article.title
-        link = last_article.link
-
-        article_published = datetime.fromtimestamp(mktime(last_article.published_parsed)).date()
-        prev_day = datetime.today().date() - timedelta(days=1)
-
-        if article_published == prev_day:
-            res.append(f"{title} {link}")
+    for feed in __feed_list:
+        try:
+            __add_new_article_to_res_list(feed, res)
+        except:
+            logging.exception(f"Couldn't process blog: {str(feed)}")
 
     return "\n".join(res)
 
