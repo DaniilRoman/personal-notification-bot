@@ -73,8 +73,6 @@ def __add_new_article_to_res_list(feed, res: List[str]):
         return
 
     last_article = parsed.entries[0]
-    title = last_article.title
-    link = last_article.link
 
     if last_article.get("published_parsed") is None:
         article_published = datetime.fromtimestamp(mktime(parsed.updated_parsed)).date()
@@ -83,10 +81,11 @@ def __add_new_article_to_res_list(feed, res: List[str]):
     prev_day = datetime.today().date() - timedelta(days=1)
 
     if article_published == prev_day:
+        res_article_str = f"{last_article.title} {last_article.link}"
         if __none_blacklist_labels(last_article):
-            res.append(f"{title} {link}")
+            res.append(res_article_str)
         else:
-            logging.info(f"Filtered by topic: {title} {link}")
+            logging.info(f"Filtered by topic: {res_article_str}")
 
 
 def _blog_updates():
