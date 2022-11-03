@@ -2,8 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 
+from utils.dynamodb import ItemStoreService
 
-def _hertha_tickets():
+
+def __hertha_tickets():
     res = ""
     hertha_tickets_url = "https://ticket-onlineshop.com/ols/hbsctk/en/tk/"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0'}
@@ -17,9 +19,15 @@ def _hertha_tickets():
     return res
 
 
-def hertha_tickets():
+def hertha_tickets(item_store_service: ItemStoreService):
     try:
-        return _hertha_tickets()
+        actual_tickets = __hertha_tickets()
+        stored_tickets = item_store_service.get_item("hertha_tickets")
+        if actual_tickets != stored_tickets:
+            item_store_service.save_item("hertha_tickets", actual_tickets)
+            return actual_tickets
+        else:
+            return ""
     except:
         logging.exception("Couldn't get Hertha tickets")
         return "Couldn't get Hertha tickets"
