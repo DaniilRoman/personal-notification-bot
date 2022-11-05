@@ -6,7 +6,7 @@ from typing import List
 
 import feedparser
 
-__blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories"]
+__blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories", "javascript", "css", "html", "typescript", "mobile", "uikit"]
 
 __feed_list = [
     # Personal blogs
@@ -54,7 +54,7 @@ __feed_list = [
 
 
 def __none_blacklist_labels(parsed_article):
-    if any(black_list_label == parsed_article.title.lower() for black_list_label in __blacklist_labels):
+    if any(black_list_label in parsed_article.title.lower() for black_list_label in __blacklist_labels):
         return False
     if parsed_article.get("tags") is not None:
         for tag in parsed_article.tags:
