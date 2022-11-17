@@ -6,7 +6,8 @@ from typing import List
 
 import feedparser
 
-__blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories", "javascript", "css", "html", "typescript", "mobile", "uikit"]
+__blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories", "meeting", "spotlight",
+                      "internship", "javascript", "css", "html", "typescript", "mobile", "uikit"]
 
 __feed_list = [
     # Personal blogs
@@ -33,7 +34,6 @@ __feed_list = [
     "https://open.nytimes.com/feed",
 
     # Others company bogs
-    "https://blog.twitter.com/engineering/en_us/blog.rss",
     "https://www.uber.com/en-DE/blog/engineering/rss",
     "https://medium.com/feed/miro-engineering",
     "https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
@@ -50,6 +50,9 @@ __feed_list = [
 
     # Company blogs to delete
     "https://engineering.fb.com/feed/",
+    "https://blog.twitter.com/engineering/en_us/blog.rss",
+    "https://www.datadoghq.com/blog/index.xml",
+    "https://grafana.com/categories/engineering/index.xml"
 ]
 
 
