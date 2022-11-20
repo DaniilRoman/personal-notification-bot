@@ -7,7 +7,8 @@ from typing import List
 import feedparser
 
 __blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories", "meeting", "spotlight",
-                      "internship", "javascript", "css", "html", "typescript", "mobile", "uikit"]
+                      "internship", "javascript", "css", "html", "typescript", "mobile", "uikit", "интерфейс", "дизайн", 
+                      "мобильн", "design", "interface"]
 
 __feed_list = [
     # Personal blogs
