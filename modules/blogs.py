@@ -34,7 +34,24 @@ __feed_list = [
     "https://medium.com/feed/bbc-product-technology",
     "https://open.nytimes.com/feed",
 
+    # Tech
+    "https://circleci.com/blog/feed.xml",
+    "https://kubernetes.io/feed.xml",
+    "https://www.docker.com/blog/feed",
+    "https://redis.com/blog/rss",
+    "https://www.mongodb.com/blog/rss",
+    "https://debezium.io/blog.atom",
+    "https://www.elastic.co/blog/feed",
+    "https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
+    "https://about.gitlab.com/atom.xml",
+    "https://feeds.feedburner.com/ContinuousBlog/", # Jenkins
+    "https://in.relation.to/blog.atom", # Hibernate
+  
     # Others company bogs
+    "https://www.hashicorp.com/blog/feed.xml",
+    "https://microservices.io/feed.xml",
+    "https://www.confluent.io/rss.xml",
+    "https://blog.cloudflare.com/rss",
     "https://www.uber.com/en-DE/blog/engineering/rss",
     "https://medium.com/feed/miro-engineering",
     "https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
