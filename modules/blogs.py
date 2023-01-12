@@ -46,6 +46,7 @@ __feed_list = [
     "https://about.gitlab.com/atom.xml",
     "https://feeds.feedburner.com/ContinuousBlog/", # Jenkins
     "https://in.relation.to/blog.atom", # Hibernate
+    "https://www.cncf.io/blog/feed/",
   
     # Others company bogs
     "https://www.hashicorp.com/blog/feed.xml",
