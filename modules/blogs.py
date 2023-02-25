@@ -17,6 +17,7 @@ __feed_list = [
     "https://blog.alexellis.io/rss/",
 
     # Interesting company blogs
+    "https://feeds.feedblitz.com/baeldung&x=1",
     "https://spring.io/blog.atom",
     "https://blog.jetbrains.com/kotlin/category/server/feed/",
     "https://aws.amazon.com/blogs/aws/feed/",
