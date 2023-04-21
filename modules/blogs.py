@@ -34,6 +34,7 @@ __feed_list = [
     "https://medium.com/feed/tinder",
     "https://medium.com/feed/bbc-product-technology",
     "https://open.nytimes.com/feed",
+    "https://neo4j.com/developer-blog/feed/",
 
     # Tech
     "https://circleci.com/blog/feed.xml",
