@@ -106,7 +106,7 @@ def __add_new_article_to_res_list(feed, res: List[str]):
     prev_day = datetime.today().date() - timedelta(days=1)
 
     if article_published == prev_day:
-        res_article_str = f"{last_article.title} {last_article.link}"
+        res_article_str = f"[{last_article.title}]({last_article.link})"
         if __none_blacklist_labels(last_article):
             res.append(res_article_str)
         else:
