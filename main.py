@@ -28,7 +28,7 @@ item_store_service = ItemStoreService(dynamodb_config)
 def send_telegram_message(msg):
     bot = telepot.Bot(TELEGRAM_TOKEN)
     bot.getMe()
-    bot.sendMessage(TELEGRAM_TO, msg, parse_mode = ParseMode.HTML)
+    bot.sendMessage(TELEGRAM_TO, msg, parse_mode= 'Markdown')
 
 
 if __name__ == "__main__":
