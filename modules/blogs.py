@@ -27,7 +27,7 @@ __feed_list = [
     "https://slack.engineering/feed/",
     "https://engineering.atspotify.com/feed/",
     "https://engineering.zalando.com/atom.xml",
-    "https://github.blog/category/engineering/feed/",
+    "https://github.blog/feed/",
     "https://netflixtechblog.com/feed",
     "https://eng.lyft.com/feed",
     "https://stackoverflow.blog/engineering/feed/",
@@ -35,6 +35,14 @@ __feed_list = [
     "https://medium.com/feed/bbc-product-technology",
     "https://open.nytimes.com/feed",
     "https://neo4j.com/developer-blog/feed/",
+  
+    # Research labs
+    # https://githubnext.com, # didn't find rss feed,
+    "http://feeds.feedburner.com/blogspot/gJZg", # Google research
+    "https://openai.com/blog/rss.xml",
+    "https://research.facebook.com/feed/",
+    "https://www.microsoft.com/en-us/research/feed/",
+    "https://bair.berkeley.edu/blog/feed",
 
     # Tech
     "https://circleci.com/blog/feed.xml",
