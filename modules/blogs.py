@@ -26,64 +26,64 @@ __feed_list = [
     "https://medium.com/feed/netcracker",
     "https://habr.com/ru/rss/company/just_ai/blog/?fl=ru",
 
-    # "https://slack.engineering/feed/",
-    # "https://engineering.atspotify.com/feed/",
-    # "https://engineering.zalando.com/atom.xml",
-    # "https://github.blog/feed/",
-    # "https://netflixtechblog.com/feed",
-    # "https://eng.lyft.com/feed",
-    # "https://stackoverflow.blog/engineering/feed/",
-    # "https://medium.com/feed/tinder",
-    # "https://medium.com/feed/bbc-product-technology",
-    # "https://open.nytimes.com/feed",
-    # "https://neo4j.com/developer-blog/feed/",
-    #
-    # # Research labs
-    # # https://githubnext.com, # didn't find rss feed,
-    # "http://feeds.feedburner.com/blogspot/gJZg", # Google research
-    # "https://openai.com/blog/rss.xml",
-    # "https://research.facebook.com/feed/",
-    # "https://www.microsoft.com/en-us/research/feed/",
-    # "https://bair.berkeley.edu/blog/feed",
-    #
-    # # Tech
-    # "https://circleci.com/blog/feed.xml",
-    # "https://kubernetes.io/feed.xml",
-    # "https://www.docker.com/blog/feed",
-    # "https://redis.com/blog/rss",
-    # "https://www.mongodb.com/blog/rss",
-    # "https://debezium.io/blog.atom",
-    # "https://www.elastic.co/blog/feed",
-    # "https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
-    # "https://about.gitlab.com/atom.xml",
-    # "https://feeds.feedburner.com/ContinuousBlog/", # Jenkins
-    # "https://in.relation.to/blog.atom", # Hibernate
-    # "https://www.cncf.io/blog/feed/",
-    #
-    # # Others company bogs
-    # "https://www.hashicorp.com/blog/feed.xml",
-    # "https://microservices.io/feed.xml",
-    # "https://www.confluent.io/rss.xml",
-    # "https://blog.cloudflare.com/rss",
-    # "https://www.uber.com/en-DE/blog/engineering/rss",
-    # "https://medium.com/feed/miro-engineering",
-    # "https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
-    # "https://habr.com/ru/rss/company/avito/blog/?fl=ru",
-    # "https://habr.com/ru/rss/company/lamoda/blog/?fl=ru",
-    # "https://habr.com/ru/rss/company/nspk/blog/?fl=ru",
-    # "https://canvatechblog.com/feed",
-    # "https://deliveroo.engineering/feed",
-    # "https://tech.ebayinc.com/rss",
-    # "https://medium.com/feed/paypal-tech",
-    # "https://medium.com/feed/strava-engineering",
-    # "https://engineering.linkedin.com/blog.rss.html",
-    # "https://www.reddit.com/r/RedditEng/.rss",
-    #
-    # # Company blogs to delete
-    # "https://engineering.fb.com/feed/",
-    # "https://blog.twitter.com/engineering/en_us/blog.rss",
-    # "https://www.datadoghq.com/blog/index.xml",
-    # "https://grafana.com/categories/engineering/index.xml"
+    "https://slack.engineering/feed/",
+    "https://engineering.atspotify.com/feed/",
+    "https://engineering.zalando.com/atom.xml",
+    "https://github.blog/feed/",
+    "https://netflixtechblog.com/feed",
+    "https://eng.lyft.com/feed",
+    "https://stackoverflow.blog/engineering/feed/",
+    "https://medium.com/feed/tinder",
+    "https://medium.com/feed/bbc-product-technology",
+    "https://open.nytimes.com/feed",
+    "https://neo4j.com/developer-blog/feed/",
+
+    # Research labs
+    # https://githubnext.com, # didn't find rss feed,
+    "http://feeds.feedburner.com/blogspot/gJZg", # Google research
+    "https://openai.com/blog/rss.xml",
+    "https://research.facebook.com/feed/",
+    "https://www.microsoft.com/en-us/research/feed/",
+    "https://bair.berkeley.edu/blog/feed",
+
+    # Tech
+    "https://circleci.com/blog/feed.xml",
+    "https://kubernetes.io/feed.xml",
+    "https://www.docker.com/blog/feed",
+    "https://redis.com/blog/rss",
+    "https://www.mongodb.com/blog/rss",
+    "https://debezium.io/blog.atom",
+    "https://www.elastic.co/blog/feed",
+    "https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
+    "https://about.gitlab.com/atom.xml",
+    "https://feeds.feedburner.com/ContinuousBlog/", # Jenkins
+    "https://in.relation.to/blog.atom", # Hibernate
+    "https://www.cncf.io/blog/feed/",
+
+    # Others company bogs
+    "https://www.hashicorp.com/blog/feed.xml",
+    "https://microservices.io/feed.xml",
+    "https://www.confluent.io/rss.xml",
+    "https://blog.cloudflare.com/rss",
+    "https://www.uber.com/en-DE/blog/engineering/rss",
+    "https://medium.com/feed/miro-engineering",
+    "https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
+    "https://habr.com/ru/rss/company/avito/blog/?fl=ru",
+    "https://habr.com/ru/rss/company/lamoda/blog/?fl=ru",
+    "https://habr.com/ru/rss/company/nspk/blog/?fl=ru",
+    "https://canvatechblog.com/feed",
+    "https://deliveroo.engineering/feed",
+    "https://tech.ebayinc.com/rss",
+    "https://medium.com/feed/paypal-tech",
+    "https://medium.com/feed/strava-engineering",
+    "https://engineering.linkedin.com/blog.rss.html",
+    "https://www.reddit.com/r/RedditEng/.rss",
+
+    # Company blogs to delete
+    "https://engineering.fb.com/feed/",
+    "https://blog.twitter.com/engineering/en_us/blog.rss",
+    "https://www.datadoghq.com/blog/index.xml",
+    "https://grafana.com/categories/engineering/index.xml"
 ]
 
 
