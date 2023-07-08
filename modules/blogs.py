@@ -4,10 +4,12 @@ from time import mktime
 import logging
 from typing import List
 
+from bs4 import BeautifulSoup
 import feedparser
+import requests
 
 __blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories", "meeting", "spotlight",
-                      "internship", "javascript", "css", "html", "typescript", "mobile", "uikit", "интерфейс", "дизайн", 
+                      "internship", "javascript", "css", "html", "typescript", "mobile", "uikit", "интерфейс", "дизайн",
                       "мобильн", "design", "interface", "A Bootiful Podcast", "Spark", "Docker Desktop"]
 
 __feed_list = [
@@ -24,65 +26,88 @@ __feed_list = [
     "https://medium.com/feed/netcracker",
     "https://habr.com/ru/rss/company/just_ai/blog/?fl=ru",
 
-    "https://slack.engineering/feed/",
-    "https://engineering.atspotify.com/feed/",
-    "https://engineering.zalando.com/atom.xml",
-    "https://github.blog/feed/",
-    "https://netflixtechblog.com/feed",
-    "https://eng.lyft.com/feed",
-    "https://stackoverflow.blog/engineering/feed/",
-    "https://medium.com/feed/tinder",
-    "https://medium.com/feed/bbc-product-technology",
-    "https://open.nytimes.com/feed",
-    "https://neo4j.com/developer-blog/feed/",
-  
-    # Research labs
-    # https://githubnext.com, # didn't find rss feed,
-    "http://feeds.feedburner.com/blogspot/gJZg", # Google research
-    "https://openai.com/blog/rss.xml",
-    "https://research.facebook.com/feed/",
-    "https://www.microsoft.com/en-us/research/feed/",
-    "https://bair.berkeley.edu/blog/feed",
-
-    # Tech
-    "https://circleci.com/blog/feed.xml",
-    "https://kubernetes.io/feed.xml",
-    "https://www.docker.com/blog/feed",
-    "https://redis.com/blog/rss",
-    "https://www.mongodb.com/blog/rss",
-    "https://debezium.io/blog.atom",
-    "https://www.elastic.co/blog/feed",
-    "https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
-    "https://about.gitlab.com/atom.xml",
-    "https://feeds.feedburner.com/ContinuousBlog/", # Jenkins
-    "https://in.relation.to/blog.atom", # Hibernate
-    "https://www.cncf.io/blog/feed/",
-  
-    # Others company bogs
-    "https://www.hashicorp.com/blog/feed.xml",
-    "https://microservices.io/feed.xml",
-    "https://www.confluent.io/rss.xml",
-    "https://blog.cloudflare.com/rss",
-    "https://www.uber.com/en-DE/blog/engineering/rss",
-    "https://medium.com/feed/miro-engineering",
-    "https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
-    "https://habr.com/ru/rss/company/avito/blog/?fl=ru",
-    "https://habr.com/ru/rss/company/lamoda/blog/?fl=ru",
-    "https://habr.com/ru/rss/company/nspk/blog/?fl=ru",
-    "https://canvatechblog.com/feed",
-    "https://deliveroo.engineering/feed",
-    "https://tech.ebayinc.com/rss",
-    "https://medium.com/feed/paypal-tech",
-    "https://medium.com/feed/strava-engineering",
-    "https://engineering.linkedin.com/blog.rss.html",
-    "https://www.reddit.com/r/RedditEng/.rss",
-
-    # Company blogs to delete
-    "https://engineering.fb.com/feed/",
-    "https://blog.twitter.com/engineering/en_us/blog.rss",
-    "https://www.datadoghq.com/blog/index.xml",
-    "https://grafana.com/categories/engineering/index.xml"
+    # "https://slack.engineering/feed/",
+    # "https://engineering.atspotify.com/feed/",
+    # "https://engineering.zalando.com/atom.xml",
+    # "https://github.blog/feed/",
+    # "https://netflixtechblog.com/feed",
+    # "https://eng.lyft.com/feed",
+    # "https://stackoverflow.blog/engineering/feed/",
+    # "https://medium.com/feed/tinder",
+    # "https://medium.com/feed/bbc-product-technology",
+    # "https://open.nytimes.com/feed",
+    # "https://neo4j.com/developer-blog/feed/",
+    #
+    # # Research labs
+    # # https://githubnext.com, # didn't find rss feed,
+    # "http://feeds.feedburner.com/blogspot/gJZg", # Google research
+    # "https://openai.com/blog/rss.xml",
+    # "https://research.facebook.com/feed/",
+    # "https://www.microsoft.com/en-us/research/feed/",
+    # "https://bair.berkeley.edu/blog/feed",
+    #
+    # # Tech
+    # "https://circleci.com/blog/feed.xml",
+    # "https://kubernetes.io/feed.xml",
+    # "https://www.docker.com/blog/feed",
+    # "https://redis.com/blog/rss",
+    # "https://www.mongodb.com/blog/rss",
+    # "https://debezium.io/blog.atom",
+    # "https://www.elastic.co/blog/feed",
+    # "https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
+    # "https://about.gitlab.com/atom.xml",
+    # "https://feeds.feedburner.com/ContinuousBlog/", # Jenkins
+    # "https://in.relation.to/blog.atom", # Hibernate
+    # "https://www.cncf.io/blog/feed/",
+    #
+    # # Others company bogs
+    # "https://www.hashicorp.com/blog/feed.xml",
+    # "https://microservices.io/feed.xml",
+    # "https://www.confluent.io/rss.xml",
+    # "https://blog.cloudflare.com/rss",
+    # "https://www.uber.com/en-DE/blog/engineering/rss",
+    # "https://medium.com/feed/miro-engineering",
+    # "https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
+    # "https://habr.com/ru/rss/company/avito/blog/?fl=ru",
+    # "https://habr.com/ru/rss/company/lamoda/blog/?fl=ru",
+    # "https://habr.com/ru/rss/company/nspk/blog/?fl=ru",
+    # "https://canvatechblog.com/feed",
+    # "https://deliveroo.engineering/feed",
+    # "https://tech.ebayinc.com/rss",
+    # "https://medium.com/feed/paypal-tech",
+    # "https://medium.com/feed/strava-engineering",
+    # "https://engineering.linkedin.com/blog.rss.html",
+    # "https://www.reddit.com/r/RedditEng/.rss",
+    #
+    # # Company blogs to delete
+    # "https://engineering.fb.com/feed/",
+    # "https://blog.twitter.com/engineering/en_us/blog.rss",
+    # "https://www.datadoghq.com/blog/index.xml",
+    # "https://grafana.com/categories/engineering/index.xml"
 ]
+
+
+class BlogData:
+    def __init__(self, link, img, title):
+        self.link = link
+        self.img = img
+        self.title = title
+
+    def __repr__(self):
+        website_name = self.link.replace("https://", "").replace("http://", "").split("/")[0]
+        res_article_str = f"- [{self.title}]({self.link})\n[[{website_name}]]"
+        return res_article_str
+
+
+class BlogsData:
+    def __init__(self):
+        self.blogs: List[BlogData] = []
+
+    def append(self, blog_data: BlogData):
+        self.blogs.append(blog_data)
+
+    def __repr__(self):
+        return "\n".join([str(blog) for blog in self.blogs])
 
 
 def __none_blacklist_labels(parsed_article):
@@ -96,7 +121,7 @@ def __none_blacklist_labels(parsed_article):
     return True
 
 
-def __add_new_article_to_res_list(feed, res: List[str]):
+def __add_new_article_to_res_list(feed, blogs_data: BlogsData):
     logging.info(f"Start process {feed}")
     parsed = feedparser.parse(feed)
     logging.info(f"Parsed {feed}")
@@ -107,35 +132,53 @@ def __add_new_article_to_res_list(feed, res: List[str]):
 
     last_article = parsed.entries[0]
 
+    if is_article_published_yesterday(last_article, parsed):
+        img = _get_img(last_article.link)
+        blog_data = BlogData(last_article.link, img, last_article.title)
+        if __none_blacklist_labels(last_article):
+            blogs_data.append(blog_data)
+        else:
+            logging.info(f"Filtered by topic: {str(blog_data)}")
+
+
+def is_article_published_yesterday(last_article, parsed) -> bool:
     if last_article.get("published_parsed") is None:
         article_published = datetime.fromtimestamp(mktime(parsed.updated_parsed)).date()
     else:
         article_published = datetime.fromtimestamp(mktime(last_article.published_parsed)).date()
     prev_day = datetime.today().date() - timedelta(days=1)
-
-    if article_published == prev_day:
-        website_name = last_article.link.replace("https://", "").replace("http://", "").split("/")[0]
-        res_article_str = f"- [{last_article.title}]({last_article.link})\n[[{website_name}]]"
-        if __none_blacklist_labels(last_article):
-            res.append(res_article_str)
-        else:
-            logging.info(f"Filtered by topic: {res_article_str}")
+    return article_published == prev_day
 
 
-def _blog_updates():
-    res = []
+def _get_img(link):
+    try:
+        page = requests.get(link)
+        soup = BeautifulSoup(page.text, "html.parser")
+        img = soup.find("meta", property="og:image")
+        if img is None:
+            return ""
+        img['height'] = '100'
+        img['width'] = '200'
+        return img
+    except:
+        logging.warning(f"Couldn't get img for {link}")
+        return ""
+
+
+def _blog_updates() -> BlogsData:
+    res = BlogsData()
     for feed in __feed_list:
         try:
             __add_new_article_to_res_list(feed, res)
         except:
             logging.exception(f"Couldn't process blog: {str(feed)}")
 
-    return "\n".join(res)
+    return res
 
 
-def blog_updates():
+def blog_updates() -> BlogsData:
     try:
         return _blog_updates()
     except:
         logging.exception("Couldn't get blog posts")
-        return "Couldn't get blog posts"
+        return "Couldn't get blog posts"  # TODO fix

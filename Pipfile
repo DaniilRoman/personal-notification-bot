@@ -10,6 +10,7 @@ python-decouple = "*"
 feedparser = "*"
 bs4 = "*"
 boto3 = "*"
+jinja2 = "*"
 
 [dev-packages]
 

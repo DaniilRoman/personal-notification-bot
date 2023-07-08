@@ -1,38 +1,25 @@
 import logging
+
 from typing import List
 
-from decouple import config
-import telepot
-
 from modules.blogs import blog_updates
-from modules.currency import curencies
+from modules.currency import curencies, CurrencyData
 from modules.herthaTickets import hertha_tickets
 from modules.weather import weather
 from utils.dynamodb import DynamodbConfig, ItemStoreService
 from utils.templating import render_index_html
 
-TELEGRAM_TO = config("TELEGRAM_TO")
-TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
-OPEN_WHEATHER_API_KEY = config("OPEN_WHEATHER_API_KEY")
-EXCHANGERATE_API_KEY = config("EXCHANGERATE_API_KEY")
-
-AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
-REGION_NAME = config("REGION_NAME")
-
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
                     filemode="w")
 
-dynamodb_config = DynamodbConfig(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
+dynamodb_config = DynamodbConfig(endpoint_url="http://localhost:8000")
 item_store_service = ItemStoreService(dynamodb_config)
 
 
 def _send_telegram_message(data_list):
     msg = _create_telegram_message(data_list)
-    bot = telepot.Bot(TELEGRAM_TOKEN)
-    bot.getMe()
-    bot.sendMessage(TELEGRAM_TO, msg, parse_mode='Markdown')
+    print(msg)
 
 
 def _create_telegram_message(data_list: List[object]) -> str:
@@ -41,8 +28,9 @@ def _create_telegram_message(data_list: List[object]) -> str:
 
 
 if __name__ == "__main__":
-    weather_data = weather(OPEN_WHEATHER_API_KEY)
-    currency_data = curencies(EXCHANGERATE_API_KEY)
+    currency_data = CurrencyData()
+    currency_data.key_values["EUR"] = 97.01
+    weather_data = "Weather good"
     blogs_data = blog_updates()
     hertha_tickets_data = hertha_tickets(item_store_service)
 

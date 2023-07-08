@@ -3,9 +3,13 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 5 * * *'
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 jobs:
   build:
-    name: Build
+    name: run script
     runs-on: ubuntu-latest
     steps:
       - name: Check out this repository
@@ -32,3 +36,20 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           REGION_NAME: ${{ secrets.REGION_NAME }}
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './www/'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

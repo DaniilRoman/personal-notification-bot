@@ -7,7 +7,7 @@ def _timestamp_to_date(timestamp):
     return datetime.fromtimestamp(timestamp).time()
 
 
-def _weather(token):
+def _weather(token) -> str:
     # Berlin Koepenick
     lat = 52.4514534
     lon = 13.5699097
@@ -30,7 +30,7 @@ def _weather(token):
     return f"Today in {city_name}: {temp_str} \nWeather: {precipitation} \nSunset at {sunset_time}"
 
 
-def weather(token):
+def weather(token) -> str:
     try:
         return _weather(token)
     except:

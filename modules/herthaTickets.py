@@ -19,7 +19,7 @@ def __hertha_tickets():
     return res
 
 
-def hertha_tickets(item_store_service: ItemStoreService):
+def hertha_tickets(item_store_service: ItemStoreService) -> str:
     try:
         actual_tickets = __hertha_tickets()
         stored_tickets = item_store_service.get_item("hertha_tickets")

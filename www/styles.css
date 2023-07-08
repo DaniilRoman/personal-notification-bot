@@ -1,0 +1,25 @@
+.wrapper {
+    display: flex;
+    gap: 30px;
+}
+
+.local-header {
+    display: flex;
+    flex-direction: column;
+    color: red;
+    gap: 30px;
+}
+
+.articles {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.article-wrapper {
+    display: flex;
+}
+
