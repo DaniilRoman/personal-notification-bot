@@ -8,6 +8,7 @@ from modules.blogs import blog_updates
 from modules.currency import curencies
 from modules.herthaTickets import hertha_tickets
 from modules.weather import weather
+from utils.chatgpt_summarizing import configure_openai
 from utils.dynamodb import DynamodbConfig, ItemStoreService
 from utils.templating import render_index_html
 
@@ -20,12 +21,16 @@ AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
 REGION_NAME = config("REGION_NAME")
 
+OPENAI_ACCESS_KEY = config("OPENAI_ACCESS_KEY")
+OPENAI_ORGANIZATION = config("OPENAI_ORGANIZATION")
+
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
                     filemode="w")
 
 dynamodb_config = DynamodbConfig(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
 item_store_service = ItemStoreService(dynamodb_config)
+configure_openai(OPENAI_ACCESS_KEY, OPENAI_ORGANIZATION)
 
 
 def _send_telegram_message(data_list):

@@ -6,6 +6,7 @@ from modules.blogs import blog_updates
 from modules.currency import curencies, CurrencyData
 from modules.herthaTickets import hertha_tickets
 from modules.weather import weather
+from utils.chatgpt_summarizing import configure_openai
 from utils.dynamodb import DynamodbConfig, ItemStoreService
 from utils.templating import render_index_html
 
@@ -15,6 +16,7 @@ logging.basicConfig(level=logging.INFO,
 
 dynamodb_config = DynamodbConfig(endpoint_url="http://localhost:8000")
 item_store_service = ItemStoreService(dynamodb_config)
+configure_openai("", "")
 
 
 def _send_telegram_message(data_list):

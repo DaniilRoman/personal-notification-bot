@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 import feedparser
 import requests
 
+from utils.chatgpt_summarizing import summarize_text
+
 __blacklist_labels = ["android", "ios", "redux", "react", "frontend", "ui/ux", "career stories", "meeting", "spotlight",
                       "internship", "javascript", "css", "html", "typescript", "mobile", "uikit", "интерфейс", "дизайн",
                       "мобильн", "design", "interface", "A Bootiful Podcast", "Spark", "Docker Desktop"]
@@ -40,7 +42,7 @@ __feed_list = [
 
     # Research labs
     # https://githubnext.com, # didn't find rss feed,
-    "http://feeds.feedburner.com/blogspot/gJZg", # Google research
+    "http://feeds.feedburner.com/blogspot/gJZg",  # Google research
     "https://openai.com/blog/rss.xml",
     "https://research.facebook.com/feed/",
     "https://www.microsoft.com/en-us/research/feed/",
@@ -56,8 +58,8 @@ __feed_list = [
     "https://www.elastic.co/blog/feed",
     "https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
     "https://about.gitlab.com/atom.xml",
-    "https://feeds.feedburner.com/ContinuousBlog/", # Jenkins
-    "https://in.relation.to/blog.atom", # Hibernate
+    "https://feeds.feedburner.com/ContinuousBlog/",  # Jenkins
+    "https://in.relation.to/blog.atom",  # Hibernate
     "https://www.cncf.io/blog/feed/",
 
     # Others company bogs
@@ -88,10 +90,11 @@ __feed_list = [
 
 
 class BlogData:
-    def __init__(self, link, img, title):
+    def __init__(self, link, title, img="", summary=""):
         self.link = link
         self.img = img
         self.title = title
+        self.summary = summary
 
     def __repr__(self):
         website_name = self.link.replace("https://", "").replace("http://", "").split("/")[0]
@@ -121,6 +124,21 @@ def __none_blacklist_labels(parsed_article):
     return True
 
 
+def _set_extra_fields(blog_data):
+    try:
+        page = requests.get(blog_data.link)
+        soup = BeautifulSoup(page.text, "html.parser")
+
+        img = _get_img(soup, blog_data.link)
+        blog_data.img = img
+
+        text_to_summarize = soup.getText().replace("\n", " ").replace("\t", " ").replace("  ", " ")
+        blog_data.summary = summarize_text(text_to_summarize)
+    except Exception as ex:
+        logging.warning(f"Couldn't get img or summarize text for {blog_data.link}", ex)
+        return ""
+
+
 def __add_new_article_to_res_list(feed, blogs_data: BlogsData):
     logging.info(f"Start process {feed}")
     parsed = feedparser.parse(feed)
@@ -133,9 +151,10 @@ def __add_new_article_to_res_list(feed, blogs_data: BlogsData):
     last_article = parsed.entries[0]
 
     if is_article_published_yesterday(last_article, parsed):
-        img = _get_img(last_article.link)
-        blog_data = BlogData(last_article.link, img, last_article.title)
+
+        blog_data = BlogData(last_article.link, last_article.title)
         if __none_blacklist_labels(last_article):
+            _set_extra_fields(blog_data)
             blogs_data.append(blog_data)
         else:
             logging.info(f"Filtered by topic: {str(blog_data)}")
@@ -150,18 +169,16 @@ def is_article_published_yesterday(last_article, parsed) -> bool:
     return article_published == prev_day
 
 
-def _get_img(link):
+def _get_img(soup, link):
     try:
-        page = requests.get(link)
-        soup = BeautifulSoup(page.text, "html.parser")
         img = soup.find("meta", property="og:image")
         if img is None:
             return ""
         img['height'] = '100'
         img['width'] = '200'
         return img
-    except:
-        logging.warning(f"Couldn't get img for {link}")
+    except Exception as ex:
+        logging.warning(f"Couldn't get img for {link}", ex)
         return ""
 
 

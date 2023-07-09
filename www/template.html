@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -33,15 +34,22 @@
 
   <div class="articles">
     {% for blog in blogs.blogs %}
-      <div class="article-wrapper">
-        <a href="{{ blog.link }}">
-        <h2 class="article-title">
-          {{ blog.title }}
-        </h2>
-        </a>
-        <a href="{{ blog.link }}">
-          <img src="{{ blog.img }}" width="10%">
-        </a>
+
+      <div class="article-summary-wrapper">
+        <div class="article-wrapper">
+          <a href="{{ blog.link }}">
+          <h2 class="article-title">
+            {{ blog.title }}
+          </h2>
+          </a>
+          <a href="{{ blog.link }}">
+            <img src="{{ blog.img }}" width="50%">
+          </a>
+          <button onclick="showHide('{{ blog.link }}')">show</button>
+        </div>
+        <div id="{{ blog.link }}" style="display: none">
+            {{ blog.summary }}
+        </div>
       </div>
     {% endfor %}
   </div>

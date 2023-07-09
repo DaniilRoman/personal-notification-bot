@@ -11,6 +11,7 @@ feedparser = "*"
 bs4 = "*"
 boto3 = "*"
 jinja2 = "*"
+openai = "*"
 
 [dev-packages]
 
