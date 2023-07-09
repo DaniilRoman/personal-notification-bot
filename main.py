@@ -14,6 +14,7 @@ from utils.templating import render_index_html
 
 TELEGRAM_TO = config("TELEGRAM_TO")
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
+
 OPEN_WHEATHER_API_KEY = config("OPEN_WHEATHER_API_KEY")
 EXCHANGERATE_API_KEY = config("EXCHANGERATE_API_KEY")
 
