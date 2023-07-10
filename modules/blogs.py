@@ -150,7 +150,7 @@ def __add_new_article_to_res_list(feed, blogs_data: BlogsData):
 
     last_article = parsed.entries[0]
 
-    if is_article_published_yesterday(last_article, parsed):
+    if _is_article_published_yesterday(last_article, parsed):
 
         blog_data = BlogData(last_article.link, last_article.title)
         if __none_blacklist_labels(last_article):
@@ -160,9 +160,12 @@ def __add_new_article_to_res_list(feed, blogs_data: BlogsData):
             logging.info(f"Filtered by topic: {str(blog_data)}")
 
 
-def is_article_published_yesterday(last_article, parsed) -> bool:
+def _is_article_published_yesterday(last_article, parsed) -> bool:
     if last_article.get("published_parsed") is None:
-        article_published = datetime.fromtimestamp(mktime(parsed.updated_parsed)).date()
+        if parsed.get("updated_parsed") is None:
+            article_published = datetime.fromtimestamp(mktime(last_article.updated)).date()
+        else:
+            article_published = datetime.fromtimestamp(mktime(parsed.updated_parsed)).date()
     else:
         article_published = datetime.fromtimestamp(mktime(last_article.published_parsed)).date()
     prev_day = datetime.today().date() - timedelta(days=1)
