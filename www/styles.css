@@ -1,21 +1,25 @@
 .wrapper {
     display: flex;
+    flex-direction: column;
     gap: 30px;
 }
 
 .local-header {
     display: flex;
     flex-direction: column;
-    color: red;
+    color: #6b1616;
     gap: 30px;
+}
+
+.value {
+    color: black;
 }
 
 .articles {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    max-height: 200px;
+    max-height: 400px;
+    max-width: 600px;
     overflow-y: scroll;
 }
 
@@ -28,5 +32,6 @@
 .article-summary-wrapper {
     display: flex;
     flex-direction: column;
+    margin: 20px;
 }
 

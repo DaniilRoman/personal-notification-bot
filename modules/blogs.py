@@ -174,11 +174,9 @@ def _is_article_published_yesterday(last_article, parsed) -> bool:
 
 def _get_img(soup, link):
     try:
-        img = soup.find("meta", property="og:image")
+        img = soup.find("meta", property="og:image").attrs["content"]
         if img is None:
             return ""
-        img['height'] = '100'
-        img['width'] = '200'
         return img
     except Exception as ex:
         logging.warning(f"Couldn't get img for {link}", ex)

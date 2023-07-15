@@ -12,13 +12,16 @@
   <div class="local-header">
 
     <div class="weather">
-      <div>{{ weather }}</div>
+        <h3>Weather today in Berlin Köpenick:</h3>
+      {% for value in weather.values %}
+        <div class="value">{{ value }}</div>
+      {% endfor %}
     </div>
 
     <div class="currency">
-      <label>Currencies:</label>
+      <h3>Currencies:</h3>
       {% for key, value in currency.key_values.items() %}
-        <div>
+        <div class="value">
           {{ key }} - {{ value }} RUB
         </div>
       {% endfor %}
@@ -36,6 +39,7 @@
     {% for blog in blogs.blogs %}
 
       <div class="article-summary-wrapper">
+
         <div class="article-wrapper">
           <a href="{{ blog.link }}">
           <h2 class="article-title">
@@ -43,13 +47,15 @@
           </h2>
           </a>
           <a href="{{ blog.link }}">
-            <img src="{{ blog.img }}" width="50%">
+            <img src="{{ blog.img }}" width="30%">
           </a>
           <button onclick="showHide('{{ blog.link }}')">show</button>
         </div>
+
         <div id="{{ blog.link }}" style="display: none">
             {{ blog.summary }}
         </div>
+
       </div>
     {% endfor %}
   </div>
