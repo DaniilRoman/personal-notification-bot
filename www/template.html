@@ -47,10 +47,10 @@
           </h2>
           </a>
           <a href="{{ blog.link }}">
-            <img src="{{ blog.img }}" width="30%">
+            <img src="{{ blog.img }}" width="50%">
           </a>
-          <button onclick="showHide('{{ blog.link }}')">show</button>
         </div>
+        <button onclick="showHide('{{ blog.link }}')">show</button>
 
         <div id="{{ blog.link }}" style="display: none">
             {{ blog.summary }}
