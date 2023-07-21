@@ -12,7 +12,7 @@ class WeatherData:
             return "Couldn't get weather"
         weather_msg = "Weather today in Berlin Köpenick:\n"
         for v in self.values:
-            weather_msg += f'{v}'
+            weather_msg += f'{v}\n'
         return weather_msg
 
 
