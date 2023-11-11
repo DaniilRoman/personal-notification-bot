@@ -10,6 +10,7 @@ from modules.herthaTickets import hertha_tickets
 from modules.unionBerlinTickets import union_berlin_tickets
 from modules.weather import weather
 from modules.mobileNumber import mobile_number_notification
+from modules.wordOfTheDay import word_of_the_day
 from utils.chatgpt_summarizing import configure_openai
 from utils.dynamodb import DynamodbConfig, ItemStoreService
 from utils.templating import render_index_html
@@ -56,8 +57,9 @@ if __name__ == "__main__":
     hertha_tickets_data = hertha_tickets(item_store_service)
     union_berlin_tickets_data = union_berlin_tickets(item_store_service)
     mobile_number_notification_data = mobile_number_notification()
+    word_of_the_day_data = word_of_the_day()
 
-    _send_telegram_message([weather_data, currency_data, blogs_data, hertha_tickets_data, union_berlin_tickets_data, mobile_number_notification_data])
+    _send_telegram_message([weather_data, currency_data, blogs_data, hertha_tickets_data, union_berlin_tickets_data, mobile_number_notification_data, word_of_the_day_data])
 
     data = {
         "weather": weather_data,
