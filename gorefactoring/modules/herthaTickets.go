@@ -26,7 +26,6 @@ func herthaTickets() (string, error) {
  
 	tickets := ""
 	parentDiv := doc.Find(".event-card__headings")
-	fmt.Print(parentDiv)
 	parentDiv.Each(func(i int, s *goquery.Selection) {
 		title := s.Text()
 		title = strings.Replace(title, "  ", "", -1)
