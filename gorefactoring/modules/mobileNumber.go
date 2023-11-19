@@ -27,7 +27,7 @@ func mobileNumberNotification() (string, error) {
 			if len(bound.Bundles) != 0 {
 				isFound = true
 			}
-		} 
+		}
 	}
 
 	if isFound {
