@@ -28,9 +28,9 @@ func herthaTickets() (string, error) {
 	parentDiv := doc.Find(".event-card__headings")
 	parentDiv.Each(func(i int, s *goquery.Selection) {
 		title := s.Text()
-		title = strings.Replace(title, "  ", "", -1)
-		title = strings.Replace(title, "\n", "", -1)
-		title = strings.Replace(title, "Hertha BSC", "Hertha BSC - ", -1)
+		title = strings.ReplaceAll(title, "  ", "")
+		title = strings.ReplaceAll(title, "\n", "")
+		title = strings.ReplaceAll(title, "Hertha BSC", "Hertha BSC - ")
 		tickets += fmt.Sprintf("%s\n", title)
 	})
 
