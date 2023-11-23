@@ -167,3 +167,8 @@ func setExtraFields(article *gofeed.Item) {
 type BlogUpdateData struct {
 
 }
+
+func (c *BlogUpdateData) String() string {
+    res := ""
+    return res
+}

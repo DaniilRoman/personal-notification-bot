@@ -8,7 +8,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func UnionBerlinTickets() string {
+func UnionBerlinTickets() *UnionBerlinTicketsData {
 	res, err := unionBerlinTickets()
     if err != nil {
 		log.Printf("Error in Union Berlin Tickets module: %s", err)
@@ -16,11 +16,11 @@ func UnionBerlinTickets() string {
 	return res
 }
 
-func unionBerlinTickets() (string, error) {
+func unionBerlinTickets() (*UnionBerlinTicketsData, error) {
  	url := "https://tickets.union-zeughaus.de/unveu/heimspiele_2.htm"
 	doc, err := utils.GetDoc(url)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
  
 	tickets := "[Union Berlin tickets]("+url+"):\n"
@@ -34,7 +34,14 @@ func unionBerlinTickets() (string, error) {
 	})
 
 
-	return tickets, nil
+	return &UnionBerlinTicketsData{tickets}, nil
 }
 
 
+type UnionBerlinTicketsData struct {
+	data string
+}
+
+func (d *UnionBerlinTicketsData) String() string {
+    return d.data
+}

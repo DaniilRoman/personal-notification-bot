@@ -9,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func HerthaTickets() string {
+func HerthaTickets() *HerthaTicketsData {
 	res, err := herthaTickets()
     if err != nil {
 		log.Printf("Error in Hertha Tickets module: %s", err)
@@ -17,11 +17,11 @@ func HerthaTickets() string {
 	return res
 }
 
-func herthaTickets() (string, error) {
+func herthaTickets() (*HerthaTicketsData, error) {
  	url := "https://ticket-onlineshop.com/ols/hbsctk/en/tk/"
 	doc, err := utils.GetDoc(url)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
  
 	tickets := ""
@@ -35,7 +35,15 @@ func herthaTickets() (string, error) {
 	})
 
 
-	return tickets, nil
+	return &HerthaTicketsData{tickets}, nil
 }
 
+
+type HerthaTicketsData struct {
+	data string
+}
+
+func (d *HerthaTicketsData) String() string {
+    return d.data
+}
 

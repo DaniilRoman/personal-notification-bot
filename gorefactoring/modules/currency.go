@@ -43,7 +43,7 @@ type CurrencyData struct {
     keyValues map[string]float32
 }
 
-func (c CurrencyData) String() string {
+func (c *CurrencyData) String() string {
     res := ""
     for k, v := range c.keyValues {
        res += fmt.Sprintf("%s: %f RUB\n", k, v)
