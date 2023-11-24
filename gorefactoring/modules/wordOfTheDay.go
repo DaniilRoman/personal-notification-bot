@@ -22,10 +22,10 @@ func wordOfTheDay() (*WordOfTheDayData, error) {
 	}
 
 	lastArticle := doc.Find("article")
-	lastArticleURL, _ := lastArticle.Find("a").Attr("href")
+	lastArticleURL, _ := lastArticle.Find("a").First().Attr("href")
 	lastArticleTitle := lastArticle.Find("h3").First().Text()
 
-	res := fmt.Sprintf("[%s](https://www.nytimes.com%s):\n", lastArticleTitle, lastArticleURL)
+	res := fmt.Sprintf("[%s](https://www.nytimes.com%s)\n", lastArticleTitle, lastArticleURL)
 
 	return &WordOfTheDayData{res}, nil
 }
