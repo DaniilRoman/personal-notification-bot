@@ -59,7 +59,15 @@ if __name__ == "__main__":
     mobile_number_notification_data = mobile_number_notification()
     word_of_the_day_data = word_of_the_day()
 
-    _send_telegram_message([weather_data, currency_data, blogs_data, hertha_tickets_data, union_berlin_tickets_data, mobile_number_notification_data, word_of_the_day_data])
+    _send_telegram_message([
+        weather_data, 
+        currency_data, 
+        blogs_data, 
+        hertha_tickets_data, 
+        union_berlin_tickets_data, 
+        mobile_number_notification_data, 
+        word_of_the_day_data
+    ])
 
     data = {
         "weather": weather_data,

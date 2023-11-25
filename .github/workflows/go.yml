@@ -1,8 +1,8 @@
-name: telegram notify
+name: telegram notify using golang
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '10 4 * * *'
 permissions:
   contents: read
   pages: write
@@ -21,19 +21,18 @@ jobs:
       - name: Check out this repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
-          python-version: '3.8'
+          go-version: '1.21.4'
 
-      - name: Install pipenv
-        run: pip install pipenv
+      - name: Build Go script
+        working-directory: ./gorefactoring
+        run: go build .
 
-      - name: Install deps
-        run: pipenv install
-
-      - name: Run Python script
-        run: pipenv run python main.py
+      - name: Run Go script
+        working-directory: ./gorefactoring
+        run: go run .
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}

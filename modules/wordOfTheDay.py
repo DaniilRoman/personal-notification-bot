@@ -13,7 +13,7 @@ def __word_of_the_day():
     last_article_url = "https://www.nytimes.com" + last_article.find('a')['href']
     last_article_title = last_article.find('h3').text
 
-    res =f"[{last_article_title}]({last_article_url}):\n"
+    res =f"[{last_article_title}]({last_article_url})\n"
 
     return res
 
