@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	"main/modules"
 
@@ -25,23 +26,72 @@ var REGION_NAME = os.Getenv("REGION_NAME")
 var OPENAI_ACCESS_KEY = os.Getenv("OPENAI_ACCESS_KEY")
 var OPENAI_ORGANIZATION = os.Getenv("OPENAI_ORGANIZATION")
 
+
 func main() {
-    currencyData 			:= modules.Currency(EXCHANGERATE_API_KEY)
-	weatherData 			:= modules.GetWeather(OPEN_WHEATHER_API_KEY)
-	blogsUpdatesData 		:= modules.BlogUpdates()
-	herthaTicketsData 		:= modules.HerthaTickets()
-	unionBerlinTicketsData  := modules.UnionBerlinTickets()
-	mobileNimberData 		:= modules.MobileNumberNotification()
-	wordOfTheDay   			:= modules.WordOfTheDay()
+	var wg sync.WaitGroup
+	wg.Add(7)
+	weatherChan := make(chan *modules.WeatherData, 1)
+	currencyChan := make(chan *modules.CurrencyData, 1)
+	wordOfTheDayChan := make(chan *modules.WordOfTheDayData, 1)
+	herthaTicketsChan := make(chan *modules.HerthaTicketsData, 1)
+	unionBerlinTicketsChan := make(chan *modules.UnionBerlinTicketsData, 1)
+	mobileNumberChan := make(chan *modules.MobileNumberData, 1)
+	blogsChan := make(chan *modules.BlogUpdateData, 1)
+
+	go func() {
+	    weatherChan <- modules.GetWeather(OPEN_WHEATHER_API_KEY)
+		wg.Done()	
+	}()
+
+	go func() {
+	    currencyChan <- modules.Currency(EXCHANGERATE_API_KEY)	
+		wg.Done()	
+	}()
+
+	go func() {
+	    wordOfTheDayChan <- modules.WordOfTheDay()	
+		wg.Done()	
+	}()
+
+	go func() {
+	    herthaTicketsChan <- modules.HerthaTickets()	
+		wg.Done()	
+	}()
+
+	go func() {
+	    unionBerlinTicketsChan <- modules.UnionBerlinTickets()	
+		wg.Done()	
+	}()
+
+	go func() {
+	    mobileNumberChan <- modules.MobileNumberNotification()	
+		wg.Done()	
+	}()
+
+	go func() {
+	    blogsChan <- modules.BlogUpdates()	
+		wg.Done()	
+	}()
+
+	wg.Wait()
+
+	wordOfTheDayData := <- wordOfTheDayChan
+	herthaTicketsData := <- herthaTicketsChan
+	unionBerlinTicketsData := <- unionBerlinTicketsChan
+	weatherData := <- weatherChan
+	currencyData := <- currencyChan
+	blogsUpdatesData := <- blogsChan
+	mobileNimberData := <- mobileNumberChan
+
 
 	telegramData := telegramData(
-		currencyData,
 		weatherData,
+		currencyData,
 		blogsUpdatesData,
 		herthaTicketsData,
 		unionBerlinTicketsData,
 		mobileNimberData,
-		wordOfTheDay,
+		wordOfTheDayData,
 	)
 
 	sendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, telegramData)
@@ -62,6 +112,7 @@ func sendToTelegram(token string, chatId int64, message string) {
 		return
     }
 	msg := tgbotapi.NewMessage(chatId, message)
+	msg.ParseMode = "Markdown"
 	if _, err := bot.Send(msg); err != nil {
         log.Fatal("Couldn't send a message to Telegram", err)
 	}
@@ -75,7 +126,7 @@ func telegramData(data ...toString) string {
 			res = append(res, el.String())
 		}
 	}
-	return strings.Join(res, "\n")
+	return strings.Join(res, "\n\n")
 }
 
 type toString interface {
