@@ -44,6 +44,9 @@ type HerthaTicketsData struct {
 }
 
 func (d *HerthaTicketsData) String() string {
+	if d == nil {
+		return ""
+	}
     return d.Data
 }
 

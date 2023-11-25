@@ -1,3 +1,4 @@
 /my-dynamodb-data/
 /Pipfile.lock
 **/index.html
+.idea/

@@ -43,5 +43,8 @@ type UnionBerlinTicketsData struct {
 }
 
 func (d *UnionBerlinTicketsData) String() string {
+	if d == nil {
+		return ""
+	}
     return d.data
 }
