@@ -1,44 +1,58 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	modules "main/modules"
 	"os"
 	"strconv"
 	"strings"
 
+	"main/modules"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
+
+var OPEN_WHEATHER_API_KEY = os.Getenv("OPEN_WHEATHER_API_KEY")
 var EXCHANGERATE_API_KEY = os.Getenv("EXCHANGERATE_API_KEY")
-var TELEGRAM_TOKEN = os.Getenv("TELEGRAM_APITOKEN")
-var TELEGRAM_CHAT_ID, chatIdError = strconv.ParseInt(os.Getenv("TELEGRAM_APITOKEN"), 10, 64)
+
+var TELEGRAM_TOKEN = os.Getenv("TELEGRAM_TOKEN")
+var TELEGRAM_CHAT_ID, _ = strconv.ParseInt(os.Getenv("TELEGRAM_TO"), 10, 64)
+
+var AWS_ACCESS_KEY_ID = os.Getenv("AWS_ACCESS_KEY_ID")
+var AWS_SECRET_ACCESS_KEY = os.Getenv("AWS_SECRET_ACCESS_KEY")
+var REGION_NAME = os.Getenv("REGION_NAME")
+
+var OPENAI_ACCESS_KEY = os.Getenv("OPENAI_ACCESS_KEY")
+var OPENAI_ORGANIZATION = os.Getenv("OPENAI_ORGANIZATION")
 
 func main() {
-	if chatIdError != nil {
-		panic(chatIdError)
-	}
-
-
     currencyData 			:= modules.Currency(EXCHANGERATE_API_KEY)
+	weatherData 			:= modules.GetWeather(OPEN_WHEATHER_API_KEY)
 	blogsUpdatesData 		:= modules.BlogUpdates()
 	herthaTicketsData 		:= modules.HerthaTickets()
 	unionBerlinTicketsData  := modules.UnionBerlinTickets()
 	mobileNimberData 		:= modules.MobileNumberNotification()
+	wordOfTheDay   			:= modules.WordOfTheDay()
 
 	telegramData := telegramData(
-		[]toString{
-			currencyData,
-			blogsUpdatesData,
-			herthaTicketsData,
-			unionBerlinTicketsData,
-			mobileNimberData,
-		},
+		currencyData,
+		weatherData,
+		blogsUpdatesData,
+		herthaTicketsData,
+		unionBerlinTicketsData,
+		mobileNimberData,
+		wordOfTheDay,
 	)
+
 	sendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, telegramData)
 
-	fmt.Print("=== END ===")
+	// dataForRendering := map[string]interface{} {
+	// 	"Weather" : weatherData,
+	// 	"Currency" : currencyData,
+	// 	"HerthaTickets" : herthaTicketsData,
+	// 	"Blogs" : blogsUpdatesData,
+	// }
+	// utils.RenderIndexHTML(dataForRendering) 
 }
 
 func sendToTelegram(token string, chatId int64, message string) {
@@ -54,10 +68,12 @@ func sendToTelegram(token string, chatId int64, message string) {
 
 }
 
-func telegramData(data []toString) string {
+func telegramData(data ...toString) string {
 	res := []string {}
 	for _, el := range data {
-		res = append(res, el.String())
+		if el != nil {
+			res = append(res, el.String())
+		}
 	}
 	return strings.Join(res, "\n")
 }
