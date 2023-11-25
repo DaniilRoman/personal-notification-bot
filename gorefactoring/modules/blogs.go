@@ -203,6 +203,9 @@ type blogUpdate struct {
 }
 
 func (c *BlogUpdateData) String() string {
+	if c == nil {
+		return ""
+	}
 	blogStrings := make([]string, len(c.Blogs))
 	for i, blog := range c.Blogs {
 		blogStrings[i] = blog.String()

@@ -35,5 +35,8 @@ type WordOfTheDayData struct {
 }
 
 func (d *WordOfTheDayData) String() string {
+	if d == nil {
+		return ""
+	}
     return d.data
 }

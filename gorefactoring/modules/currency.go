@@ -44,6 +44,9 @@ type CurrencyData struct {
 }
 
 func (c *CurrencyData) String() string {
+    if c == nil {
+		return ""
+	}
     res := ""
     for k, v := range c.KeyValues {
        res += fmt.Sprintf("%s: %f RUB\n", k, v)

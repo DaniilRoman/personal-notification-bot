@@ -56,6 +56,9 @@ type MobileNumberData struct {
 }
 
 func (d *MobileNumberData) String() string {
+	if d == nil {
+		return ""
+	}
     return d.data
 }
 
