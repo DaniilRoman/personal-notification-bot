@@ -48,14 +48,14 @@ type weatherResponse struct {
 }
 
 type WeatherData struct {
-	temp string
-	precipitation string
-	sunsetTime string
+	Temp string
+	Precipitation string
+	SunsetTime string
 }
 
 func (w *WeatherData) String() string {
 	weatherMsg := "Weather today in Berlin Köpenick:\n"
-	weatherMsg += fmt.Sprintf("%s\n%s\nSunset at %s", w.temp, w.precipitation, w.sunsetTime)
+	weatherMsg += fmt.Sprintf("%s\n%s\nSunset at %s", w.Temp, w.Precipitation, w.SunsetTime)
 	return weatherMsg
 }
 

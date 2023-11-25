@@ -35,7 +35,7 @@ __feed_list = [
     "https://github.blog/feed/",
     "https://netflixtechblog.com/feed",
     "https://eng.lyft.com/feed",
-    "https://stackoverflow.blog/engineering/feed/",
+    "https://stackoverflow.blog/feed",
     "https://medium.com/feed/tinder",
     "https://medium.com/feed/bbc-product-technology",
     "https://open.nytimes.com/feed",

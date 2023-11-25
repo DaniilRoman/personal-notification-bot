@@ -40,10 +40,10 @@ func herthaTickets() (*HerthaTicketsData, error) {
 
 
 type HerthaTicketsData struct {
-	data string
+	Data string
 }
 
 func (d *HerthaTicketsData) String() string {
-    return d.data
+    return d.Data
 }
 

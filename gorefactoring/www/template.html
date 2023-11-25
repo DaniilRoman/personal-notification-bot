@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="local-header">
+
+    <div class="weather">
+      <h3>Weather today in Berlin Köpenick:</h3>
+      <div class="value">{{.Weather.Temp}}</div>
+      <div class="value">{{.Weather.Precipitation}}</div>
+      <div class="value">{{.Weather.SunsetTime}}</div>
+    </div>
+
+    <div class="currency">
+      <h3>Currencies:</h3>
+      {{range $key, $value := .Currency.KeyValues}}
+        <div class="value">
+          {{$key}} - {{$value}} RUB
+        </div>
+      {{end}}
+    </div>
+
+    <div class="herta-tickets">
+      <div>
+        {{.HerthaTickets.Data}}
+      </div>
+    </div>
+
+  </div>
+
+  <div class="articles">
+    {{range .Blogs.Blogs}}
+
+      <div class="article-summary-wrapper">
+
+        <div class="article-wrapper">
+          <a href="{{.Link}}">
+          <h2 class="article-title">
+            {{.Title}}
+          </h2>
+          </a>
+          <a href="{{.Link}}">
+            <img src="{{.Img}}" width="50%">
+          </a>
+        </div>
+        <button onclick="showHide('{{.Link}}')">summary</button>
+
+        <div id="{{.Link}}" style="display: none">
+            {{.Summary}}
+        </div>
+
+      </div>
+    {{end}}
+  </div>
+
+</div>
+
+</body>
+</html>

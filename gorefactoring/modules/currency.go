@@ -25,7 +25,7 @@ func currency(token string) (*CurrencyData, error) {
           return nil, err
        }
 
-       currencyData.keyValues[currency] = response.ConversionRates.Rub
+       currencyData.KeyValues[currency] = response.ConversionRates.Rub
     }
 
     return currencyData, nil
@@ -40,12 +40,12 @@ type currencyEntry struct {
 }
 
 type CurrencyData struct {
-    keyValues map[string]float32
+    KeyValues map[string]float32
 }
 
 func (c *CurrencyData) String() string {
     res := ""
-    for k, v := range c.keyValues {
+    for k, v := range c.KeyValues {
        res += fmt.Sprintf("%s: %f RUB\n", k, v)
     }
     return res
@@ -53,6 +53,6 @@ func (c *CurrencyData) String() string {
 
 func newCurrencyData() *CurrencyData {
     var data CurrencyData
-    data.keyValues = make(map[string]float32)
+    data.KeyValues = make(map[string]float32)
     return &data
 }

@@ -165,7 +165,14 @@ func setExtraFields(article *gofeed.Item) {
 }
 
 type BlogUpdateData struct {
+	Blogs []blogUpdate 
+}
 
+type blogUpdate struct {
+	Title string
+	Link string
+	Img string
+	Summary string
 }
 
 func (c *BlogUpdateData) String() string {
