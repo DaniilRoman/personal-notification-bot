@@ -2,12 +2,23 @@ package modules
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/mmcdole/gofeed"
 )
+
+
+var blackListKeywords = []string {
+	"android", "ios", "redux", "react", "frontend", 
+	"ui/ux", "career stories", "meeting", "spotlight",
+    "internship", "javascript", "css", "html", "typescript", 
+	"mobile", "uikit", "интерфейс", "дизайн", "мобильн", 
+	"design", "interface", "A Bootiful Podcast", "Spark", "Docker Desktop",
+}
 
 var blogsUrls = []string {
 	// Personal blogs
@@ -95,29 +106,29 @@ func BlogUpdates() *BlogUpdateData {
 
 func blogUpdates() (*BlogUpdateData, error) {
 	var wg sync.WaitGroup
-	titleChannel := make(chan string)
+	blogsChannel := make(chan blogUpdate)
 	parser := gofeed.NewParser()
 
 	wg.Add(len(blogsUrls))
 	for _, url := range blogsUrls {
-		go parseLastArticle(url, parser, titleChannel, &wg)
+		go parseLastArticle(url, parser, blogsChannel, &wg)
 	}
 
 	go func() {
 		wg.Wait()
-		close(titleChannel)
+		close(blogsChannel)
 	}()
 
-	titles := []string {}
-	for title := range titleChannel {
+	titles := []blogUpdate {}
+	for title := range blogsChannel {
 		titles = append(titles, title)
 	}
 	log.Println("Finished all: ", titles)
 	
-	return &BlogUpdateData{}, nil
+	return &BlogUpdateData{titles}, nil
 }
 
-func parseLastArticle(url string, parser *gofeed.Parser, job chan<- string, wg *sync.WaitGroup) {
+func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup) {
 	defer wg.Done()
 	log.Println("Starting: " + url)
 	defer log.Println("Finished: " + url)
@@ -137,18 +148,13 @@ func parseLastArticle(url string, parser *gofeed.Parser, job chan<- string, wg *
 	lastArticle := feed.Items[0]
 
 	if isArticlePublishedYesterday(lastArticle) {
-		// blogUpdateData := BlogUpdateData()
-		// if notInBlacklist(lastArticle) {
-		// 	setExtraFields(lastArticle)
-		// } else {
-		// 	log.Printf("Filtered by topic: %s", lastArticle.Title)
-		// }
+		if isInBlacklist(lastArticle) {
+			log.Printf("Article %s in black list", lastArticle.Title)
+			return
+		}
+		img, summary := getExtraFields(lastArticle)
 
-		// log.Println(lastArticle.Title)
-		// log.Println(lastArticle.Link)
-		// log.Println("================")
-
-		job <- lastArticle.Title
+		blogs <- blogUpdate{lastArticle.Title, lastArticle.Link, img, summary}
 	}
 }
 
@@ -156,12 +162,33 @@ func isArticlePublishedYesterday(article *gofeed.Item) bool {
 	return article.PublishedParsed.After(time.Now().Add(-24*time.Hour))
 }
 
-func notInBlacklist(article *gofeed.Item) bool {
-	return true
+func isInBlacklist(article *gofeed.Item) bool {
+	if containsInBlacklistKeywords(article.Title) {
+		return true
+	}
+
+	if article.Categories != nil {
+		for _, tag := range article.Categories {
+			if containsInBlacklistKeywords(tag) {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
-func setExtraFields(article *gofeed.Item) {
+func containsInBlacklistKeywords(s string) bool {
+	for _, blacklistLabel := range blackListKeywords {
+		if strings.Contains(strings.ToLower(s), blacklistLabel) {
+			return true
+		}
+	}
+	return false
+}
 
+func getExtraFields(article *gofeed.Item) (string, string) {
+	return "", ""
 }
 
 type BlogUpdateData struct {
@@ -176,6 +203,15 @@ type blogUpdate struct {
 }
 
 func (c *BlogUpdateData) String() string {
-    res := ""
-    return res
+	blogStrings := make([]string, len(c.Blogs))
+	for i, blog := range c.Blogs {
+		blogStrings[i] = blog.String()
+	} 
+    return strings.Join(blogStrings, "\n")
+}
+
+func (b *blogUpdate) String() string {
+	websiteName := strings.Split(strings.TrimPrefix(strings.TrimPrefix(b.Link, "https://"), "http://"), "/")[0]
+	resArticleStr := fmt.Sprintf("- [%s](%s)\n[[%s]]", b.Title, b.Link, websiteName)
+	return resArticleStr
 }
