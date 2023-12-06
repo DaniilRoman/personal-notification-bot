@@ -4,13 +4,16 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/http/cookiejar"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
 func doGet(url string) (*http.Response, error) {
+	jar, _ := cookiejar.New(nil)
 	client := http.Client{
+		Jar: jar,
 		Timeout: 5 * time.Second,
 	}
 	req , err := http.NewRequest("GET", url, nil)
@@ -21,6 +24,8 @@ func doGet(url string) (*http.Response, error) {
 	req.Header = http.Header{
 		"User-Agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0"},
 	}
+	req.Header.Add("Accept", "application/json, text/javascript")
+	req.Header.Add("Content-Type", "application/json")
 
 	res , err := client.Do(req)
 	if err != nil {
