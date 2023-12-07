@@ -36,7 +36,7 @@ def _weather(token) -> WeatherData:
     temp_afternoon = weather["list"][2]["main"]["temp"]  # +6 hours ~13:00
     temp_evening = weather["list"][4]["main"]["temp"]  # +12 hours ~19:00
 
-    temp_str = f"{temp_now} - {temp_afternoon} - {temp_evening}"
+    temp_str = f"{temp_now}  {temp_afternoon}  {temp_evening}"
     precipitation = " - ".join(set(w["main"] for entry in weather["list"] for w in entry["weather"]))
 
     weather_data = WeatherData()

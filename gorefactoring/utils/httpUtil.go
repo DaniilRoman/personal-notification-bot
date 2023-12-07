@@ -21,9 +21,7 @@ func doGet(url string) (*http.Response, error) {
 		return nil, err
 	}
 
-	req.Header = http.Header{
-		"User-Agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0"},
-	}
+	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0")
 	req.Header.Add("Accept", "application/json, text/javascript")
 	req.Header.Add("Content-Type", "application/json")
 

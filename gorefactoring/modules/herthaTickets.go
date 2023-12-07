@@ -24,7 +24,7 @@ func herthaTickets() (*HerthaTicketsData, error) {
 		return nil, err
 	}
  
-	tickets := ""
+	tickets := "[Hertha Berlin tickets]("+url+"):\n"
 	parentDiv := doc.Find(".event-card__headings")
 	parentDiv.Each(func(i int, s *goquery.Selection) {
 		title := s.Text()

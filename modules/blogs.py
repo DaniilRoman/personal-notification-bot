@@ -99,7 +99,7 @@ class BlogData:
 
     def __repr__(self):
         website_name = self.link.replace("https://", "").replace("http://", "").split("/")[0]
-        res_article_str = f"- [{self.title}]({self.link})\n[[{website_name}]]"
+        res_article_str = f"- [{self.title}]({self.link}) [[{website_name}]]"
         return res_article_str
 
 
@@ -111,7 +111,7 @@ class BlogsData:
         self.blogs.append(blog_data)
 
     def __repr__(self):
-        return "\n".join([str(blog) for blog in self.blogs])
+        return "\n\n".join([str(blog) for blog in self.blogs])
 
 
 def __none_blacklist_labels(parsed_article):
@@ -130,8 +130,7 @@ def _set_extra_fields(blog_data):
         page = requests.get(blog_data.link)
         soup = BeautifulSoup(page.text, "html.parser")
 
-        img = _get_img(soup, blog_data.link)
-        blog_data.img = img
+        blog_data.img = _get_img(soup, blog_data.link)
 
         text_to_summarize = soup.getText().replace("\n", " ").replace("\t", " ").replace("  ", " ")
         blog_data.summary = summarize_text(text_to_summarize)

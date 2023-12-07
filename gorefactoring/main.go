@@ -1,15 +1,12 @@
 package main
 
 import (
-	"log"
 	"os"
 	"strconv"
-	"strings"
 	"sync"
 
 	"main/modules"
-
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	utils "main/utils"
 )
 
 
@@ -44,32 +41,33 @@ func main() {
 	}()
 
 	go func() {
-	    currencyChan <- modules.Currency(EXCHANGERATE_API_KEY)	
+	    currencyChan <- modules.Currency(EXCHANGERATE_API_KEY)
 		wg.Done()	
 	}()
 
 	go func() {
-	    wordOfTheDayChan <- modules.WordOfTheDay()	
+	    wordOfTheDayChan <- modules.WordOfTheDay()
 		wg.Done()	
 	}()
 
 	go func() {
-	    herthaTicketsChan <- modules.HerthaTickets()	
+	    herthaTicketsChan <- modules.HerthaTickets()
 		wg.Done()	
 	}()
 
 	go func() {
-	    unionBerlinTicketsChan <- modules.UnionBerlinTickets()	
+	    unionBerlinTicketsChan <- modules.UnionBerlinTickets()
 		wg.Done()	
 	}()
 
 	go func() {
-	    mobileNumberChan <- modules.MobileNumberNotification()	
+	    mobileNumberChan <- modules.MobileNumberNotification()
 		wg.Done()	
 	}()
 
 	go func() {
-	    blogsChan <- modules.BlogUpdates()	
+		client := utils.ConfigureOpenAI(OPENAI_ACCESS_KEY)
+	    blogsChan <- modules.BlogUpdates(client)
 		wg.Done()	
 	}()
 
@@ -84,7 +82,7 @@ func main() {
 	mobileNimberData := <- mobileNumberChan
 
 
-	telegramData := telegramData(
+	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
 		weatherData,
 		currencyData,
 		blogsUpdatesData,
@@ -94,41 +92,12 @@ func main() {
 		wordOfTheDayData,
 	)
 
-	sendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, telegramData)
 
-	// dataForRendering := map[string]interface{} {
-	// 	"Weather" : weatherData,
-	// 	"Currency" : currencyData,
-	// 	"HerthaTickets" : herthaTicketsData,
-	// 	"Blogs" : blogsUpdatesData,
-	// }
-	// utils.RenderIndexHTML(dataForRendering) 
-}
-
-func sendToTelegram(token string, chatId int64, message string) {
-	bot, err := tgbotapi.NewBotAPI(token)
-    if err != nil {
-        log.Fatal("Couldn't initialise Telegram bot Api", err)
-		return
-    }
-	msg := tgbotapi.NewMessage(chatId, message)
-	msg.ParseMode = "Markdown"
-	if _, err := bot.Send(msg); err != nil {
-        log.Fatal("Couldn't send a message to Telegram", err)
+	dataForRendering := map[string]interface{} {
+		"Weather" : weatherData,
+		"Currency" : currencyData,
+		"HerthaTickets" : herthaTicketsData,
+		"Blogs" : blogsUpdatesData,
 	}
-
-}
-
-func telegramData(data ...toString) string {
-	res := []string {}
-	for _, el := range data {
-		if el != nil {
-			res = append(res, el.String())
-		}
-	}
-	return strings.Join(res, "\n\n")
-}
-
-type toString interface {
-	String() string
+	utils.RenderIndexHTML(dataForRendering)
 }

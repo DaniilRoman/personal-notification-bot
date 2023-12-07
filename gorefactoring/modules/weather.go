@@ -67,7 +67,7 @@ func (w weatherResponse) GetTodayWeather() *WeatherData {
 	tempAfternoon := w.List[2].Main.Temp // +6 hours ~13:00
 	tempEvening := w.List[4].Main.Temp // +12 hours ~19:00
 
-	tempStr := fmt.Sprintf("%.2f : %.2f : %.2f", tempNow, tempAfternoon, tempEvening)
+	tempStr := fmt.Sprintf("%.2f  %.2f  %.2f", tempNow, tempAfternoon, tempEvening)
 
 	var precipitation []string
 	for _, entry := range w.List {

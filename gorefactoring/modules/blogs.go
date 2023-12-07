@@ -8,7 +8,11 @@ import (
 	"sync"
 	"time"
 
+	utils "main/utils"
+
+	"github.com/PuerkitoBio/goquery"
 	"github.com/mmcdole/gofeed"
+	"github.com/sashabaranov/go-openai"
 )
 
 
@@ -96,22 +100,22 @@ var blogsUrls = []string {
 }
 
 
-func BlogUpdates() *BlogUpdateData {
-	blogUpdateData, err := blogUpdates()
+func BlogUpdates(client *openai.Client) *BlogUpdateData {
+	blogUpdateData, err := blogUpdates(client)
     if err != nil {
        log.Printf("Error in blogs updates module: %s", err)
     }
     return blogUpdateData
 }
 
-func blogUpdates() (*BlogUpdateData, error) {
+func blogUpdates(client *openai.Client) (*BlogUpdateData, error) {
 	var wg sync.WaitGroup
 	blogsChannel := make(chan blogUpdate)
 	parser := gofeed.NewParser()
 
 	wg.Add(len(blogsUrls))
 	for _, url := range blogsUrls {
-		go parseLastArticle(url, parser, blogsChannel, &wg)
+		go parseLastArticle(url, parser, blogsChannel, &wg, client)
 	}
 
 	go func() {
@@ -128,7 +132,7 @@ func blogUpdates() (*BlogUpdateData, error) {
 	return &BlogUpdateData{titles}, nil
 }
 
-func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup) {
+func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *openai.Client) {
 	defer wg.Done()
 	log.Println("Starting: " + url)
 	defer log.Println("Finished: " + url)
@@ -152,7 +156,7 @@ func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate
 			log.Printf("Article %s in black list", lastArticle.Title)
 			return
 		}
-		img, summary := getExtraFields(lastArticle)
+		img, summary := getExtraFields(lastArticle, client)
 
 		blogs <- blogUpdate{lastArticle.Title, lastArticle.Link, img, summary}
 	}
@@ -187,8 +191,29 @@ func containsInBlacklistKeywords(s string) bool {
 	return false
 }
 
-func getExtraFields(article *gofeed.Item) (string, string) {
-	return "", ""
+func getExtraFields(article *gofeed.Item, client *openai.Client) (string, string) {
+	doc, err := utils.GetDoc(article.Link)
+	if err != nil {
+		log.Printf("Error in getting blog extra data for %s: %s", article.Link, err)
+		return "", ""
+	}
+	img := getImage(doc)
+	summary := getSummary(doc, client)
+	return img, summary
+}
+
+func getImage(doc *goquery.Document) string {
+	img, _ := doc.Find(`meta[property="og:image"]`).Attr("content")
+	return img
+}
+
+func getSummary(doc *goquery.Document, client *openai.Client) string {
+	textToSummarize := doc.Text()
+	textToSummarize = strings.ReplaceAll(textToSummarize, "\n", " ")
+	textToSummarize = strings.ReplaceAll(textToSummarize, "\t", " ")
+	textToSummarize = strings.ReplaceAll(textToSummarize, "  ", " ")
+
+	return utils.SummarizeText(textToSummarize, client)
 }
 
 type BlogUpdateData struct {
@@ -210,11 +235,11 @@ func (c *BlogUpdateData) String() string {
 	for i, blog := range c.Blogs {
 		blogStrings[i] = blog.String()
 	} 
-    return strings.Join(blogStrings, "\n")
+    return strings.Join(blogStrings, "\n\n")
 }
 
 func (b *blogUpdate) String() string {
 	websiteName := strings.Split(strings.TrimPrefix(strings.TrimPrefix(b.Link, "https://"), "http://"), "/")[0]
-	resArticleStr := fmt.Sprintf("- [%s](%s)\n[[%s]]", b.Title, b.Link, websiteName)
+	resArticleStr := fmt.Sprintf("- [%s](%s) [[%s]]", b.Title, b.Link, websiteName)
 	return resArticleStr
 }
