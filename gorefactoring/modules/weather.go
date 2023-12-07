@@ -78,7 +78,20 @@ func (w weatherResponse) GetTodayWeather() *WeatherData {
 	precipitation = utils.RemoveDuplicate(precipitation)
 	precipitationStr := strings.Join(precipitation, " - ")
 
-	sunsetTime := time.Unix(w.City.Sunset, 0).Format("15:04")
+	sunsetTime := getSunset(w)
 
 	return &WeatherData{tempStr, precipitationStr, sunsetTime}
+}
+
+func getSunset(w weatherResponse) string {
+	timeUtc := time.Unix(w.City.Sunset, 0)
+
+	timezone := "Europe/Berlin"
+	loc, err := time.LoadLocation(timezone)
+	if err != nil {
+		return ""
+	}
+
+	timeWithTimezone := timeUtc.In(loc)
+	return timeWithTimezone.Format("15:04")
 }
