@@ -46,7 +46,6 @@ def _send_telegram_message(data_list):
 
 def _create_telegram_message(data_list: List[object]) -> str:
     str_list = [str(data) for data in data_list]
-    str_list.append("[Html page](https://daniilroman.github.io/personal-notification-bot/)")
     return "\n\n".join(str_list)
 
 

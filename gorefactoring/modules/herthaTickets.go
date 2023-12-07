@@ -17,14 +17,16 @@ func HerthaTickets() *HerthaTicketsData {
 	return res
 }
 
+
+const herthaTicketsUrl = "https://ticket-onlineshop.com/ols/hbsctk/en/tk/"
+
 func herthaTickets() (*HerthaTicketsData, error) {
- 	url := "https://ticket-onlineshop.com/ols/hbsctk/en/tk/"
-	doc, err := utils.GetDoc(url)
+	doc, err := utils.GetDoc(herthaTicketsUrl)
 	if err != nil {
 		return nil, err
 	}
  
-	tickets := "[Hertha Berlin tickets]("+url+"):\n"
+	tickets := ""
 	parentDiv := doc.Find(".event-card__headings")
 	parentDiv.Each(func(i int, s *goquery.Selection) {
 		title := s.Text()
@@ -47,6 +49,6 @@ func (d *HerthaTicketsData) String() string {
 	if d == nil {
 		return ""
 	}
-    return d.Data
+    return fmt.Sprintf("[Hertha Berlin tickets](%s):\n%s", herthaTicketsUrl, d.Data)
 }
 

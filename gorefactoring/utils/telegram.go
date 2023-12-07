@@ -26,9 +26,14 @@ func telegramData(data ...toString) string {
 	res := []string {}
 	for _, el := range data {
 		if el != nil {
-			res = append(res, el.String())
+			str := el.String()
+			if str != "" {
+				res = append(res, str)
+			}
+	
 		}
 	}
+    res = append(res, "[Html page](https://daniilroman.github.io/personal-notification-bot/)")
 	return strings.Join(res, "\n\n")
 }
 

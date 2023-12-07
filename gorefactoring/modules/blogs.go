@@ -240,6 +240,6 @@ func (c *BlogUpdateData) String() string {
 
 func (b *blogUpdate) String() string {
 	websiteName := strings.Split(strings.TrimPrefix(strings.TrimPrefix(b.Link, "https://"), "http://"), "/")[0]
-	resArticleStr := fmt.Sprintf("- [%s](%s) [[%s]]", b.Title, b.Link, websiteName)
+	resArticleStr := fmt.Sprintf("- %s [[%s](%s)]", b.Title, websiteName, b.Link)
 	return resArticleStr
 }
