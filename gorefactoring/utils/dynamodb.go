@@ -12,15 +12,15 @@ import (
 )
 
 type DynamoDbService struct {
-	AppName    string
-	TableName  string
-	DynamoDB   *dynamodb.DynamoDB
+	AppName   string
+	TableName string
+	DynamoDB  *dynamodb.DynamoDB
 }
 
 type item struct {
-	AppName    string `json:"app_name"`
-	ItemName   string `json:"item_name"`
-	ItemValue  string `json:"item_value"`
+	AppName   string `json:"app_name"`
+	ItemName  string `json:"item_name"`
+	ItemValue string `json:"item_value"`
 }
 
 func NewDynamoDbService(accessKey, secretAccessKey, region string, endpointUrl *string) *DynamoDbService {
@@ -36,9 +36,9 @@ func NewDynamoDbService(accessKey, secretAccessKey, region string, endpointUrl *
 	dynamoDB := dynamodb.New(session)
 
 	return &DynamoDbService{
-		AppName:    "person-notification-bot",
-		TableName:  "items",
-		DynamoDB:   dynamoDB,
+		AppName:   "person-notification-bot",
+		TableName: "items",
+		DynamoDB:  dynamoDB,
 	}
 }
 
@@ -71,7 +71,7 @@ func (si *DynamoDbService) createItemTable() error {
 	return nil
 }
 
-func (si *DynamoDbService) getItem(itemName string) (string) {
+func (si *DynamoDbService) getItem(itemName string) string {
 	result, err := si.DynamoDB.GetItem(&dynamodb.GetItemInput{
 		TableName: &si.TableName,
 		Key: map[string]*dynamodb.AttributeValue{
@@ -119,12 +119,12 @@ func (si *DynamoDbService) saveItem(key, value string) {
 	}
 }
 
-func (item *DynamoDbService) GetActualItem(key, newValue string) string {
+func (item *DynamoDbService) GetValueIfChanged(key, newValue string) string {
 	prevValue := item.getItem(key)
 	if prevValue != newValue {
 		item.saveItem(key, newValue)
 		return newValue
 	} else {
-		return prevValue
+		return ""
 	}
 }
