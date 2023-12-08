@@ -32,9 +32,9 @@ logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
                     filemode="w")
 
-dynamodb_config = DynamodbConfig(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
-item_store_service = ItemStoreService(dynamodb_config)
-configure_openai(OPENAI_ACCESS_KEY, OPENAI_ORGANIZATION)
+# dynamodb_config = DynamodbConfig(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME)
+# item_store_service = ItemStoreService(dynamodb_config)
+# configure_openai(OPENAI_ACCESS_KEY, OPENAI_ORGANIZATION)
 
 
 def _send_telegram_message(data_list):
@@ -50,28 +50,28 @@ def _create_telegram_message(data_list: List[object]) -> str:
 
 
 if __name__ == "__main__":
-    weather_data = weather(OPEN_WHEATHER_API_KEY)
-    currency_data = curencies(EXCHANGERATE_API_KEY)
-    blogs_data = blog_updates()
-    hertha_tickets_data = hertha_tickets(item_store_service)
-    union_berlin_tickets_data = union_berlin_tickets(item_store_service)
+    # weather_data = weather(OPEN_WHEATHER_API_KEY)
+    # currency_data = curencies(EXCHANGERATE_API_KEY)
+    # blogs_data = blog_updates()
+    hertha_tickets_data = hertha_tickets(None)
+    union_berlin_tickets_data = union_berlin_tickets(None)
     mobile_number_notification_data = mobile_number_notification()
-    word_of_the_day_data = word_of_the_day()
+    # word_of_the_day_data = word_of_the_day()
 
     _send_telegram_message([
-        weather_data, 
-        currency_data, 
-        blogs_data, 
+        # weather_data, 
+        # currency_data, 
+        # blogs_data, 
         hertha_tickets_data, 
         union_berlin_tickets_data, 
         mobile_number_notification_data, 
-        word_of_the_day_data
+        # word_of_the_day_data
     ])
 
-    data = {
-        "weather": weather_data,
-        "currency": currency_data,
-        "blogs": blogs_data,
-        "herta_tickets": hertha_tickets_data
-    }
-    render_index_html(data)
+    # data = {
+    #     "weather": weather_data,
+    #     "currency": currency_data,
+    #     "blogs": blogs_data,
+    #     "herta_tickets": hertha_tickets_data
+    # }
+    # render_index_html(data)

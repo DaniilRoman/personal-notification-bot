@@ -22,6 +22,8 @@ def __hertha_tickets():
 def hertha_tickets(item_store_service: ItemStoreService) -> str:
     try:
         actual_tickets = __hertha_tickets()
+        if item_store_service is None:
+            return actual_tickets
         stored_tickets = item_store_service.get_item("hertha_tickets")
         if actual_tickets != stored_tickets:
             item_store_service.save_item("hertha_tickets", actual_tickets)

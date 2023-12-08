@@ -1,12 +1,16 @@
 package modules
 
 import (
+	"fmt"
 	"log"
 	utils "main/utils"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
+
+
+const url = "https://tickets.union-zeughaus.de/unveu/heimspiele_2.htm"
 
 func UnionBerlinTickets(dynamodb *utils.DynamoDbService) *UnionBerlinTicketsData {
 	res, err := unionBerlinTickets()
@@ -18,13 +22,12 @@ func UnionBerlinTickets(dynamodb *utils.DynamoDbService) *UnionBerlinTicketsData
 }
 
 func unionBerlinTickets() (*UnionBerlinTicketsData, error) {
-	url := "https://tickets.union-zeughaus.de/unveu/heimspiele_2.htm"
 	doc, err := utils.GetDoc(url)
 	if err != nil {
 		return nil, err
 	}
 
-	tickets := "[Union Berlin tickets](" + url + "):\n"
+	tickets := ""
 	parentDiv := doc.Find(".ticket.listitem.gamehome")
 	parentDiv.Each(func(i int, s *goquery.Selection) {
 		elementsStrings := []string{}
@@ -45,5 +48,5 @@ func (d *UnionBerlinTicketsData) String() string {
 	if d == nil || d.data == "" {
 		return ""
 	}
-	return d.data
+	return fmt.Sprintf("[Union Berlin tickets](%s):\n%s", url, d.data)
 }
