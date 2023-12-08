@@ -25,6 +25,8 @@ var OPENAI_ORGANIZATION = os.Getenv("OPENAI_ORGANIZATION")
 
 
 func main() {
+	dynamodb := utils.NewDynamoDbService(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME, nil)
+
 	var wg sync.WaitGroup
 	wg.Add(7)
 	weatherChan := make(chan *modules.WeatherData, 1)
@@ -51,12 +53,12 @@ func main() {
 	}()
 
 	go func() {
-	    herthaTicketsChan <- modules.HerthaTickets()
+	    herthaTicketsChan <- modules.HerthaTickets(dynamodb)
 		wg.Done()	
 	}()
 
 	go func() {
-	    unionBerlinTicketsChan <- modules.UnionBerlinTickets()
+	    unionBerlinTicketsChan <- modules.UnionBerlinTickets(dynamodb)
 		wg.Done()	
 	}()
 

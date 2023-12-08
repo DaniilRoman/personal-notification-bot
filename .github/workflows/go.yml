@@ -2,7 +2,7 @@ name: telegram notify using golang
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 4 * * *'
+    - cron: '0 5 * * *'
 permissions:
   contents: read
   pages: write

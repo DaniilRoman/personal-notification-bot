@@ -9,11 +9,12 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func HerthaTickets() *HerthaTicketsData {
+func HerthaTickets(dynamodb *utils.DynamoDbService) *HerthaTicketsData {
 	res, err := herthaTickets()
     if err != nil {
 		log.Printf("Error in Hertha Tickets module: %s", err)
-	 }
+	}
+	res.Data = dynamodb.GetActualItem("hertha_tickets", res.Data)
 	return res
 }
 

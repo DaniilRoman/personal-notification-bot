@@ -8,11 +8,12 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func UnionBerlinTickets() *UnionBerlinTicketsData {
+func UnionBerlinTickets(dynamodb *utils.DynamoDbService) *UnionBerlinTicketsData {
 	res, err := unionBerlinTickets()
     if err != nil {
 		log.Printf("Error in Union Berlin Tickets module: %s", err)
-	 }
+	}
+	res.data = dynamodb.GetActualItem("union_berlin_tickets", res.data)
 	return res
 }
 
