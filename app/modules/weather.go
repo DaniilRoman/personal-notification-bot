@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const weatherUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&cnt=6&units=metric&appid=%s"
+
 
 func GetWeather(token string) *WeatherData {
 	res, err := getWeather(token)
@@ -21,7 +23,7 @@ func getWeather(token string) (*WeatherData, error) {
 	// Berlin Koepenick
 	lat := 52.4514534
 	lon := 13.5699097
-	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&cnt=6&units=metric&appid=%s", lat, lon, token)
+	url := fmt.Sprintf(weatherUrl, lat, lon, token)
 
 	weatherResponse := weatherResponse{}
 	err := utils.DoGet(url, &weatherResponse)

@@ -9,8 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-
-const url = "https://tickets.union-zeughaus.de/unveu/heimspiele_2.htm"
+const unionBerlinUrl = "https://tickets.union-zeughaus.de/unveu/heimspiele_2.htm"
 
 func UnionBerlinTickets(dynamodb *utils.DynamoDbService) *UnionBerlinTicketsData {
 	res, err := unionBerlinTickets()
@@ -22,7 +21,7 @@ func UnionBerlinTickets(dynamodb *utils.DynamoDbService) *UnionBerlinTicketsData
 }
 
 func unionBerlinTickets() (*UnionBerlinTicketsData, error) {
-	doc, err := utils.GetDoc(url)
+	doc, err := utils.GetDoc(unionBerlinUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -48,5 +47,5 @@ func (d *UnionBerlinTicketsData) String() string {
 	if d == nil || d.data == "" {
 		return ""
 	}
-	return fmt.Sprintf("[Union Berlin tickets](%s):\n%s", url, d.data)
+	return fmt.Sprintf("[Union Berlin tickets](%s):\n%s", unionBerlinUrl, d.data)
 }

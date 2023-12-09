@@ -42,6 +42,16 @@ func NewDynamoDbService(accessKey, secretAccessKey, region string, endpointUrl *
 	}
 }
 
+func (item *DynamoDbService) GetValueIfChanged(key, newValue string) string {
+	prevValue := item.getItem(key)
+	if prevValue != newValue {
+		item.saveItem(key, newValue)
+		return newValue
+	} else {
+		return ""
+	}
+}
+
 func (si *DynamoDbService) createItemTable() error {
 	input := &dynamodb.CreateTableInput{
 		TableName: &si.TableName,
@@ -116,15 +126,5 @@ func (si *DynamoDbService) saveItem(key, value string) {
 	_, err = si.DynamoDB.PutItem(input)
 	if err != nil {
 		log.Printf("operation failed: %w", err)
-	}
-}
-
-func (item *DynamoDbService) GetValueIfChanged(key, newValue string) string {
-	prevValue := item.getItem(key)
-	if prevValue != newValue {
-		item.saveItem(key, newValue)
-		return newValue
-	} else {
-		return ""
 	}
 }

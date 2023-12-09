@@ -9,6 +9,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+const herthaTicketsUrl = "https://ticket-onlineshop.com/ols/hbsctk/en/tk/"
+
 func HerthaTickets(dynamodb *utils.DynamoDbService) *HerthaTicketsData {
 	res, err := herthaTickets()
 	if err != nil {
@@ -17,8 +19,6 @@ func HerthaTickets(dynamodb *utils.DynamoDbService) *HerthaTicketsData {
 	res.Data = dynamodb.GetValueIfChanged("hertha_tickets", res.Data)
 	return res
 }
-
-const herthaTicketsUrl = "https://ticket-onlineshop.com/ols/hbsctk/en/tk/"
 
 func herthaTickets() (*HerthaTicketsData, error) {
 	doc, err := utils.GetDoc(herthaTicketsUrl)

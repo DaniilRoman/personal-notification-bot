@@ -6,6 +6,8 @@ import (
     utils "main/utils"
 )
 
+const currencyUrl = "https://v6.exchangerate-api.com/v6/%s/latest/%s"
+
 func Currency(token string) *CurrencyData {
     currencyData, err := currency(token)
     if err != nil {
@@ -18,7 +20,7 @@ func currency(token string) (*CurrencyData, error) {
     currencyData := newCurrencyData()
     currencies := [2]string{"USD", "EUR"}
     for _, currency := range currencies {
-       url := fmt.Sprintf("https://v6.exchangerate-api.com/v6/%s/latest/%s", token, currency)
+       url := fmt.Sprintf(currencyUrl, token, currency)
        response := currencyResponse{}
        err := utils.DoGet(url, &response)
        if err != nil {
@@ -43,6 +45,12 @@ type CurrencyData struct {
     KeyValues map[string]float32
 }
 
+func newCurrencyData() *CurrencyData {
+    var data CurrencyData
+    data.KeyValues = make(map[string]float32)
+    return &data
+}
+
 func (c *CurrencyData) String() string {
     if c == nil {
 		return ""
@@ -52,10 +60,4 @@ func (c *CurrencyData) String() string {
        res += fmt.Sprintf("%s: %.2f RUB\n", k, v)
     }
     return res
-}
-
-func newCurrencyData() *CurrencyData {
-    var data CurrencyData
-    data.KeyValues = make(map[string]float32)
-    return &data
 }

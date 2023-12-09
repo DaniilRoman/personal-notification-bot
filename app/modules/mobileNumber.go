@@ -5,6 +5,8 @@ import (
     utils "main/utils"
 )
 
+const tele2Url = "https://nnov.tele2.ru/api/shop/products/numbers/bundles/1/groups?query=9524596234&exclude&siteId=siteNNOV"
+
 func MobileNumberNotification() *MobileNumberData {
     mobileNumberData, err := mobileNumberNotification()
     if err != nil {
@@ -14,7 +16,6 @@ func MobileNumberNotification() *MobileNumberData {
 }
 
 func mobileNumberNotification() (*MobileNumberData, error) {
-	tele2Url := "https://nnov.tele2.ru/api/shop/products/numbers/bundles/1/groups?query=9524596234&exclude&siteId=siteNNOV"
 	isFound := false
 	res := mobileNumberResponse{}
 	err := utils.DoGet(tele2Url, &res)

@@ -6,6 +6,8 @@ import (
 	utils "main/utils"
 )
 
+const wordOfTheDayURL = "https://www.nytimes.com/column/learning-word-of-the-day"
+
 func WordOfTheDay() *WordOfTheDayData {
 	res, err := wordOfTheDay()
     if err != nil {
@@ -15,7 +17,6 @@ func WordOfTheDay() *WordOfTheDayData {
 }
 
 func wordOfTheDay() (*WordOfTheDayData, error) {
-	wordOfTheDayURL := "https://www.nytimes.com/column/learning-word-of-the-day"
 	doc, err := utils.GetDoc(wordOfTheDayURL)
 	if err != nil {
 		return nil, err
