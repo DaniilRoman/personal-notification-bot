@@ -5,9 +5,10 @@
 # Personal notification github actions telegram bot
 #### Goal - daily notification about:
 - Blogs rss feed
-- Hertha Berlin's next home games
+- Hertha and Union Berlin's next home games
 - Weather this day
 - Selected currencies state
+- Word of the day from NY times
 
 #### Tech functionalities:
 - API calls
@@ -16,3 +17,5 @@
 - AWS DynamoDB data storing
 - Gtihub actions CI/CD and scheduling
 - Telegram bots messaging
+- Html templating
+- OpenAI text summarization
