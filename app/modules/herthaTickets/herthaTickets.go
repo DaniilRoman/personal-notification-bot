@@ -1,9 +1,9 @@
-package modules
+package hertha
 
 import (
 	"fmt"
 	"log"
-	utils "main/utils"
+	"main/utils"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -37,15 +37,4 @@ func herthaTickets() (*HerthaTicketsData, error) {
 	})
 
 	return &HerthaTicketsData{tickets}, nil
-}
-
-type HerthaTicketsData struct {
-	Data string
-}
-
-func (d *HerthaTicketsData) String() string {
-	if d == nil || d.Data == "" {
-		return ""
-	}
-	return fmt.Sprintf("[Hertha Berlin tickets](%s):\n%s", herthaTicketsUrl, d.Data)
 }

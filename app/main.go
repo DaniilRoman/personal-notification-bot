@@ -1,12 +1,17 @@
 package main
 
 import (
+	"main/modules/blogs"
+	"main/modules/currency"
+	hertha "main/modules/herthaTickets"
+	mobilenumber "main/modules/mobileNumber"
+	union "main/modules/unionBerlinTickets"
+	"main/modules/weather"
+	word "main/modules/wordOfTheDay"
+	"main/utils"
 	"os"
 	"strconv"
 	"sync"
-
-	"main/modules"
-	utils "main/utils"
 )
 
 
@@ -29,47 +34,47 @@ func main() {
 
 	var wg sync.WaitGroup
 	wg.Add(7)
-	weatherChan := make(chan *modules.WeatherData, 1)
-	currencyChan := make(chan *modules.CurrencyData, 1)
-	wordOfTheDayChan := make(chan *modules.WordOfTheDayData, 1)
-	herthaTicketsChan := make(chan *modules.HerthaTicketsData, 1)
-	unionBerlinTicketsChan := make(chan *modules.UnionBerlinTicketsData, 1)
-	mobileNumberChan := make(chan *modules.MobileNumberData, 1)
-	blogsChan := make(chan *modules.BlogUpdateData, 1)
+	weatherChan := make(chan *weather.WeatherData, 1)
+	currencyChan := make(chan *currency.CurrencyData, 1)
+	wordOfTheDayChan := make(chan *word.WordOfTheDayData, 1)
+	herthaTicketsChan := make(chan *hertha.HerthaTicketsData, 1)
+	unionBerlinTicketsChan := make(chan *union.UnionBerlinTicketsData, 1)
+	mobileNumberChan := make(chan *mobilenumber.MobileNumberData, 1)
+	blogsChan := make(chan *blogs.BlogUpdateData, 1)
 
 	go func() {
-	    weatherChan <- modules.GetWeather(OPEN_WHEATHER_API_KEY)
+	    weatherChan <- weather.GetWeather(OPEN_WHEATHER_API_KEY)
 		wg.Done()	
 	}()
 
 	go func() {
-	    currencyChan <- modules.Currency(EXCHANGERATE_API_KEY)
+	    currencyChan <- currency.Currency(EXCHANGERATE_API_KEY)
 		wg.Done()	
 	}()
 
 	go func() {
-	    wordOfTheDayChan <- modules.WordOfTheDay()
+	    wordOfTheDayChan <- word.WordOfTheDay()
 		wg.Done()	
 	}()
 
 	go func() {
-	    herthaTicketsChan <- modules.HerthaTickets(dynamodb)
+	    herthaTicketsChan <- hertha.HerthaTickets(dynamodb)
 		wg.Done()	
 	}()
 
 	go func() {
-	    unionBerlinTicketsChan <- modules.UnionBerlinTickets(dynamodb)
+	    unionBerlinTicketsChan <- union.UnionBerlinTickets(dynamodb)
 		wg.Done()	
 	}()
 
 	go func() {
-	    mobileNumberChan <- modules.MobileNumberNotification()
+	    mobileNumberChan <- mobilenumber.MobileNumberNotification()
 		wg.Done()	
 	}()
 
 	go func() {
 		client := utils.ConfigureOpenAI(OPENAI_ACCESS_KEY)
-	    blogsChan <- modules.BlogUpdates(client)
+	    blogsChan <- blogs.BlogUpdates(client)
 		wg.Done()	
 	}()
 

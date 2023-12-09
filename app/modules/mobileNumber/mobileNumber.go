@@ -1,4 +1,4 @@
-package modules
+package mobilenumber
 
 import (
 	"log"
@@ -50,16 +50,3 @@ type groupResponse struct {
 type bundleResponse struct {
 	Bundles []any `json:"bundles"`
 }
-
-
-type MobileNumberData struct {
-	data string
-}
-
-func (d *MobileNumberData) String() string {
-	if d == nil {
-		return ""
-	}
-    return d.data
-}
-

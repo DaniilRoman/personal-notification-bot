@@ -1,9 +1,8 @@
-package modules
+package union
 
 import (
-	"fmt"
 	"log"
-	utils "main/utils"
+	"main/utils"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -37,15 +36,4 @@ func unionBerlinTickets() (*UnionBerlinTicketsData, error) {
 	})
 
 	return &UnionBerlinTicketsData{tickets}, nil
-}
-
-type UnionBerlinTicketsData struct {
-	data string
-}
-
-func (d *UnionBerlinTicketsData) String() string {
-	if d == nil || d.data == "" {
-		return ""
-	}
-	return fmt.Sprintf("[Union Berlin tickets](%s):\n%s", unionBerlinUrl, d.data)
 }

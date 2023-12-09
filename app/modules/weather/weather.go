@@ -1,9 +1,9 @@
-package modules
+package weather
 
 import (
 	"fmt"
 	"log"
-	utils "main/utils"
+	"main/utils"
 	"strings"
 	"time"
 )
@@ -34,35 +34,6 @@ func getWeather(token string) (*WeatherData, error) {
 	return weatherResponse.GetTodayWeather(), nil
 }
 
-type weatherResponse struct {
-	City struct {
-		Name  string `json:"name"`
-		Sunset int64  `json:"sunset"`
-	} `json:"city"`
-	List []struct {
-		Main struct {
-			Temp float64 `json:"temp"`
-		} `json:"main"`
-		Weather []struct {
-			Main string `json:"main"`
-		} `json:"weather"`
-	} `json:"list"`
-}
-
-type WeatherData struct {
-	Temp string
-	Precipitation string
-	SunsetTime string
-}
-
-func (w *WeatherData) String() string {
-	if w == nil {
-		return ""
-	}
-	weatherMsg := "Weather today in Berlin Köpenick:\n"
-	weatherMsg += fmt.Sprintf("%s\n%s\nSunset at %s", w.Temp, w.Precipitation, w.SunsetTime)
-	return weatherMsg
-}
 
 func (w weatherResponse) GetTodayWeather() *WeatherData {
 	tempNow := w.List[1].Main.Temp // +3 hours ~10:00
@@ -96,4 +67,20 @@ func getSunset(w weatherResponse) string {
 
 	timeWithTimezone := timeUtc.In(loc)
 	return timeWithTimezone.Format("15:04")
+}
+
+
+type weatherResponse struct {
+	City struct {
+		Name  string `json:"name"`
+		Sunset int64  `json:"sunset"`
+	} `json:"city"`
+	List []struct {
+		Main struct {
+			Temp float64 `json:"temp"`
+		} `json:"main"`
+		Weather []struct {
+			Main string `json:"main"`
+		} `json:"weather"`
+	} `json:"list"`
 }

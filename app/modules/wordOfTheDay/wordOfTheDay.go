@@ -1,4 +1,4 @@
-package modules
+package word
 
 import (
 	"fmt"
@@ -29,15 +29,4 @@ func wordOfTheDay() (*WordOfTheDayData, error) {
 	res := fmt.Sprintf("[%s](https://www.nytimes.com%s)\n", lastArticleTitle, lastArticleURL)
 
 	return &WordOfTheDayData{res}, nil
-}
-
-type WordOfTheDayData struct {
-	data string
-}
-
-func (d *WordOfTheDayData) String() string {
-	if d == nil {
-		return ""
-	}
-    return d.data
 }

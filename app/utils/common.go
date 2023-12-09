@@ -1,4 +1,4 @@
-package modules
+package utils
 
 func RemoveDuplicate[T string | int](tSlice []T) []T {
     allKeys := make(map[T]bool)
