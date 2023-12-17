@@ -18,7 +18,7 @@ func SummarizeText(text string, client *openai.Client) string {
         text = text[:4000]
     }
 	inputText := "Give me the main ideas of this tech article: " + text
-	model := openai.GPT4
+	model := openai.GPT3Dot5Turbo
 	maxTokens := 300
 
 	request := openai.ChatCompletionRequest{
