@@ -14,6 +14,7 @@ func UnionBerlinTickets(dynamodb *utils.DynamoDbService) *UnionBerlinTicketsData
 	res, err := unionBerlinTickets()
 	if err != nil {
 		log.Printf("Error in Union Berlin Tickets module: %s", err)
+		return res
 	}
 	res.data = dynamodb.GetValueIfChanged("union_berlin_tickets", res.data)
 	return res
