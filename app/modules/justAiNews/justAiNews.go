@@ -45,7 +45,7 @@ func justAiNews(dynamodb *utils.DynamoDbService) (*JustAiNewsData, error) {
 }
 
 func incrementPage(value int, dynamodb *utils.DynamoDbService) {
-	dynamodb.SaveItem(JustAiNewsPageKey, strconv.Itoa(value))
+	dynamodb.SaveItem(JustAiNewsPageKey, strconv.Itoa(value+1))
 }
 
 func getCurrentPage(dynamodb *utils.DynamoDbService) (int, error) {
