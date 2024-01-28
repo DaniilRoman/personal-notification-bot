@@ -81,7 +81,7 @@ func main() {
 	}()
 
 	go func() {
-	    justAiNewsChan <- justAiNews.JustAiNews()
+	    justAiNewsChan <- justAiNews.JustAiNews(dynamodb)
 		wg.Done()	
 	}()
 
