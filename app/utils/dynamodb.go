@@ -2,6 +2,7 @@ package utils
 
 import (
 	"log"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -44,7 +45,7 @@ func NewDynamoDbService(accessKey, secretAccessKey, region string, endpointUrl *
 
 func (item *DynamoDbService) GetValueIfChanged(key, newValue string) string {
 	prevValue := item.GetItem(key)
-	if prevValue != newValue {
+	if strings.TrimSpace(prevValue) != strings.TrimSpace(newValue) {
 		item.SaveItem(key, newValue)
 		return newValue
 	} else {
