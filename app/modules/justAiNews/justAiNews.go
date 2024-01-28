@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-const JustAiNewsPageKey = "JustAiNewsPage"
+const JustAiNewsPageKey = "just_ai_news_page"
 
 func JustAiNews(dynamodb *utils.DynamoDbService) *JustAiNewsData {
 	res, err := justAiNews(dynamodb)
