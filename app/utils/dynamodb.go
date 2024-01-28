@@ -43,9 +43,9 @@ func NewDynamoDbService(accessKey, secretAccessKey, region string, endpointUrl *
 }
 
 func (item *DynamoDbService) GetValueIfChanged(key, newValue string) string {
-	prevValue := item.getItem(key)
+	prevValue := item.GetItem(key)
 	if prevValue != newValue {
-		item.saveItem(key, newValue)
+		item.SaveItem(key, newValue)
 		return newValue
 	} else {
 		return ""
@@ -81,7 +81,7 @@ func (si *DynamoDbService) createItemTable() error {
 	return nil
 }
 
-func (si *DynamoDbService) getItem(itemName string) string {
+func (si *DynamoDbService) GetItem(itemName string) string {
 	result, err := si.DynamoDB.GetItem(&dynamodb.GetItemInput{
 		TableName: &si.TableName,
 		Key: map[string]*dynamodb.AttributeValue{
@@ -110,7 +110,7 @@ func (si *DynamoDbService) getItem(itemName string) string {
 	return storedItem.ItemValue
 }
 
-func (si *DynamoDbService) saveItem(key, value string) {
+func (si *DynamoDbService) SaveItem(key, value string) {
 	item := item{si.AppName, key, value}
 	av, err := dynamodbattribute.MarshalMap(item)
 	if err != nil {

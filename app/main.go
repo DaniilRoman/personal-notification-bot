@@ -1,13 +1,14 @@
 package main
 
 import (
-	"main/modules/blogs"
-	"main/modules/currency"
+	blogs "main/modules/blogs"
+	currency "main/modules/currency"
 	hertha "main/modules/herthaTickets"
 	mobilenumber "main/modules/mobileNumber"
 	union "main/modules/unionBerlinTickets"
-	"main/modules/weather"
+	weather "main/modules/weather"
 	word "main/modules/wordOfTheDay"
+	justAiNews "main/modules/justAiNews"
 	"main/utils"
 	"os"
 	"strconv"
@@ -33,7 +34,7 @@ func main() {
 	dynamodb := utils.NewDynamoDbService(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME, nil)
 
 	var wg sync.WaitGroup
-	wg.Add(7)
+	wg.Add(8)
 	weatherChan := make(chan *weather.WeatherData, 1)
 	currencyChan := make(chan *currency.CurrencyData, 1)
 	wordOfTheDayChan := make(chan *word.WordOfTheDayData, 1)
@@ -41,6 +42,7 @@ func main() {
 	unionBerlinTicketsChan := make(chan *union.UnionBerlinTicketsData, 1)
 	mobileNumberChan := make(chan *mobilenumber.MobileNumberData, 1)
 	blogsChan := make(chan *blogs.BlogUpdateData, 1)
+	justAiNewsChan := make(chan *justAiNews.JustAiNewsData, 1)
 
 	go func() {
 	    weatherChan <- weather.GetWeather(OPEN_WHEATHER_API_KEY)
@@ -78,6 +80,11 @@ func main() {
 		wg.Done()	
 	}()
 
+	go func() {
+	    justAiNewsChan <- justAiNews.JustAiNews()
+		wg.Done()	
+	}()
+
 	wg.Wait()
 
 	wordOfTheDayData := <- wordOfTheDayChan
@@ -87,16 +94,21 @@ func main() {
 	currencyData := <- currencyChan
 	blogsUpdatesData := <- blogsChan
 	mobileNimberData := <- mobileNumberChan
+	justAiNewsData := <- justAiNewsChan
 
+
+	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
+		blogsUpdatesData,
+	)
 
 	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
 		weatherData,
 		currencyData,
-		blogsUpdatesData,
 		herthaTicketsData,
 		unionBerlinTicketsData,
 		mobileNimberData,
 		wordOfTheDayData,
+		justAiNewsData,
 	)
 
 

@@ -23,8 +23,8 @@ func (c *BlogUpdateData) String() string {
 	blogStrings := make([]string, len(c.Blogs))
 	for i, blog := range c.Blogs {
 		blogStrings[i] = blog.String()
-	} 
-    return strings.Join(blogStrings, "\n\n")
+	}
+    return "Blogs updates:\n\n" + strings.Join(blogStrings, "\n\n")
 }
 
 func (b *blogUpdate) String() string {

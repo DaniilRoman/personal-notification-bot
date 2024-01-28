@@ -51,6 +51,14 @@ func DoGet(url string, response any) error {
 	return nil
 }
 
+func GetStatusCode(url string) (int, error) {
+	res , err := doGet(url)
+	if err != nil {
+		return 500, err
+	}
+	return res.StatusCode, nil
+}
+
 func GetDoc(url string) (*goquery.Document, error) {
 	res , err := doGet(url)
 	if err != nil {
