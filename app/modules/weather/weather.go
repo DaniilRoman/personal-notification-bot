@@ -36,9 +36,9 @@ func getWeather(token string) (*WeatherData, error) {
 
 
 func (w weatherResponse) GetTodayWeather() *WeatherData {
-	tempNow := w.List[1].Main.Temp // +3 hours ~10:00
-	tempAfternoon := w.List[2].Main.Temp // +6 hours ~13:00
-	tempEvening := w.List[4].Main.Temp // +12 hours ~19:00
+	tempNow := w.List[1].Main.Temp // +3 hours ~09:00
+	tempAfternoon := w.List[2].Main.Temp // +6 hours ~12:00
+	tempEvening := w.List[4].Main.Temp // +12 hours ~18:00
 
 	tempStr := fmt.Sprintf("%.2f  %.2f  %.2f", tempNow, tempAfternoon, tempEvening)
 
