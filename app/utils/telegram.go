@@ -33,7 +33,6 @@ func telegramData(data ...toString) string {
 	
 		}
 	}
-    res = append(res, "[Html page](https://daniilroman.github.io/personal-notification-bot/)")
 	return strings.Join(res, "\n\n")
 }
 

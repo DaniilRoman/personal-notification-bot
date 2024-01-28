@@ -24,7 +24,9 @@ func (c *BlogUpdateData) String() string {
 	for i, blog := range c.Blogs {
 		blogStrings[i] = blog.String()
 	}
-    return "Blogs updates:\n\n" + strings.Join(blogStrings, "\n\n")
+    return "Blogs updates:\n\n" + 
+	strings.Join(blogStrings, "\n\n") + 
+	"[Html page](https://daniilroman.github.io/personal-notification-bot/)"
 }
 
 func (b *blogUpdate) String() string {
