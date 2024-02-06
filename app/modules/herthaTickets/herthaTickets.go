@@ -16,6 +16,9 @@ func HerthaTickets(dynamodb *utils.DynamoDbService) *HerthaTicketsData {
 	if err != nil {
 		log.Printf("Error in Hertha Tickets module: %s", err)
 	}
+	if res == nil {
+		return nil
+	}
 	res.Data = dynamodb.GetValueIfChanged("hertha_tickets", res.Data)
 	return res
 }
