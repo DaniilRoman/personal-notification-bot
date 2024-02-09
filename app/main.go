@@ -115,7 +115,6 @@ func main() {
 	dataForRendering := map[string]interface{} {
 		"Weather" : weatherData,
 		"Currency" : currencyData,
-		"HerthaTickets" : herthaTicketsData,
 		"Blogs" : blogsUpdatesData,
 	}
 	utils.RenderIndexHTML(dataForRendering)

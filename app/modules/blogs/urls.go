@@ -43,6 +43,7 @@ var blogsUrls = []string {
 	"https://research.facebook.com/feed/",
 	"https://www.microsoft.com/en-us/research/feed/",
 	"https://bair.berkeley.edu/blog/feed",
+	"https://www.amazon.science/index.rss",
 
 	// Tech
 	"https://circleci.com/blog/feed.xml",
