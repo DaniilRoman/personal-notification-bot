@@ -73,7 +73,7 @@ func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate
 		}
 		img, summary := getExtraFields(lastArticle, client)
 
-		blogs <- blogUpdate{lastArticle.Title, lastArticle.Link, img, summary}
+		blogs <- NewBlogUpdate(lastArticle.Title, lastArticle.Link, img, summary)
 	}
 }
 

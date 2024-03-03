@@ -32,25 +32,20 @@
   <div class="articles">
     {{range .Blogs.Blogs}}
 
-      <div class="article-summary-wrapper">
-
-        <div class="article-wrapper">
-          <a href="{{.Link}}">
-          <h2 class="article-title">
-            {{.Title}}
-          </h2>
-          </a>
-          <a href="{{.Link}}">
-            <img src="{{.Img}}" width="50%">
-          </a>
-        </div>
-        <button onclick="showHide('{{.Link}}')">summary</button>
-
-        <div id="{{.Link}}" style="display: none">
+      <article class="article">
+        <a href="{{.Link}}">
+          <img src="{{.Img}}" alt="Article Image">
+        </a>
+        <div class="article-content">
+          <div class="author">{{.Author}}</div>
+          <h2 class="article-title">{{.Title}}</h2>
+          <button onclick="showHide('{{.Link}}')">summary</button>
+          <p style="display: none" id="{{.Link}}" class="article-summary">
             {{.Summary}}
+          </p>        
         </div>
-
-      </div>
+  
+      </article>
     {{end}}
   </div>
 
