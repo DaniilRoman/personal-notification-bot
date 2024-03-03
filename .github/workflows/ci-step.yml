@@ -1,4 +1,4 @@
-name: to build on push to the main branch
+name: build on push to the main branch
 on:
   push:
     branches:
@@ -21,4 +21,7 @@ jobs:
       - name: Build Go script
         working-directory: ./app
         run: go build .
+      
+      - name: Test with the Go CLI
+        run: go test
 
