@@ -1,0 +1,24 @@
+name: to build on push to the main branch
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: run script
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.4'
+          cache-dependency-path: |
+             app/go.sum
+
+      - name: Build Go script
+        working-directory: ./app
+        run: go build .
+
