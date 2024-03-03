@@ -1,4 +1,4 @@
-name: telegram notify using golang
+name: notify Telegram and publish a GitHub page
 on:
   workflow_dispatch:
   schedule:
