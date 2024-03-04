@@ -12,6 +12,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mmcdole/gofeed"
 	"github.com/sashabaranov/go-openai"
+	"jaytaylor.com/html2text"
 )
 
 
@@ -113,7 +114,10 @@ func getExtraFields(article *gofeed.Item, client *openai.Client) (string, string
 		return "", ""
 	}
 	img := getImage(doc)
-	summary := getSummary(doc, client)
+	summary, err := getSummary(doc, client)
+	if err != nil {
+		log.Printf("Error is during generating a summary for %s: %s", article.Link, err)
+	}
 	return img, summary
 }
 
@@ -122,12 +126,23 @@ func getImage(doc *goquery.Document) string {
 	return img
 }
 
-func getSummary(doc *goquery.Document, client *openai.Client) string {
-	textToSummarize := doc.Text()
+func getSummary(doc *goquery.Document, client *openai.Client) (string, error) {
+	textToSummarize, err := htmlToText(doc)
+	if err != nil {
+		return "", err
+	}
 	textToSummarize = strings.ReplaceAll(textToSummarize, "\n", " ")
 	textToSummarize = strings.ReplaceAll(textToSummarize, "\t", " ")
 	textToSummarize = strings.ReplaceAll(textToSummarize, "  ", " ")
 
-	return utils.SummarizeText(textToSummarize, client)
+	return utils.SummarizeText(textToSummarize, client), nil
+}
+
+func htmlToText(doc *goquery.Document) (string, error) {
+	html, err := doc.Html()
+	if err != nil {
+		return "", err
+	}
+	return html2text.FromString(html, html2text.Options{PrettyTables: false, TextOnly: true, OmitLinks: true})
 }
 
