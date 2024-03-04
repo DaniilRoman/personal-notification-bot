@@ -128,6 +128,7 @@ func getImage(doc *goquery.Document) string {
 
 func getSummary(doc *goquery.Document, client *openai.Client) (string, error) {
 	textToSummarize, err := htmlToText(doc)
+	textToSummarize = filterLongLines(textToSummarize)
 	if err != nil {
 		return "", err
 	}
@@ -146,3 +147,12 @@ func htmlToText(doc *goquery.Document) (string, error) {
 	return html2text.FromString(html, html2text.Options{PrettyTables: false, TextOnly: true, OmitLinks: true})
 }
 
+func filterLongLines(text string) string {
+	var filteredLines []string
+	for _, line := range strings.Split(text, "\n") {
+		if len(line) > 42 {
+			filteredLines = append(filteredLines, line)
+		}
+	}
+	return strings.Join(filteredLines, " ")
+}
