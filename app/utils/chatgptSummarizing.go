@@ -17,7 +17,7 @@ func SummarizeText(text string, client *openai.Client) string {
     if len(text) > modelLimit {
         text = text[:4000]
     }
-	inputText := "Give me the main ideas of this tech article: " + text
+	inputText := "Why would I want to read this tech article?\n" + text
 	model := openai.GPT3Dot5Turbo
 	maxTokens := 300
 
