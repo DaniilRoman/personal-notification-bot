@@ -1,0 +1,66 @@
+.article {
+  display: flex;
+  flex-direction: row-reverse; /* Image on the right */
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 5px;
+  margin-bottom: 20px;
+  overflow: hidden; /* Clip overflowing image */
+  transition: all 0.3s ease-in-out; /* Smooth transitions on hover */
+}
+
+.article:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.article a {
+  width: 40%;
+  position: relative; /* Enable hover effects on image */
+}
+
+.article img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out; /* Smooth image zoom on hover */
+}
+
+.article:hover img {
+  transform: scale(1.05); /* Zoom image slightly on hover */
+}
+
+.article-content {
+  padding: 20px;
+  flex: 1;
+}
+
+.article-title {
+  margin-bottom: 10px;
+  font-size: 1.2em; /* Slightly larger title */
+  font-weight: bold;
+}
+
+.article-summary {
+  color: #666; /* Subdued text color for summary */
+  line-height: 1.5; /* Increased line spacing for readability */
+}
+
+.author {
+  margin-bottom: 5px;
+  font-size: 0.9em; /* Slightly smaller font for author */
+  color: #aaa; /* Lighter color for author name */
+}
+
+/* Button styles */
+.article button {
+  border: none; /* Remove default border */
+  background-color: #eee; /* Light gray background */
+  padding: 10px 15px; /* Adjust padding as needed */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Indicate interactivity */
+  font-size: 0.9em; /* Slightly smaller font for the button */
+}
+
+.article button:hover {
+  background-color: #ddd; /* Slightly darker background on hover */
+}
