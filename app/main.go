@@ -2,6 +2,7 @@ package main
 
 import (
 	blogs "main/modules/blogs"
+	blogsStats "main/modules/blogsStats"
 	currency "main/modules/currency"
 	hertha "main/modules/herthaTickets"
 	mobilenumber "main/modules/mobileNumber"
@@ -32,6 +33,7 @@ var OPENAI_ORGANIZATION = os.Getenv("OPENAI_ORGANIZATION")
 
 func main() {
 	dynamodb := utils.NewDynamoDbService(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME, nil)
+	chatGptService := utils.NewChatGptService(OPENAI_ACCESS_KEY)
 
 	var wg sync.WaitGroup
 	wg.Add(8)
@@ -75,8 +77,7 @@ func main() {
 	}()
 
 	go func() {
-		client := utils.ConfigureOpenAI(OPENAI_ACCESS_KEY)
-	    blogsChan <- blogs.BlogUpdates(client)
+	    blogsChan <- blogs.BlogUpdates(chatGptService)
 		wg.Done()	
 	}()
 
@@ -96,6 +97,8 @@ func main() {
 	mobileNimberData := <- mobileNumberChan
 	justAiNewsData := <- justAiNewsChan
 
+	blogsStatsData := blogsStats.BlogsStats(blogsUpdatesData.PopularWords(), dynamodb, chatGptService)
+
 
 	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
 		blogsUpdatesData,
@@ -109,6 +112,7 @@ func main() {
 		mobileNimberData,
 		wordOfTheDayData,
 		justAiNewsData,
+		blogsStatsData,
 	)
 
 

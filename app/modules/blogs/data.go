@@ -14,24 +14,36 @@ type blogUpdate struct {
 	Link string
 	Img string
 	Summary string
+	PopularWords string
 	Author string
 }
 
-func NewBlogUpdate(title string, link string, img string, summary string) blogUpdate {
-	return blogUpdate{title, link, img, summary, websiteName(link)}
+func NewBlogUpdate(title string, link string, img string, summary string, popularWords string) blogUpdate {
+	return blogUpdate{title, link, img, summary, popularWords, websiteName(link)}
 }
 
-func (c *BlogUpdateData) String() string {
-	if c == nil {
+func (blogs *BlogUpdateData) String() string {
+	if blogs == nil {
 		return ""
 	}
-	blogStrings := make([]string, len(c.Blogs))
-	for i, blog := range c.Blogs {
+	blogStrings := make([]string, len(blogs.Blogs))
+	for i, blog := range blogs.Blogs {
 		blogStrings[i] = blog.String()
 	}
     return "Blogs updates:\n\n" + 
 	strings.Join(blogStrings, "\n\n") + 
 	"\n\n[Html page](https://daniilroman.github.io/personal-notification-bot/)"
+}
+
+func (blogs *BlogUpdateData) PopularWords() string {
+	if blogs == nil {
+		return ""
+	}
+	popularWords := make([]string, len(blogs.Blogs))
+	for i, blog := range blogs.Blogs {
+		popularWords[i] = blog.PopularWords
+	}
+	return strings.Join(popularWords, ",")
 }
 
 func (b *blogUpdate) String() string {

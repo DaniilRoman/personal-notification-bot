@@ -11,12 +11,11 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mmcdole/gofeed"
-	"github.com/sashabaranov/go-openai"
 	"jaytaylor.com/html2text"
 )
 
 
-func BlogUpdates(client *openai.Client) *BlogUpdateData {
+func BlogUpdates(client *utils.ChatGptService) *BlogUpdateData {
 	blogUpdateData, err := blogUpdates(client)
     if err != nil {
        log.Printf("Error in blogs updates module: %s", err)
@@ -24,7 +23,7 @@ func BlogUpdates(client *openai.Client) *BlogUpdateData {
     return blogUpdateData
 }
 
-func blogUpdates(client *openai.Client) (*BlogUpdateData, error) {
+func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
 	var wg sync.WaitGroup
 	blogsChannel := make(chan blogUpdate)
 	parser := gofeed.NewParser()
@@ -48,7 +47,7 @@ func blogUpdates(client *openai.Client) (*BlogUpdateData, error) {
 	return &BlogUpdateData{titles}, nil
 }
 
-func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *openai.Client) {
+func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService) {
 	defer wg.Done()
 	log.Println("Starting: " + url)
 	defer log.Println("Finished: " + url)
@@ -67,15 +66,14 @@ func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate
 	}
 	lastArticle := feed.Items[0]
 
-	if isArticlePublishedYesterday(lastArticle) {
-		if isInBlacklist(lastArticle) {
-			log.Printf("Article %s in black list", lastArticle.Title)
-			return
-		}
-		img, summary := getExtraFields(lastArticle, client)
-
-		blogs <- NewBlogUpdate(lastArticle.Title, lastArticle.Link, img, summary)
+	if !isArticlePublishedYesterday(lastArticle) || isInBlacklist(lastArticle) {
+		log.Printf("Article %s is filtered out", lastArticle.Title)
+		return
 	}
+
+	img, summary, popularWords := getExtraFields(lastArticle, client)
+
+	blogs <- NewBlogUpdate(lastArticle.Title, lastArticle.Link, img, summary, popularWords)
 }
 
 func isArticlePublishedYesterday(article *gofeed.Item) bool {
@@ -107,18 +105,18 @@ func containsInBlacklistKeywords(s string) bool {
 	return false
 }
 
-func getExtraFields(article *gofeed.Item, client *openai.Client) (string, string) {
+func getExtraFields(article *gofeed.Item, client *utils.ChatGptService) (string, string, string) {
 	doc, err := utils.GetDoc(article.Link)
 	if err != nil {
 		log.Printf("Error in getting blog extra data for %s: %s", article.Link, err)
-		return "", ""
+		return "", "", ""
 	}
 	img := getImage(doc)
-	summary, err := getSummary(doc, client)
+	summary, popularWords, err := getSummaryAndSaveStats(doc, client)
 	if err != nil {
 		log.Printf("Error is during generating a summary for %s: %s", article.Link, err)
 	}
-	return img, summary
+	return img, summary, popularWords
 }
 
 func getImage(doc *goquery.Document) string {
@@ -126,17 +124,32 @@ func getImage(doc *goquery.Document) string {
 	return img
 }
 
-func getSummary(doc *goquery.Document, client *openai.Client) (string, error) {
+func getSummaryAndSaveStats(doc *goquery.Document, client *utils.ChatGptService) (string, string, error) {
 	textToSummarize, err := htmlToText(doc)
 	textToSummarize = filterLongLines(textToSummarize)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	textToSummarize = strings.ReplaceAll(textToSummarize, "\n", " ")
 	textToSummarize = strings.ReplaceAll(textToSummarize, "\t", " ")
 	textToSummarize = strings.ReplaceAll(textToSummarize, "  ", " ")
 
-	return utils.SummarizeText(textToSummarize, client), nil
+	var wg sync.WaitGroup
+	wg.Add(2)
+	
+	summary := ""
+	popularWords := ""
+	go func() {
+		defer wg.Done()
+		summary = client.SummarizeText(textToSummarize)
+	}()
+	go func() {
+		defer wg.Done()
+		popularWords = client.ArticlePopularWords(textToSummarize)
+	}()
+	wg.Wait()
+	
+	return summary, popularWords, nil
 }
 
 func htmlToText(doc *goquery.Document) (string, error) {

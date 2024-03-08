@@ -8,16 +8,40 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func ConfigureOpenAI(apiKey string) *openai.Client {
+type ChatGptService struct {
+	client *openai.Client
+}
+
+func NewChatGptService(apiKey string) *ChatGptService {
+	client := configureOpenAI(apiKey)
+	return &ChatGptService{client}
+}
+
+func configureOpenAI(apiKey string) *openai.Client {
     return openai.NewClient(apiKey)
 }
 
-func SummarizeText(text string, client *openai.Client) string {
-    modelLimit := 4000
+func (service *ChatGptService) SummarizeText(text string) string {
+	prompt := "Why would I want to read this tech article?\n"
+	return service.chatCompletionRequest(text, prompt)
+}
+
+func (service *ChatGptService) ArticlePopularWords(text string) string {
+	prompt := "Here's a tech article below. I'm a developer and my goal is to understand the main idea of this article from technologies point of view. Can you show me the top 10 most popular words that are related to technologies in this tech article? But show it without any formatting, just separate by comma.\n"
+	return service.chatCompletionRequest(text, prompt)
+}
+
+func (service *ChatGptService) AggregatedPopularWords(text string) string {
+	prompt := "Here're the keywords from the different technical articles. They might diverse but have the same meaning at the same time. Can you show me the top 10 most popular words? But show it without any formatting, just separate by comma.\n"
+	return service.chatCompletionRequest(text, prompt)
+}
+
+func (service *ChatGptService) chatCompletionRequest(text string, prompt string) string {
+    modelLimit := 16000
     if len(text) > modelLimit {
-        text = text[:4000]
+        text = text[:modelLimit]
     }
-	inputText := "Why would I want to read this tech article?\n" + text
+	inputText := prompt + text
 	model := openai.GPT3Dot5Turbo
 	maxTokens := 200
 
@@ -33,7 +57,7 @@ func SummarizeText(text string, client *openai.Client) string {
 		MaxTokens:   maxTokens,
 	}
 
-	resp, err := client.CreateChatCompletion(
+	resp, err := service.client.CreateChatCompletion(
         context.Background(),
         request,
     )
