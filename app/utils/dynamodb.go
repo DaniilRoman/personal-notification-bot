@@ -237,3 +237,32 @@ func (service *DynamoDbService) GetStatsFromPrevDays(lastDays []string) string {
 
 	return strings.Join(words, ",")
 }
+
+func (si *DynamoDbService) GetBlogsStat(date string) string {
+	result, err := si.DynamoDB.GetItem(&dynamodb.GetItemInput{
+		TableName: &si.blogsStatsTableName,
+		Key: map[string]*dynamodb.AttributeValue{
+			"stat_name":  {S: aws.String(si.popularWordsStatName)},
+			"date": {S: aws.String(date)},
+		},
+	})
+
+	if err != nil {
+		log.Printf("operation failed: %w", err)
+		return ""
+	}
+
+	if result.Item == nil {
+		log.Printf("operation failed: %w", err)
+		return ""
+	}
+
+	var stats blogsStats
+	err = dynamodbattribute.UnmarshalMap(result.Item, &stats)
+	if err != nil {
+		log.Printf("operation failed: %w", err)
+		return ""
+	}
+
+	return stats.StatValue
+}

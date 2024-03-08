@@ -14,19 +14,34 @@ var monthFormat string = "2006-01"
 func BlogsStats(popularWords string, dynamodb *utils.DynamoDbService, chatGpt *utils.ChatGptService) *BlogsStatsData {
     saveTodaysStats(popularWords, dynamodb)
 
+    sundayStats := ""
+    monthStats := ""
+
     if sunday() {
         collectedPopularWords := popularWordsFromPrevWeek(dynamodb)
         collectedPopularWords += ","+popularWords        
         weekPopularWords := chatGpt.AggregatedPopularWords(collectedPopularWords)
         saveWeekStats(weekPopularWords, dynamodb)
-        return &BlogsStatsData{weekPopularWords}
+        sundayStats = weekPopularWords
     }
-    return nil
+
+    if lastDayOfMonth() {
+        collectedPopularWords := dynamodb.GetBlogsStat(today.Format(monthFormat))
+        monthStats = chatGpt.AggregatedPopularWords(collectedPopularWords)
+    }
+
+    return &BlogsStatsData{sundayStats, monthStats}
 }
 
 func sunday() bool {
     weekday := today.Weekday()
     return weekday == time.Sunday 
+}
+
+func lastDayOfMonth() bool {
+    todayMonth := today.Format(monthFormat)
+    tomorrowMonth := today.AddDate(0, 0, 1).Format(monthFormat)
+    return todayMonth != tomorrowMonth 
 }
 
 func saveTodaysStats(popularWords string, dynamodb *utils.DynamoDbService) {
