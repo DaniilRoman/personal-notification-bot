@@ -34,7 +34,7 @@
     {{range .Blogs.Blogs}}
 
       <article class="article">
-        <a href="{{.Link}}">
+        <a onclick="trackClick({{.Link}})" href="{{.Link}}">
           <img src="{{.Img}}" alt="Article Image">
         </a>
         <div class="article-content">

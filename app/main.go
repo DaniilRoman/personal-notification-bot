@@ -30,6 +30,7 @@ var REGION_NAME = os.Getenv("REGION_NAME")
 var OPENAI_ACCESS_KEY = os.Getenv("OPENAI_ACCESS_KEY")
 var OPENAI_ORGANIZATION = os.Getenv("OPENAI_ORGANIZATION")
 
+var APP_SCRIPT_ID = os.Getenv("APP_SCRIPT_ID")
 
 func main() {
 	dynamodb := utils.NewDynamoDbService(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME, nil)
@@ -120,6 +121,7 @@ func main() {
 		"Weather" : weatherData,
 		"Currency" : currencyData,
 		"Blogs" : blogsUpdatesData,
+		"AppScriptId": APP_SCRIPT_ID,
 	}
-	utils.RenderIndexHTML(dataForRendering)
+	utils.RenderWwwResources(dataForRendering)
 }
