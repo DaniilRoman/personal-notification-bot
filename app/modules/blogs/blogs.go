@@ -67,7 +67,7 @@ func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate
 	lastArticle := feed.Items[0]
 
 	if !isArticlePublishedYesterday(lastArticle) || isInBlacklist(lastArticle) {
-		log.Printf("Article %s is filtered out", lastArticle.Title)
+		// log.Printf("Article %s is filtered out", lastArticle.Title)
 		return
 	}
 

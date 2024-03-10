@@ -133,19 +133,19 @@ func (si *DynamoDbService) GetItem(itemName string) string {
 	})
 
 	if err != nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("get item operation failed: %w", err)
 		return ""
 	}
 
 	if result.Item == nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("Item is nil with the name: %s", itemName)
 		return ""
 	}
 
 	var storedItem item
 	err = dynamodbattribute.UnmarshalMap(result.Item, &storedItem)
 	if err != nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("unmarshal item operation failed: %w", err)
 		return ""
 	}
 
@@ -156,7 +156,7 @@ func (si *DynamoDbService) SaveItem(key, value string) {
 	item := item{si.appName, key, value}
 	av, err := dynamodbattribute.MarshalMap(item)
 	if err != nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("unmarshal item operation failed: %w", err)
 		return
 	}
 
@@ -167,7 +167,7 @@ func (si *DynamoDbService) SaveItem(key, value string) {
 
 	_, err = si.DynamoDB.PutItem(input)
 	if err != nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("save item operation failed: %w", err)
 	}
 }
 
@@ -175,7 +175,7 @@ func (si *DynamoDbService) SavePopularWords(key, value string) {
 	stat := blogsStats{si.popularWordsStatName, key, value}
 	av, err := dynamodbattribute.MarshalMap(stat)
 	if err != nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("unmarshal stat operation failed: %w", err)
 		return
 	}
 
@@ -186,7 +186,7 @@ func (si *DynamoDbService) SavePopularWords(key, value string) {
 
 	_, err = si.DynamoDB.PutItem(input)
 	if err != nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("save stat operation failed: %w", err)
 	}
 }
 
@@ -248,12 +248,12 @@ func (si *DynamoDbService) GetBlogsStat(date string) string {
 	})
 
 	if err != nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("get blog stats operation failed: %w", err)
 		return ""
 	}
 
 	if result.Item == nil {
-		log.Printf("operation failed: %w", err)
+		log.Printf("Blog stat is nil for a date: %s", date)
 		return ""
 	}
 

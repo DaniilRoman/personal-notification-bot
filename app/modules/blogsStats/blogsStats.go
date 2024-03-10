@@ -1,9 +1,9 @@
 package blogsStats
 
 import (
-    "time"
+	"log"
 	"main/utils"
-
+	"time"
 )
 
 var today time.Time = time.Now()
@@ -18,16 +18,20 @@ func BlogsStats(popularWords string, dynamodb *utils.DynamoDbService, chatGpt *u
     monthStats := ""
 
     if sunday() {
+		log.Printf("Runnung a statistic for a week...")
         collectedPopularWords := popularWordsFromPrevWeek(dynamodb)
         collectedPopularWords += ","+popularWords        
         weekPopularWords := chatGpt.AggregatedPopularWords(collectedPopularWords)
         saveWeekStats(weekPopularWords, dynamodb)
         sundayStats = weekPopularWords
+		log.Printf("Finished a statistic for a week.")
     }
 
     if lastDayOfMonth() {
+		log.Printf("Runnung a statistic for a month...")
         collectedPopularWords := dynamodb.GetBlogsStat(today.Format(monthFormat))
         monthStats = chatGpt.AggregatedPopularWords(collectedPopularWords)
+		log.Printf("Finished a statistic for a month.")
     }
 
     return &BlogsStatsData{sundayStats, monthStats}
@@ -45,6 +49,9 @@ func lastDayOfMonth() bool {
 }
 
 func saveTodaysStats(popularWords string, dynamodb *utils.DynamoDbService) {
+    if popularWords == "" {
+        return
+    }
     itemKey := today.Format(dayFormat)
     dynamodb.SavePopularWords(itemKey, popularWords)
 }
