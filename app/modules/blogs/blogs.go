@@ -49,8 +49,8 @@ func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
 
 func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService) {
 	defer wg.Done()
-	log.Println("Starting: " + url)
-	defer log.Println("Finished: " + url)
+	// log.Println("Starting: " + url)
+	// defer log.Println("Finished: " + url)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
