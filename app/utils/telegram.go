@@ -9,6 +9,9 @@ import (
 
 func SendToTelegram(token string, chatId int64, data ...toString) {
 	message := telegramData(data...)
+	if message == "" {
+		return;
+	}
 
 	bot, err := tgbotapi.NewBotAPI(token)
     if err != nil {

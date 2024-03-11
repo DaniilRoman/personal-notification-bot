@@ -23,7 +23,7 @@ func NewBlogUpdate(title string, link string, img string, summary string, popula
 }
 
 func (blogs *BlogUpdateData) String() string {
-	if blogs == nil {
+	if blogs == nil || len(blogs.Blogs) == 0 {
 		return ""
 	}
 	blogStrings := make([]string, len(blogs.Blogs))
