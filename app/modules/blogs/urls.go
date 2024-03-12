@@ -68,6 +68,9 @@ var blogsUrls = []string{
 	"https://medium.com/feed/strava-engineering",
 	"https://engineering.linkedin.com/blog.rss.html",
 	"https://www.reddit.com/r/RedditEng/.rss",
+	"https://doordash.engineering/category/backend/feed/",
+	"https://doordash.engineering/category/data-platform/feed/",
+	"https://doordash.engineering/category/data-science-and-machine-learning/feed/",
 
 	// Company blogs to delete
 	"https://engineering.fb.com/feed/",
