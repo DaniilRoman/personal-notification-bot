@@ -18,7 +18,7 @@ func RenderWwwResources(data map[string]interface{}) {
 }
 
 func renderIndexHTML(data map[string]interface{}) {
-	templatePath := fmt.Sprintf("%s/%s/template.html", mainDir, wwwDir)
+	templatePath := fmt.Sprintf("%s/%s/indexTemplate.html", mainDir, wwwDir)
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {
 		log.Fatalf("Error parsing template: %v", err)
