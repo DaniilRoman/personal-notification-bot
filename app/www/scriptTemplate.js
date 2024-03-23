@@ -16,12 +16,11 @@ function trackClick(url) {
 }
 
 function doGet(url) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', url);
-
-  xhr.onerror = function(error) {
-    console.error('Error:', error);
-  };
-
-  xhr.send();
+  fetch(url, { mode: 'no-cors'})
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function(err) {
+    console.log('Fetch Error: ', err);
+  });
 }
