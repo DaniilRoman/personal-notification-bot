@@ -3,6 +3,7 @@ package blogsStats
 import (
 	"log"
 	"main/utils"
+	"strings"
 	"time"
 )
 
@@ -15,6 +16,7 @@ func BlogsStats(popularWords string, dynamodb *utils.DynamoDbService, chatGpt *u
     saveTodaysStats(popularWords, dynamodb)
 
     sundayStats := ""
+    newWeekWords := ""
     monthStats := ""
 
     if sunday() {
@@ -22,6 +24,7 @@ func BlogsStats(popularWords string, dynamodb *utils.DynamoDbService, chatGpt *u
         collectedPopularWords := popularWordsFromPrevWeek(dynamodb)
         collectedPopularWords += ","+popularWords        
         weekPopularWords := chatGpt.AggregatedPopularWords(collectedPopularWords)
+        newWeekWords = calculateNewKeywordsForWeek(weekPopularWords, dynamodb)
         saveWeekStats(weekPopularWords, dynamodb)
         sundayStats = weekPopularWords
 		log.Printf("Finished a statistic for a week.")
@@ -34,7 +37,7 @@ func BlogsStats(popularWords string, dynamodb *utils.DynamoDbService, chatGpt *u
 		log.Printf("Finished a statistic for a month.")
     }
 
-    return &BlogsStatsData{sundayStats, monthStats}
+    return &BlogsStatsData{sundayStats, monthStats, newWeekWords}
 }
 
 func sunday() bool {
@@ -69,4 +72,40 @@ func popularWordsFromPrevWeek(dynamodb *utils.DynamoDbService) string {
     day5 := today.AddDate(0, 0, -5).Format(dayFormat)
     day6 := today.AddDate(0, 0, -6).Format(dayFormat)
     return dynamodb.GetStatsFromPrevDays([]string{day1, day2, day3, day4, day5, day6})
+}
+
+func calculateNewKeywordsForWeek(weekPopularWords string, dynamodb *utils.DynamoDbService) string {
+    currentMonthKeywords := dynamodb.GetItem(today.Format(monthFormat))
+    currentMonthKeywordsArray := toArray(currentMonthKeywords)
+    currentWeekKeywordsArray := toArray(weekPopularWords)
+    newWeekWords := findNonDuplicates(currentMonthKeywordsArray, currentWeekKeywordsArray)
+    return strings.Join(newWeekWords, ",")
+}
+
+func toArray(popularWords string) []string {
+    keywords := strings.Split(popularWords, ",")
+
+	for i, keyword := range keywords {
+		keywords[i] = strings.TrimSpace(keyword)
+	}
+    return keywords
+}
+
+
+func findNonDuplicates(arr1 []string, arr2 []string) []string {
+	// Create a map to store elements from the first array for efficient lookup
+	seen := make(map[string]bool)
+	for _, element := range arr1 {
+		seen[element] = true
+	}
+
+	// Iterate through the second array and add non-duplicates to a new slice
+	var nonDuplicates []string
+	for _, element := range arr2 {
+		if !seen[element] {
+			nonDuplicates = append(nonDuplicates, element)
+		}
+	}
+
+	return nonDuplicates
 }
