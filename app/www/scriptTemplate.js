@@ -11,7 +11,7 @@ function trackClick(url) {
   const websiteUrl = new URL(url);
   const hostname = websiteUrl.hostname
   const appScriptId = "{{.AppScriptId}}"
-  const appscriptEndpoint = `https://script.google.com/macros/s/${appScriptId}/exec?url="${hostname}"`
+  const appscriptEndpoint = `https://script.google.com/macros/s/${appScriptId}/exec?value="${hostname}"&sheet="clicks"`
   doGet(appscriptEndpoint)
 }
 
