@@ -19,7 +19,7 @@ type blogUpdate struct {
 }
 
 func NewBlogUpdate(title string, link string, img string, summary string, popularWords string) blogUpdate {
-	return blogUpdate{title, link, img, summary, popularWords, websiteName(link)}
+	return blogUpdate{title, link, img, summary, popularWords, substractedUrl(link)}
 }
 
 func (blogs *BlogUpdateData) String() string {
@@ -53,5 +53,21 @@ func (b *blogUpdate) String() string {
 }
 
 func websiteName(link string) string {
-	return strings.Split(strings.TrimPrefix(strings.TrimPrefix(link, "https://"), "http://"), "/")[0]
+	if strings.Contains(link, "medium.com") {
+		urlParts := strings.Split(link, "/")
+		if len(urlParts) > 4 {
+		  return urlParts[4]
+		}
+	}
+	if strings.Contains(link, "habr.com") {
+		urlParts := strings.Split(link, "/")
+		if len(urlParts) > 6 {
+		  return urlParts[6]
+		}
+	}
+	return substractedUrl(link)
+}
+
+func substractedUrl(link string) string {
+	return  strings.Split(strings.TrimPrefix(strings.TrimPrefix(link, "https://"), "http://"), "/")[0]
 }
