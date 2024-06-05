@@ -8,11 +8,12 @@ import (
 
 const wordOfTheDayURL = "https://www.nytimes.com/column/learning-word-of-the-day"
 
-func WordOfTheDay() *WordOfTheDayData {
+func WordOfTheDay(dynamodb *utils.DynamoDbService) *WordOfTheDayData {
 	res, err := wordOfTheDay()
     if err != nil {
 		log.Printf("Error in Word of the day module: %s", err)
-	 }
+	}
+	res.data = dynamodb.GetValueIfChanged("word_of_the_day", res.data)
 	return res
 }
 

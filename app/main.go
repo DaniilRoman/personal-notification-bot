@@ -58,7 +58,7 @@ func main() {
 	}()
 
 	go func() {
-	    wordOfTheDayChan <- word.WordOfTheDay()
+	    wordOfTheDayChan <- word.WordOfTheDay(dynamodb)
 		wg.Done()	
 	}()
 
