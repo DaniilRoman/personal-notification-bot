@@ -94,7 +94,7 @@ func toArray(popularWords string) []string {
 
 func findNonDuplicates(arr1 []string, arr2 []string) []string {
 	// Create a map to store elements from the first array for efficient lookup
-	seen := make(map[string]bool)
+	seen := map[string]bool{}
 	for _, element := range arr1 {
 		seen[element] = true
 	}
