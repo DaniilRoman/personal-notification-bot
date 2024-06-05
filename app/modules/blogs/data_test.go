@@ -12,13 +12,13 @@ func Test_websiteName(t *testing.T) {
 }
 
 func Test_websiteName_medium(t *testing.T) {
-	actualUrl := websiteName("https://medium.com/feed/paypal-tech")
+	actualUrl := websiteName("https://medium.com/adevinta-tech-blog/oops-i-forgot-to-publish-how-can-i-connect-to-the-container-then-8391a3b76c71?source=rss----19a122f075bd---4")
 
-	assert.Equal(t, "paypal-tech", actualUrl)
+	assert.Equal(t, "adevinta-tech-blog", actualUrl)
 }
 
 func Test_websiteName_habr(t *testing.T) {
-	actualUrl := websiteName("https://habr.com/ru/rss/company/just_ai/blog/?fl=ru")
+	actualUrl := websiteName("https://habr.com/ru/companies/ozontech/articles/817737/?utm_source=habrahabr&utm_medium=rss&utm_campaign=corporate_blog")
 
-	assert.Equal(t, "just_ai", actualUrl)
+	assert.Equal(t, "ozontech", actualUrl)
 }

@@ -55,14 +55,14 @@ func (b *blogUpdate) String() string {
 func websiteName(link string) string {
 	if strings.Contains(link, "medium.com") {
 		urlParts := strings.Split(link, "/")
-		if len(urlParts) > 4 {
-		  return urlParts[4]
+		if len(urlParts) > 3 {
+		  return urlParts[3]
 		}
 	}
 	if strings.Contains(link, "habr.com") {
 		urlParts := strings.Split(link, "/")
-		if len(urlParts) > 6 {
-		  return urlParts[6]
+		if len(urlParts) > 5 {
+		  return urlParts[5]
 		}
 	}
 	return substractedUrl(link)
