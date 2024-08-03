@@ -1,6 +1,9 @@
 package weather
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type WeatherData struct {
 	Temp string
@@ -13,6 +16,14 @@ func (w *WeatherData) String() string {
 		return ""
 	}
 	weatherMsg := "Weather today in Berlin Köpenick:\n"
-	weatherMsg += fmt.Sprintf("%s\n%s\nSunset at %s", w.Temp, w.Precipitation, w.SunsetTime)
+	precipitationEmoji := replacePrecipitationToEmoji(w.Precipitation)
+	weatherMsg += fmt.Sprintf("🌡️ %s\n%s\n🌇 Sunset at %s", w.Temp, precipitationEmoji, w.SunsetTime)
 	return weatherMsg
+}
+
+func replacePrecipitationToEmoji(s string) string {
+	s = strings.ReplaceAll(s, "Clouds", "☁️")
+	s = strings.ReplaceAll(s, "Clear", "☀️")
+	s = strings.ReplaceAll(s, "Rain", "🌧️")
+	return s
 }
