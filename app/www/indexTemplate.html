@@ -34,16 +34,21 @@
     {{range .Blogs.Blogs}}
 
       <article class="article">
-        <a onclick="trackClick('{{.Link}}')" href="{{.Link}}">
-          <img src="{{.Img}}" alt="Article Image">
-        </a>
+        <div class="article-top article-content">
+          <div class="article-content">
+            <div class="author">{{.Author}}</div>
+            <h2 class="article-title">{{.Title}}</h2>     
+          </div>
+          <a onclick="trackClick('{{.Link}}')" href="{{.Link}}">
+            <img src="{{.Img}}" alt="Article Image">
+          </a>
+        </div>
+
         <div class="article-content">
-          <div class="author">{{.Author}}</div>
-          <h2 class="article-title">{{.Title}}</h2>
           <button onclick="showHide('{{.Link}}')">summary</button>
           <p style="display: none" id="{{.Link}}" class="article-summary">
             {{.Summary}}
-          </p>        
+          </p>   
         </div>
   
       </article>

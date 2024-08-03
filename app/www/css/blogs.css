@@ -1,12 +1,17 @@
 .article {
   display: flex;
-  flex-direction: row-reverse; /* Image on the right */
+  flex-direction: column;
   background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   border-radius: 5px;
   margin-bottom: 20px;
   overflow: hidden; /* Clip overflowing image */
   transition: all 0.3s ease-in-out; /* Smooth transitions on hover */
+}
+
+.article-top {
+  flex-direction: row;
+  display: flex;
 }
 
 .article:hover {
