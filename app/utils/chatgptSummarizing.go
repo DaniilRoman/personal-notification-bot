@@ -36,6 +36,11 @@ func (service *ChatGptService) AggregatedPopularWords(text string) string {
 	return service.chatCompletionRequest(text, prompt)
 }
 
+func (service *ChatGptService) CommonSummaryFromSeveralNews(text string) string {
+	prompt := "Here're the several different technical article summaries separated by a new line. Could you please summarise what happend in these articles.\n"
+	return service.chatCompletionRequest(text, prompt)
+}
+
 func (service *ChatGptService) chatCompletionRequest(text string, prompt string) string {
     modelLimit := 16000
     if len(text) > modelLimit {

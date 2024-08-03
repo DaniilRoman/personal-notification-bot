@@ -3,6 +3,7 @@ package main
 import (
 	blogs "main/modules/blogs"
 	blogsStats "main/modules/blogsStats"
+	blogsSummary "main/modules/blogsSummary"
 	currency "main/modules/currency"
 	hertha "main/modules/herthaTickets"
 	mobilenumber "main/modules/mobileNumber"
@@ -99,7 +100,7 @@ func main() {
 	justAiNewsData := <- justAiNewsChan
 
 	blogsStatsData := blogsStats.BlogsStats(blogsUpdatesData.PopularWords(), dynamodb, chatGptService)
-
+	blogsSummaryData := blogsSummary.BlogsSummary(blogsUpdatesData, chatGptService)
 
 	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
 		blogsUpdatesData,
@@ -116,6 +117,9 @@ func main() {
 		blogsStatsData,
 	)
 
+	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
+		blogsSummaryData,
+	)
 
 	dataForRendering := map[string]interface{} {
 		"Weather" : weatherData,
