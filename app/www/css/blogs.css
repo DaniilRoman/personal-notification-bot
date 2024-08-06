@@ -35,13 +35,13 @@
 }
 
 .article-content {
-  padding: 20px;
+  padding: 15%;
   flex: 1;
 }
 
 .article-title {
   margin-bottom: 10px;
-  font-size: 1.2em; /* Slightly larger title */
+  font-size: 1.2rem; /* Slightly larger title */
   font-weight: bold;
 }
 
@@ -68,4 +68,20 @@
 
 .article button:hover {
   background-color: #ddd; /* Slightly darker background on hover */
+}
+
+@media only screen and (max-width: 768px) {
+  /* Styles for screens less than 768px wide */
+  .article {
+    flex-direction: column; /* Make articles stack vertically */
+    width: 100%; /* Make articles take full width */
+  }
+
+  .article-top {
+    flex-direction: column; /* Stack image and content on top of each other */
+  }
+
+  .article a {
+    width: 100%; /* Make image take full width */
+  }
 }
