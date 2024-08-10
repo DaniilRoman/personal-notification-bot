@@ -17,6 +17,7 @@ var blogsUrls = []string{
 	// Interesting company blogs
 	"https://medium.com/feed/netcracker",
 	"https://habr.com/ru/rss/company/just_ai/blog/?fl=ru",
+	"https://medium.com/feed/tovieai",
 	"https://medium.com/feed/adevinta-tech-blog",
 
 	"https://slack.engineering/feed/",
