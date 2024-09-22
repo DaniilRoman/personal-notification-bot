@@ -27,8 +27,10 @@ func (service *ChatGptService) SummarizeText(text string) string {
 }
 
 func (service *ChatGptService) ArticlePopularWords(text string) string {
-	prompt := "Here's a tech article below. I'm a developer and my goal is to understand the main idea of this article from technologies point of view. Can you show me the top 10 most popular words that are related to technologies in this tech article? But show it without any formatting, just separate by comma.\n"
-	return service.chatCompletionRequest(text, prompt)
+	// TODO either refactor and fix or remove completely
+	// prompt := "Here's a tech article below. I'm a developer and my goal is to understand the main idea of this article from technologies point of view. Can you show me the top 10 most popular words that are related to technologies in this tech article? But show it without any formatting, just separate by comma.\n"
+	// return service.chatCompletionRequest(text, prompt)
+	return ""
 }
 
 func (service *ChatGptService) AggregatedPopularWords(text string) string {
