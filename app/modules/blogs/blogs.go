@@ -141,11 +141,11 @@ func getSummaryAndSaveStats(doc *goquery.Document, client *utils.ChatGptService)
 	popularWords := ""
 	go func() {
 		defer wg.Done()
-		summary = client.SummarizeText(textToSummarize)
+		// summary = client.SummarizeText(textToSummarize)
 	}()
 	go func() {
 		defer wg.Done()
-		popularWords = client.ArticlePopularWords(textToSummarize)
+		// popularWords = client.ArticlePopularWords(textToSummarize)
 	}()
 	wg.Wait()
 	
