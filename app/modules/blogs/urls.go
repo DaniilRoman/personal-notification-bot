@@ -22,15 +22,33 @@ var blogsUrls = []string{
 
 	"https://slack.engineering/feed/",
 	"https://engineering.atspotify.com/feed/",
-	"https://engineering.zalando.com/atom.xml",
-	"https://github.blog/feed/",
 	"https://netflixtechblog.com/feed",
 	"https://eng.lyft.com/feed",
 	"https://stackoverflow.blog/feed",
 	"https://medium.com/feed/tinder",
 	"https://medium.com/feed/bbc-product-technology",
 	"https://open.nytimes.com/feed",
-	"https://neo4j.com/developer-blog/feed/",
+	"https://developers.facebook.com/blog/feed",
+
+	// E-commerce
+	"https://engineering.zalando.com/atom.xml",
+	"https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
+	"https://habr.com/ru/rss/company/avito/blog/?fl=ru",
+	"https://habr.com/ru/rss/company/lamoda/blog/?fl=ru",
+	"https://tech.ebayinc.com/rss",
+	"https://vinted.engineering/atom.xml",
+	"https://www.wix.engineering/blog-feed.xml",
+	"https://engineering.squarespace.com/blog?format=rss",
+	"https://www.etsy.com/de-en/codeascraft/rss",
+	"https://techlab.bol.com/api/v1/en/newsFeed/",
+	"https://blog.allegro.tech/feed.xml",
+
+	// Tech products
+	"https://github.blog/feed/",
+	"https://circleci.com/blog/feed.xml",
+	"https://kubernetes.io/feed.xml",
+	"https://debezium.io/blog.atom",
+	"https://www.elastic.co/blog/feed",
 
 	// Research labs
 	// https://githubnext.com, # didn't find rss feed,
@@ -42,11 +60,7 @@ var blogsUrls = []string{
 	"https://www.amazon.science/index.rss",
 
 	// Tech
-	"https://www.docker.com/blog/category/engineering/feed/",
-	"https://redis.com/blog/rss",
 	"https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
-	"https://about.gitlab.com/atom.xml",
-	"https://feeds.feedburner.com/ContinuousBlog/", // Jenkins
 	"https://www.cncf.io/blog/feed/",
 
 	// Others company bogs
@@ -58,13 +72,9 @@ var blogsUrls = []string{
 	"https://blog.cloudflare.com/tag/developers",
 	// "https://www.uber.com/en-DE/blog/engineering/rss", // TODO http error: 406 Not Acceptable
 	"https://medium.com/feed/miro-engineering",
-	"https://habr.com/ru/rss/company/ozontech/blog/?fl=ru",
-	"https://habr.com/ru/rss/company/avito/blog/?fl=ru",
-	"https://habr.com/ru/rss/company/lamoda/blog/?fl=ru",
 	"https://habr.com/ru/rss/company/nspk/blog/?fl=ru",
 	"https://canvatechblog.com/feed",
 	"https://deliveroo.engineering/feed",
-	"https://tech.ebayinc.com/rss",
 	"https://medium.com/feed/paypal-tech",
 	"https://medium.com/feed/strava-engineering",
 	"https://engineering.linkedin.com/blog.rss.html",
@@ -83,10 +93,6 @@ var blogsUrls = []string{
 	// "https://spring.io/blog.atom",
 	// "https://www.mongodb.com/blog/rss",
 	"https://blog.jetbrains.com/kotlin/category/server/feed/",
-	"https://circleci.com/blog/feed.xml",
-	"https://kubernetes.io/feed.xml",
-	"https://debezium.io/blog.atom",
-	"https://www.elastic.co/blog/feed",
 	"https://in.relation.to/blog.atom", // Hibernate
 	"https://www.hashicorp.com/blog/categories/products-technology/feed.xml",
 }
