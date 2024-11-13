@@ -49,6 +49,7 @@ var blogsUrls = []string{
 	"https://kubernetes.io/feed.xml",
 	"https://debezium.io/blog.atom",
 	"https://www.elastic.co/blog/feed",
+	"https://blog.healthchecks.io/feed/",
 
 	// Research labs
 	// https://githubnext.com, # didn't find rss feed,
