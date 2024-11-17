@@ -59,6 +59,7 @@ var blogsUrls = []string{
 	"https://www.microsoft.com/en-us/research/feed/",
 	"https://bair.berkeley.edu/blog/feed",
 	"https://www.amazon.science/index.rss",
+	"https://www.elastic.co/search-labs/rss/feed",
 
 	// Tech
 	"https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
