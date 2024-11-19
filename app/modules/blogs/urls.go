@@ -13,6 +13,7 @@ var blogsUrls = []string{
 	"https://vladmihalcea.com/blog/feed/",
 	"https://piotrminkowski.com/feed/",
 	"https://blog.alexellis.io/rss/",
+	"https://feeds.feedburner.com/martinkl?format=xml",
 
 	// Interesting company blogs
 	"https://medium.com/feed/netcracker",
