@@ -8,7 +8,7 @@ require (
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/sashabaranov/go-openai v1.37.0
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	jaytaylor.com/html2text v0.0.0-20230321000545-74c2419ad056
 )
 
