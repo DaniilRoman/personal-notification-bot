@@ -4,7 +4,7 @@ go 1.21.4
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.1
-	github.com/aws/aws-sdk-go v1.48.16
+	github.com/aws/aws-sdk-go v1.55.6
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/sashabaranov/go-openai v1.37.0
