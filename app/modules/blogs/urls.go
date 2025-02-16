@@ -10,6 +10,7 @@ var blackListKeywords = []string{
 
 var blogsUrls = []string{
 	// Personal blogs
+	"https://vas3k.blog/rss/",
 	"https://vladmihalcea.com/blog/feed/",
 	"https://piotrminkowski.com/feed/",
 	"https://blog.alexellis.io/rss/",
