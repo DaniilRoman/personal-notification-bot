@@ -17,6 +17,9 @@ var blogsUrls = []string{
 	"https://piotrminkowski.com/feed/",
 	"https://blog.alexellis.io/rss/",
 	"https://feeds.feedburner.com/martinkl?format=xml",
+	"https://world.hey.com/dhh/feed.atom",
+	"https://world.hey.com/jason/feed.atom",
+	"https://news.google.com/rss/search?q=site:x.com/levelsio+when:1d&hl=en-US&gl=US&ceid=US:en",
 
 	// Interesting company blogs
 	"https://medium.com/feed/netcracker",
