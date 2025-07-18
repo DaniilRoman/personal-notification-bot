@@ -21,6 +21,7 @@ var blogsUrls = []string{
 	"https://world.hey.com/jason/feed.atom",
 	"https://news.google.com/rss/search?q=site:x.com/levelsio+when:1d&hl=en-US&gl=US&ceid=US:en",
 	"https://news.ycombinator.com/rss",
+	"https://feeds.feedburner.com/eu-startups",
 
 	// Interesting company blogs
 	"https://medium.com/feed/netcracker",
