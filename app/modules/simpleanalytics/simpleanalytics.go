@@ -13,7 +13,7 @@ import (
 
 func MakeSimpleAnalyticsScreenshot() {
 	if err := os.MkdirAll("./data/images", 0755); err != nil {
-		return err
+		log.Printf("Error in SimpleAnalytics while creating the folders: %s", err)
 	}
 
 	var wg sync.WaitGroup
