@@ -41,8 +41,8 @@ func makeSimpleAnalyticsScreenshot(projectName string) {
 	// Configure options for chrome
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		// Disable sandbox in CI environment
-		chromedp.Flag("no-sandbox", false),
-		chromedp.Flag("disable-setuid-sandbox", false),
+		chromedp.Flag("no-sandbox", true),
+		chromedp.Flag("disable-setuid-sandbox", true),
 		// Add additional options for stability
 		chromedp.Flag("disable-gpu", true),
 		chromedp.Flag("headless", true),
