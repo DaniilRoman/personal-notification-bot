@@ -38,11 +38,25 @@ func MakeSimpleAnalyticsScreenshot() {
 }
 
 func makeSimpleAnalyticsScreenshot(projectName string) {
-	// Create a context
-	ctx, cancel := chromedp.NewContext(context.Background())
+	// Configure options for chrome
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		// Disable sandbox in CI environment
+		chromedp.Flag("no-sandbox", os.Getenv("CI") != ""),
+		chromedp.Flag("disable-setuid-sandbox", os.Getenv("CI") != ""),
+		// Add additional options for stability
+		chromedp.Flag("disable-gpu", true),
+		chromedp.Flag("headless", true),
+	)
+
+	// Create allocator context
+	allocCtx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 	defer cancel()
 
-	// Give Chrome some time
+	// Create browser context
+	ctx, cancel := chromedp.NewContext(allocCtx)
+	defer cancel()
+
+	// Set timeout for the entire operation
 	ctx, cancel = context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
