@@ -4,17 +4,17 @@ import (
 	blogs "main/modules/blogs"
 	currency "main/modules/currency"
 	hertha "main/modules/herthaTickets"
+	justAiNews "main/modules/justAiNews"
 	mobilenumber "main/modules/mobileNumber"
+	simpleanalytics "main/modules/simpleanalytics"
 	union "main/modules/unionBerlinTickets"
 	weather "main/modules/weather"
 	word "main/modules/wordOfTheDay"
-	justAiNews "main/modules/justAiNews"
 	"main/utils"
 	"os"
 	"strconv"
 	"sync"
 )
-
 
 var OPEN_WHEATHER_API_KEY = os.Getenv("OPEN_WHEATHER_API_KEY")
 var EXCHANGERATE_API_KEY = os.Getenv("EXCHANGERATE_API_KEY")
@@ -36,7 +36,7 @@ func main() {
 	chatGptService := utils.NewChatGptService(OPENAI_ACCESS_KEY)
 
 	var wg sync.WaitGroup
-	wg.Add(8)
+	wg.Add(9)
 	weatherChan := make(chan *weather.WeatherData, 1)
 	currencyChan := make(chan *currency.CurrencyData, 1)
 	wordOfTheDayChan := make(chan *word.WordOfTheDayData, 1)
@@ -47,55 +47,62 @@ func main() {
 	justAiNewsChan := make(chan *justAiNews.JustAiNewsData, 1)
 
 	go func() {
-	    weatherChan <- weather.GetWeather(OPEN_WHEATHER_API_KEY)
-		wg.Done()	
+		weatherChan <- weather.GetWeather(OPEN_WHEATHER_API_KEY)
+		wg.Done()
 	}()
 
 	go func() {
-	    currencyChan <- currency.Currency(EXCHANGERATE_API_KEY)
-		wg.Done()	
+		currencyChan <- currency.Currency(EXCHANGERATE_API_KEY)
+		wg.Done()
 	}()
 
 	go func() {
-	    wordOfTheDayChan <- word.WordOfTheDay(dynamodb)
-		wg.Done()	
+		wordOfTheDayChan <- word.WordOfTheDay(dynamodb)
+		wg.Done()
 	}()
 
 	go func() {
-	    herthaTicketsChan <- hertha.HerthaTickets(dynamodb)
-		wg.Done()	
+		herthaTicketsChan <- hertha.HerthaTickets(dynamodb)
+		wg.Done()
 	}()
 
 	go func() {
-	    unionBerlinTicketsChan <- union.UnionBerlinTickets(dynamodb)
-		wg.Done()	
+		unionBerlinTicketsChan <- union.UnionBerlinTickets(dynamodb)
+		wg.Done()
 	}()
 
 	go func() {
-	    mobileNumberChan <- mobilenumber.MobileNumberNotification()
-		wg.Done()	
+		mobileNumberChan <- mobilenumber.MobileNumberNotification()
+		wg.Done()
 	}()
 
 	go func() {
-	    blogsChan <- blogs.BlogUpdates(chatGptService)
-		wg.Done()	
+		blogsChan <- blogs.BlogUpdates(chatGptService)
+		wg.Done()
 	}()
 
 	go func() {
-	    justAiNewsChan <- justAiNews.JustAiNews(dynamodb)
-		wg.Done()	
+		justAiNewsChan <- justAiNews.JustAiNews(dynamodb)
+		wg.Done()
+	}()
+
+	go func() {
+		simpleanalytics.MakeSimpleAnalyticsScreenshot()
+		wg.Done()
 	}()
 
 	wg.Wait()
 
-	wordOfTheDayData := <- wordOfTheDayChan
-	herthaTicketsData := <- herthaTicketsChan
-	unionBerlinTicketsData := <- unionBerlinTicketsChan
-	weatherData := <- weatherChan
-	currencyData := <- currencyChan
-	blogsUpdatesData := <- blogsChan
-	mobileNimberData := <- mobileNumberChan
-	justAiNewsData := <- justAiNewsChan
+	wordOfTheDayData := <-wordOfTheDayChan
+	herthaTicketsData := <-herthaTicketsChan
+	unionBerlinTicketsData := <-unionBerlinTicketsChan
+	weatherData := <-weatherChan
+	currencyData := <-currencyChan
+	blogsUpdatesData := <-blogsChan
+	mobileNimberData := <-mobileNumberChan
+	justAiNewsData := <-justAiNewsChan
+
+	utils.SendImagesToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
 
 	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
 		blogsUpdatesData,
@@ -111,10 +118,10 @@ func main() {
 		justAiNewsData,
 	)
 
-	dataForRendering := map[string]interface{} {
-		"Weather" : weatherData,
-		"Currency" : currencyData,
-		"Blogs" : blogsUpdatesData,
+	dataForRendering := map[string]interface{}{
+		"Weather":     weatherData,
+		"Currency":    currencyData,
+		"Blogs":       blogsUpdatesData,
 		"AppScriptId": APP_SCRIPT_ID,
 	}
 	utils.RenderWwwResources(dataForRendering)
