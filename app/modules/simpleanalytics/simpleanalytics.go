@@ -66,7 +66,7 @@ func makeSimpleAnalyticsScreenshot(projectName string) {
 	// Run tasks
 	if err := chromedp.Run(ctx,
 		chromedp.Navigate(url),
-		chromedp.WaitVisible(`body`, chromedp.ByQuery), // wait until body loads
+		chromedp.WaitVisible(`[class*="graph-container"]`, chromedp.ByQuery),
 		chromedp.FullScreenshot(&buf, 90),
 	); err != nil {
 		log.Fatal(err)
