@@ -20,7 +20,6 @@ var blogsUrls = []string{
 	"https://feeds.feedburner.com/martinkl?format=xml",
 	"https://world.hey.com/dhh/feed.atom",
 	"https://world.hey.com/jason/feed.atom",
-	"https://news.google.com/rss/search?q=site:x.com/levelsio+when:1d&hl=en-US&gl=US&ceid=US:en",
 	"https://news.ycombinator.com/rss",
 	"https://feeds.feedburner.com/eu-startups",
 
@@ -72,13 +71,9 @@ var blogsUrls = []string{
 	"https://www.elastic.co/search-labs/rss/feed",
 
 	// Tech
-	"https://aws.amazon.com/blogs/database/tag/dynamodb/feed",
 	"https://www.cncf.io/blog/feed/",
 
 	// Others company bogs
-	"https://aws.amazon.com/ru/blogs/machine-learning/feed/",
-	"https://aws.amazon.com/ru/blogs/architecture/feed/",
-	"https://aws.amazon.com/ru/blogs/database/feed/",
 	"https://microservices.io/feed.xml",
 	"https://www.confluent.io/blog/area/technology/rss.xml",
 	"https://blog.cloudflare.com/tag/developers",
