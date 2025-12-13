@@ -2,7 +2,9 @@ package blogs
 
 import (
 	"context"
+	"crypto/tls"
 	"log"
+	"net/http"
 	"strings"
 	"sync"
 	"time"
@@ -14,19 +16,26 @@ import (
 	"jaytaylor.com/html2text"
 )
 
-
 func BlogUpdates(client *utils.ChatGptService) *BlogUpdateData {
 	blogUpdateData, err := blogUpdates(client)
-    if err != nil {
-       log.Printf("Error in blogs updates module: %s", err)
-    }
-    return blogUpdateData
+	if err != nil {
+		log.Printf("Error in blogs updates module: %s", err)
+	}
+	return blogUpdateData
 }
 
 func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
 	var wg sync.WaitGroup
 	blogsChannel := make(chan blogUpdate)
 	parser := gofeed.NewParser()
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	httpClient := &http.Client{
+		Transport: &UserAgentTransport{RoundTripper: transport},
+		Timeout:   5 * time.Second,
+	}
+	parser.Client = httpClient
 
 	wg.Add(len(blogsUrls))
 	for _, url := range blogsUrls {
@@ -38,12 +47,12 @@ func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
 		close(blogsChannel)
 	}()
 
-	titles := []blogUpdate {}
+	titles := []blogUpdate{}
 	for title := range blogsChannel {
 		titles = append(titles, title)
 	}
 	log.Println("Finished all: ", titles)
-	
+
 	return &BlogUpdateData{titles}, nil
 }
 
@@ -77,7 +86,7 @@ func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate
 }
 
 func isArticlePublishedYesterday(article *gofeed.Item) bool {
-	return article.PublishedParsed.After(time.Now().Add(-24*time.Hour))
+	return article.PublishedParsed.After(time.Now().Add(-24 * time.Hour))
 }
 
 func isInBlacklist(article *gofeed.Item) bool {
@@ -136,7 +145,7 @@ func getSummaryAndSaveStats(doc *goquery.Document, client *utils.ChatGptService)
 
 	var wg sync.WaitGroup
 	wg.Add(2)
-	
+
 	summary := ""
 	popularWords := ""
 	go func() {
@@ -148,7 +157,7 @@ func getSummaryAndSaveStats(doc *goquery.Document, client *utils.ChatGptService)
 		// popularWords = client.ArticlePopularWords(textToSummarize)
 	}()
 	wg.Wait()
-	
+
 	return summary, popularWords, nil
 }
 
@@ -168,4 +177,13 @@ func filterLongLines(text string) string {
 		}
 	}
 	return strings.Join(filteredLines, " ")
+}
+
+type UserAgentTransport struct {
+	http.RoundTripper
+}
+
+func (c *UserAgentTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	r.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0")
+	return c.RoundTripper.RoundTrip(r)
 }

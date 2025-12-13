@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/cookiejar"
@@ -12,11 +14,15 @@ import (
 
 func doGet(url string) (*http.Response, error) {
 	jar, _ := cookiejar.New(nil)
-	client := http.Client{
-		Jar: jar,
-		Timeout: 5 * time.Second,
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
-	req , err := http.NewRequest("GET", url, nil)
+	client := http.Client{
+		Jar:       jar,
+		Timeout:   5 * time.Second,
+		Transport: tr,
+	}
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +31,7 @@ func doGet(url string) (*http.Response, error) {
 	req.Header.Add("Accept", "application/json, text/javascript")
 	req.Header.Add("Content-Type", "application/json")
 
-	res , err := client.Do(req)
+	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +45,11 @@ func DoGet(url string, response any) error {
 	}
 	defer res.Body.Close()
 
+	// Added status code check
+	if res.StatusCode != 200 {
+		return fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
+	}
+
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
@@ -47,12 +58,12 @@ func DoGet(url string, response any) error {
 	err = json.Unmarshal(body, response)
 	if err != nil {
 		return err
-	  }
+	}
 	return nil
 }
 
 func GetStatusCode(url string) (int, error) {
-	res , err := doGet(url)
+	res, err := doGet(url)
 	if err != nil {
 		return 500, err
 	}
@@ -60,15 +71,15 @@ func GetStatusCode(url string) (int, error) {
 }
 
 func GetDoc(url string) (*goquery.Document, error) {
-	res , err := doGet(url)
+	res, err := doGet(url)
 	if err != nil {
 		return nil, err
 	}
 	defer res.Body.Close()
-	
+
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-	  return nil, err
+		return nil, err
 	}
 	return doc, nil
 }
