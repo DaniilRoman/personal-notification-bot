@@ -31,6 +31,21 @@ var OPENAI_ORGANIZATION = os.Getenv("OPENAI_ORGANIZATION")
 
 var APP_SCRIPT_ID = os.Getenv("APP_SCRIPT_ID")
 
+func sendBlogUpdatesSeparately(blogsData *blogs.BlogUpdateData) {
+	if blogsData == nil {
+		return
+	}
+
+	updateStrings := blogsData.GetUpdateStrings()
+	if len(updateStrings) == 0 {
+		return
+	}
+
+	for _, updateStr := range updateStrings {
+		utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, updateStr)
+	}
+}
+
 func main() {
 	dynamodb := utils.NewDynamoDbService(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, REGION_NAME, nil)
 	chatGptService := utils.NewChatGptService(OPENAI_ACCESS_KEY)
@@ -104,11 +119,9 @@ func main() {
 
 	utils.SendImagesToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
 
-	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
-		blogsUpdatesData,
-	)
+	sendBlogUpdatesSeparately(blogsUpdatesData)
 
-	utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
+	utils.SendToTelegramWithInterface(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
 		weatherData,
 		currencyData,
 		herthaTicketsData,

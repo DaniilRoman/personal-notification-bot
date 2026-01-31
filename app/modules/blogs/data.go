@@ -35,6 +35,18 @@ func (blogs *BlogUpdateData) String() string {
 	"\n\n[Html page](https://daniilroman.github.io/personal-notification-bot/)"
 }
 
+func (blogs *BlogUpdateData) GetUpdateStrings() []string {
+	if blogs == nil || len(blogs.Blogs) == 0 {
+		return []string{}
+	}
+	
+	updateStrings := make([]string, len(blogs.Blogs))
+	for i, blog := range blogs.Blogs {
+		updateStrings[i] = blog.String()
+	}
+	return updateStrings
+}
+
 func (blogs *BlogUpdateData) PopularWords() string {
 	if blogs == nil {
 		return ""

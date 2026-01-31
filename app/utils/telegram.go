@@ -40,8 +40,8 @@ func SendImagesToTelegram(token string, chatId int64) error {
 	return nil
 }
 
-func SendToTelegram(token string, chatId int64, data ...toString) {
-	message := telegramData(data...)
+func SendToTelegram(token string, chatId int64, data ...string) {
+	message := strings.Join(data, "\n\n")
 	if message == "" {
 		return
 	}
@@ -56,6 +56,14 @@ func SendToTelegram(token string, chatId int64, data ...toString) {
 	if _, err := bot.Send(msg); err != nil {
 		log.Fatal("Couldn't send a message to Telegram", err)
 	}
+}
+
+func SendToTelegramWithInterface(token string, chatId int64, data ...toString) {
+	message := telegramData(data...)
+	if message == "" {
+		return
+	}
+	SendToTelegram(token, chatId, message)
 }
 
 func telegramData(data ...toString) string {
