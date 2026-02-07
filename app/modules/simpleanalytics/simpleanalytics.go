@@ -69,13 +69,15 @@ func makeSimpleAnalyticsScreenshot(projectName string) {
 		chromedp.WaitVisible(`[class*="graph-container"]`, chromedp.ByQuery),
 		chromedp.FullScreenshot(&buf, 90),
 	); err != nil {
-		log.Fatal(err)
+		log.Printf("Error in SimpleAnalytics while taking screenshot for %s: %s", projectName, err)
+		return
 	}
 
 	// Save screenshot
 	if err := os.WriteFile(fmt.Sprintf("./data/images/%s.png", projectName), buf, 0644); err != nil {
-		log.Fatal(err)
+		log.Printf("Error in SimpleAnalytics while saving screenshot for %s: %s", projectName, err)
+		return
 	}
 
-	log.Println(fmt.Sprintf("Screenshot saved as %s.png", projectName))
+	log.Printf("Screenshot saved as %s.png", projectName)
 }
