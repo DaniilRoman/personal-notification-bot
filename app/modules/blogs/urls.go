@@ -22,6 +22,9 @@ var blogsUrls = []string{
 	"https://world.hey.com/jason/feed.atom",
 	"https://news.ycombinator.com/rss",
 	"https://feeds.feedburner.com/eu-startups",
+	"https://spinscale.de/index.xml",
+	"https://blog.wilsonl.in/rss.xml",
+	"https://softwaredoug.com/feed.xml",
 
 	// Interesting company blogs
 	"https://medium.com/feed/netcracker",
@@ -89,12 +92,21 @@ var blogsUrls = []string{
 	"https://doordash.engineering/category/backend/feed/",
 	"https://doordash.engineering/category/data-platform/feed/",
 	"https://doordash.engineering/category/data-science-and-machine-learning/feed/",
+	"https://www.elastic.co/search-labs/rss/feed",
+	"https://weaviate.io/blog/rss.xml",
+	"https://tech.olx.com/feed",
+	"https://medium.com/feed/walmartglobaltech",
+
+	"https://www.bloomreach.com/en/feed",
+	"https://www.coveo.com/blog/feed",
 
 	// Company blogs to delete
 	"https://engineering.fb.com/feed/",
 	// "https://blog.twitter.com/engineering/en_us/blog.rss", // TODO no published date
+	"https://blog.x.com/engineering/en_us/blog.rss",
 	"https://www.datadoghq.com/blog/engineering/index.xml",
 	"https://grafana.com/categories/engineering/index.xml",
+	"https://blog.traversaal.ai/rss/",
 
 	// "https://feeds.feedblitz.com/baeldung&x=1",
 	// "https://spring.io/blog.atom",
