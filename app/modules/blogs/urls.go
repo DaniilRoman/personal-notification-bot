@@ -106,6 +106,12 @@ var blogsUrls = []string{
 	"https://www.uber.com/en-US/blog/engineering/data/rss/",
 	"https://tech.instacart.com/feed",
 	"https://blog.picnic.nl/feed",
+	"https://www.grammarly.com/blog/feed/",
+	"https://slack.engineering/feed/",
+	"https://engblog.nextdoor.com/feed",
+	"https://medium.com/feed/@Pinterest_Engineering",
+	"https://eng.snap.com/feed",
+	"https://medium.com/feed/bumble-tech",
 
 	"https://www.bloomreach.com/en/feed",
 	"https://www.coveo.com/blog/feed",
