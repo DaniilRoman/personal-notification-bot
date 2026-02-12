@@ -72,6 +72,7 @@ var blogsUrls = []string{
 	"https://bair.berkeley.edu/blog/feed",
 	"https://www.amazon.science/index.rss",
 	"https://www.elastic.co/search-labs/rss/feed",
+	"https://www.jina.ai/feed.rss",
 
 	// Tech
 	"https://www.cncf.io/blog/feed/",
