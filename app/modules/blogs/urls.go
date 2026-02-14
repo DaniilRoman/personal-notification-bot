@@ -62,6 +62,7 @@ var blogsUrls = []string{
 	"https://debezium.io/blog.atom",
 	"https://www.elastic.co/blog/feed",
 	"https://blog.healthchecks.io/feed/",
+	"https://constructor.com/blog/atom.xml",
 
 	// Research labs
 	// https://githubnext.com, # didn't find rss feed,
@@ -102,7 +103,6 @@ var blogsUrls = []string{
 	"https://medium.com/feed/expedia-group-tech",
 	"https://medium.com/feed/vimeo-engineering-blog",
 	"https://medium.com/feed/disney-streaming/",
-	"https://open.nytimes.com/feed",
 	"https://www.uber.com/en-US/blog/engineering/backend/rss/",
 	"https://www.uber.com/en-US/blog/engineering/data/rss/",
 	"https://tech.instacart.com/feed",
