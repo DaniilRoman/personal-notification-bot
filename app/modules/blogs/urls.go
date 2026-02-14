@@ -116,6 +116,8 @@ var blogsUrls = []string{
 
 	"https://www.bloomreach.com/en/feed",
 	"https://www.coveo.com/blog/feed",
+	"https://athoscommerce.com/blog/feed",
+	"https://www.luigisbox.com/blog/feed",
 
 	// Company blogs to delete
 	"https://engineering.fb.com/feed/",
