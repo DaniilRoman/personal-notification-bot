@@ -46,6 +46,7 @@ jobs:
           OPENAI_ACCESS_KEY: ${{ secrets.OPENAI_ACCESS_KEY }}
           OPENAI_ORGANIZATION: ${{ secrets.OPENAI_ORGANIZATION }}
           APP_SCRIPT_ID: ${{ secrets.APP_SCRIPT_ID }}
+          MONTHLY_TOTAL_URL: ${{ secrets.MONTHLY_TOTAL_URL }}
           
 
       - name: Setup Pages

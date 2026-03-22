@@ -3,6 +3,7 @@ package main
 import (
 	blogs "main/modules/blogs"
 	currency "main/modules/currency"
+	expenses "main/modules/expenses"
 	hertha "main/modules/herthaTickets"
 	justAiNews "main/modules/justAiNews"
 	mobilenumber "main/modules/mobileNumber"
@@ -51,7 +52,7 @@ func main() {
 	chatGptService := utils.NewChatGptService(OPENAI_ACCESS_KEY)
 
 	var wg sync.WaitGroup
-	wg.Add(9)
+	wg.Add(10)
 	weatherChan := make(chan *weather.WeatherData, 1)
 	currencyChan := make(chan *currency.CurrencyData, 1)
 	wordOfTheDayChan := make(chan *word.WordOfTheDayData, 1)
@@ -60,6 +61,7 @@ func main() {
 	mobileNumberChan := make(chan *mobilenumber.MobileNumberData, 1)
 	blogsChan := make(chan *blogs.BlogUpdateData, 1)
 	justAiNewsChan := make(chan *justAiNews.JustAiNewsData, 1)
+	expensesTotalChan := make(chan *expenses.MonthlyTotalData, 1)
 
 	go func() {
 		weatherChan <- weather.GetWeather(OPEN_WHEATHER_API_KEY)
@@ -106,6 +108,11 @@ func main() {
 		wg.Done()
 	}()
 
+	go func() {
+		expensesTotalChan <- expenses.GetMonthlyTotal()
+		wg.Done()
+	}()
+
 	wg.Wait()
 
 	wordOfTheDayData := <-wordOfTheDayChan
@@ -116,6 +123,7 @@ func main() {
 	blogsUpdatesData := <-blogsChan
 	mobileNimberData := <-mobileNumberChan
 	justAiNewsData := <-justAiNewsChan
+	expensesTotal := <-expensesTotalChan
 
 	utils.SendImagesToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
 
@@ -129,12 +137,14 @@ func main() {
 		mobileNimberData,
 		wordOfTheDayData,
 		justAiNewsData,
+		expensesTotal,
 	)
 
 	dataForRendering := map[string]interface{}{
 		"Weather":     weatherData,
 		"Currency":    currencyData,
 		"Blogs":       blogsUpdatesData,
+		"Expenses":    expensesTotal,
 		"AppScriptId": APP_SCRIPT_ID,
 	}
 	utils.RenderWwwResources(dataForRendering)
