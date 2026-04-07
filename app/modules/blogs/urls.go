@@ -54,6 +54,7 @@ var blogsUrls = []string{
 	"https://www.etsy.com/de-en/codeascraft/rss",
 	"https://techlab.bol.com/api/v1/en/newsFeed/",
 	"https://blog.allegro.tech/feed.xml",
+	"https://deliveryhero.jobs/blog/feed/",
 
 	// Tech products
 	"https://github.blog/feed/",
