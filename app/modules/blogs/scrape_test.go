@@ -153,3 +153,30 @@ func TestAllScrapeConfigs(t *testing.T) {
 		})
 	}
 }
+
+func TestParseDateCleaning(t *testing.T) {
+	tests := []struct {
+		input       string
+		shouldParse bool
+	}{
+		{"16 Mar 2026 • Leron Gil,  Julianna Roberts, Sanskriti Deva, Robert Davis", true},
+		{"23 Mar 2026 • Rafi Letzter", true},
+		{"Published: January 2, 2026", true},
+		{"Posted on 2026-01-02", true},
+		{"Date: 2026/01/02 15:04:05", true},
+		{"2026-01-02T15:04:05Z", true},
+		{"", false},
+		{"invalid date", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			got := parseDate(tt.input)
+			if tt.shouldParse && got.IsZero() {
+				t.Errorf("parseDate(%q) = zero time, expected non-zero", tt.input)
+			}
+			if !tt.shouldParse && !got.IsZero() {
+				t.Errorf("parseDate(%q) = non-zero time %v, expected zero", tt.input, got)
+			}
+		})
+	}
+}

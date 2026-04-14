@@ -136,6 +136,8 @@ func scrapeLastArticle(config BlogConfig, parser *gofeed.Parser, blogs chan<- bl
 		return
 	}
 
+	// Fetch missing dates from article pages
+	items = fetchMissingDates(items)
 	// Generate RSS feed from scraped items
 	rssBytes, err := GenerateRSS(items, config.URL, config.URL, "Scraped feed")
 	if err != nil {

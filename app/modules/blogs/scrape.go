@@ -3,15 +3,18 @@ package blogs
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gorilla/feeds"
+	"main/utils"
 )
 
 type BlogConfig struct {
@@ -70,11 +73,19 @@ func Extract(config BlogConfig, body []byte) ([]ScrapedItem, error) {
 
 		if sel.Date != "" {
 			dateEl := s.Find(sel.Date).First()
+			var rawDate string
 			if dt, ok := dateEl.Attr("datetime"); ok {
+				rawDate = dt
 				item.Date = parseDate(dt)
 			} else {
-				item.Date = parseDate(strings.TrimSpace(dateEl.Text()))
+				rawDate = strings.TrimSpace(dateEl.Text())
+				item.Date = parseDate(rawDate)
 			}
+			if item.Date.IsZero() && rawDate != "" {
+				log.Printf("Date selector '%s' found raw date '%s' but failed to parse", sel.Date, rawDate)
+			}
+		} else {
+			log.Printf("No date selector for config %s", config.URL)
 		}
 
 		if sel.Description != "" {
@@ -113,20 +124,62 @@ func resolveURL(baseURL, pageURL, href string) string {
 
 var dateFormats = []string{
 	time.RFC3339,
+	time.RFC3339Nano,
 	time.RFC1123Z,
 	time.RFC1123,
+	"2006-01-02T15:04:05Z",
+	"2006-01-02T15:04:05-07:00",
+	"2006-01-02 15:04:05",
+	"2006-01-02 15:04",
 	"2006-01-02",
 	"January 2, 2006",
 	"Jan 2, 2006",
+	"Jan 2, 2006 3:04 PM",
+	"Jan 2, 2006 15:04",
 	"02 Jan 2006",
 	"2 Jan 2006",
 	"January 02, 2006",
 	"Mon, 02 Jan 2006",
+	"Monday, January 2, 2006",
+	"Mon Jan 2 2006",
 	"2006/01/02",
+	"2006/01/02 15:04:05",
+}
+
+func cleanDateString(s string) string {
+	original := s
+	s = strings.TrimSpace(s)
+	// Remove common prefixes (longer first)
+	prefixes := []string{"Published on", "Posted on", "Published", "Posted", "Updated", "Date:"}
+	for _, p := range prefixes {
+		if strings.HasPrefix(strings.ToLower(s), strings.ToLower(p)) {
+			// Remove prefix using slice (case-insensitive)
+			s = s[len(p):]
+			s = strings.TrimSpace(s)
+			// Also remove optional colon
+			s = strings.TrimPrefix(s, ":")
+			s = strings.TrimSpace(s)
+			break // only remove one prefix
+		}
+	}
+	// Split on common separators that indicate extra metadata
+	separators := []string{" • ", " | ", " - ", " – ", " — "}
+	for _, sep := range separators {
+		if idx := strings.Index(s, sep); idx > 0 {
+			s = s[:idx]
+			break
+		}
+	}
+	// Remove extra spaces and newlines
+	s = strings.Join(strings.Fields(s), " ")
+	if os.Getenv("BLOG_DEBUG_DATE") == "1" {
+		log.Printf("cleanDateString: input=%q, output=%q", original, s)
+	}
+	return s
 }
 
 func parseDate(s string) time.Time {
-	s = strings.TrimSpace(s)
+	s = cleanDateString(s)
 	if s == "" {
 		return time.Time{}
 	}
@@ -171,7 +224,52 @@ func ExtractDateFromDoc(doc *goquery.Document) time.Time {
 			return t
 		}
 	}
+	// Try JSON-LD script tags
+	var found time.Time
+	doc.Find("script[type='application/ld+json']").Each(func(i int, s *goquery.Selection) {
+		if !found.IsZero() {
+			return
+		}
+		text := s.Text()
+		// Look for datePublished field
+		re := regexp.MustCompile(`"datePublished"\s*:\s*"([^"]+)"`)
+		if matches := re.FindStringSubmatch(text); matches != nil {
+			if t := parseDate(matches[1]); !t.IsZero() {
+				found = t
+			}
+		}
+	})
+	if !found.IsZero() {
+		return found
+	}
 	return time.Time{}
+}
+
+func fetchMissingDates(items []ScrapedItem) []ScrapedItem {
+	updated := make([]ScrapedItem, len(items))
+	for i, item := range items {
+		updated[i] = item
+		if !item.Date.IsZero() {
+			continue
+		}
+		if item.Link == "" {
+			continue
+		}
+		log.Printf("Fetching date from article page: %s", item.Link)
+		doc, err := utils.GetDoc(item.Link)
+		if err != nil {
+			log.Printf("Failed to fetch article page %s: %v", item.Link, err)
+			continue
+		}
+		date := ExtractDateFromDoc(doc)
+		if date.IsZero() {
+			log.Printf("No date found in article %s", item.Link)
+			continue
+		}
+		updated[i].Date = date
+		log.Printf("Found date %v for %s", date, item.Title)
+	}
+	return updated
 }
 
 func GenerateRSS(items []ScrapedItem, feedTitle, feedLink, feedDescription string) ([]byte, error) {
