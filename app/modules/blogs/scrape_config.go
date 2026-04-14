@@ -1,6 +1,9 @@
 package blogs
 
 var scrapeBlogs = []BlogConfig{
+	// Add your non-RSS blog configurations here
+	// To debug generated RSS feeds, set environment variable BLOG_DEBUG_RSS=1
+	// Generated RSS files will be saved to ./debug_rss/[domain].xml
 	// Example configuration:
 	// {
 	// 	URL:      "https://example.com/blog",
@@ -14,6 +17,8 @@ var scrapeBlogs = []BlogConfig{
 	// 		Description: ".excerpt",
 	// 	},
 	// },
+
+	
 	// Boston Dynamics blog (no RSS feed)
 	{
 		URL:      "https://bostondynamics.com/blog/",
@@ -39,31 +44,29 @@ var scrapeBlogs = []BlogConfig{
 		},
 	},
 	// Agility Robotics blog
-	{
-		URL:      "https://www.agilityrobotics.com/resources?tab=blogs",
-		BaseURL:  "https://www.agilityrobotics.com",
-		MaxItems: 5,
-		Selectors: Selectors{
-			Item:  `div[data-w-tab="Blogs"] .collection-item-5.w-dyn-item`,
-			Title: ".blog-tease-title",
-			Link:  ".blog-tile",
-			Date:  ".frame-1307898284 p.blog-tease-meta:nth-child(2)",
-		},
-	},
+	// {
+	// 	URL:      "https://www.agilityrobotics.com/resources?tab=blogs",
+	// 	BaseURL:  "https://www.agilityrobotics.com",
+	// 	MaxItems: 5,
+	// 	Selectors: Selectors{
+	// 		Item:  `div[data-w-tab="Blogs"] .collection-item-5.w-dyn-item`,
+	// 		Title: ".blog-tease-title",
+	// 		Link:  ".blog-tile",
+	// 		Date:  ".frame-1307898284 p.blog-tease-meta:nth-child(2)",
+	// 	},
+	// },
+	
 	// Sanctuary AI news
-	{
-		URL:      "https://www.sanctuary.ai/news/",
-		BaseURL:  "https://www.sanctuary.ai",
-		MaxItems: 5,
-		Selectors: Selectors{
-			Item:        "div.summary-block-wrapper:nth-of-type(2) .summary-item",
-			Title:       ".summary-title-link",
-			Link:        ".summary-title-link",
-			Date:        ".summary-metadata-item--date",
-			Description: ".summary-excerpt",
-		},
-	},
-	// Add your non-RSS blog configurations here
-	// To debug generated RSS feeds, set environment variable BLOG_DEBUG_RSS=1
-	// Generated RSS files will be saved to ./debug_rss/[domain].xml
+	// {
+	// 	URL:      "https://www.sanctuary.ai/news/",
+	// 	BaseURL:  "https://www.sanctuary.ai",
+	// 	MaxItems: 5,
+	// 	Selectors: Selectors{
+	// 		Item:        "div.summary-block-wrapper:nth-of-type(2) .summary-item",
+	// 		Title:       ".summary-title-link",
+	// 		Link:        ".summary-title-link",
+	// 		Date:        ".summary-metadata-item--date",
+	// 		Description: ".summary-excerpt",
+	// 	},
+	// },
 }

@@ -138,8 +138,27 @@ func TestAllScrapeConfigs(t *testing.T) {
 			}
 
 			if len(items) == 0 {
-				t.Logf("No items extracted for %s", config.URL)
+				t.Errorf("No items extracted for %s", config.URL)
 				return
+			}
+
+			// Fetch missing dates from article pages (mirrors production flow)
+			items = fetchMissingDates(items)
+
+			// Verify all items have title, link, and date
+			for _, item := range items {
+				if item.Title == "" {
+					t.Errorf("Item missing title: %s", item.Link)
+				}
+				if item.Link == "" {
+					t.Errorf("Item missing link: %q", item.Title)
+				}
+				if !strings.HasPrefix(item.Link, "http") {
+					t.Errorf("Item link is not absolute: %q (%s)", item.Title, item.Link)
+				}
+				if item.Date.IsZero() {
+					t.Errorf("Item missing date: %q (%s)", item.Title, item.Link)
+				}
 			}
 
 			rssBytes, err := GenerateRSS(items, config.URL, config.URL, "Scraped feed")
