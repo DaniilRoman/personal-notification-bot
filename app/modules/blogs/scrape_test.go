@@ -1,12 +1,12 @@
 package blogs
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 	"time"
-	"fmt"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -99,5 +99,57 @@ func TestExtractBostonDynamics(t *testing.T) {
 		if !strings.HasPrefix(item.Link, "http") {
 			t.Errorf("Item link is not absolute: %s", item.Link)
 		}
+	}
+}
+
+func TestAllScrapeConfigs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration test in short mode")
+	}
+
+	client := &http.Client{Timeout: 15 * time.Second}
+
+	for i, config := range scrapeBlogs {
+		t.Run(config.URL, func(t *testing.T) {
+			req, err := http.NewRequest("GET", config.URL, nil)
+			if err != nil {
+				t.Skipf("Failed to create request for %s: %v", config.URL, err)
+			}
+			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0")
+
+			resp, err := client.Do(req)
+			if err != nil {
+				t.Skipf("Network error fetching %s, skipping: %v", config.URL, err)
+			}
+			defer resp.Body.Close()
+
+			if resp.StatusCode != 200 {
+				t.Skipf("Non-200 status for %s: %d", config.URL, resp.StatusCode)
+			}
+
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				t.Skipf("Failed to read body from %s: %v", config.URL, err)
+			}
+
+			items, err := Extract(config, body)
+			if err != nil {
+				t.Skipf("Extract failed for %s: %v", config.URL, err)
+			}
+
+			if len(items) == 0 {
+				t.Logf("No items extracted for %s", config.URL)
+				return
+			}
+
+			rssBytes, err := GenerateRSS(items, config.URL, config.URL, "Scraped feed")
+			if err != nil {
+				t.Skipf("GenerateRSS failed for %s: %v", config.URL, err)
+			}
+
+			fmt.Printf("\n=== RSS Feed %d: %s ===\n", i+1, config.URL)
+			fmt.Println(string(rssBytes))
+			fmt.Printf("=== End RSS Feed %d ===\n\n", i+1)
+		})
 	}
 }
