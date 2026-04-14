@@ -3,8 +3,10 @@ package blogs
 import (
 	"context"
 	"crypto/tls"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -37,9 +39,13 @@ func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
 	}
 	parser.Client = httpClient
 
-	wg.Add(len(blogsUrls))
+	totalFeeds := len(blogsUrls) + len(scrapeBlogs)
+	wg.Add(totalFeeds)
 	for _, url := range blogsUrls {
 		go parseLastArticle(url, parser, blogsChannel, &wg, client)
+	}
+	for _, config := range scrapeBlogs {
+		go scrapeLastArticle(config, parser, blogsChannel, &wg, client, httpClient)
 	}
 
 	go func() {
@@ -75,18 +81,96 @@ func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate
 	}
 	lastArticle := feed.Items[0]
 
-	if !isArticlePublishedYesterday(lastArticle) || isInBlacklist(lastArticle) {
-		// log.Printf("Article %s is filtered out", lastArticle.Title)
+	processFeedItem(lastArticle, client, blogs)
+}
+
+func processFeedItem(item *gofeed.Item, client *utils.ChatGptService, blogs chan<- blogUpdate) bool {
+	var date time.Time
+	if item.PublishedParsed != nil {
+		date = *item.PublishedParsed
+	}
+	if !shouldIncludeArticle(date, item.Title) || isInBlacklist(item) {
+		return false
+	}
+	img, summary, popularWords := getExtraFields(item, client)
+	blogs <- NewBlogUpdate(item.Title, item.Link, img, summary, popularWords)
+	return true
+}
+
+func scrapeLastArticle(config BlogConfig, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService, httpClient *http.Client) {
+	defer wg.Done()
+
+	req, err := http.NewRequest("GET", config.URL, nil)
+	if err != nil {
+		log.Printf("Error creating request for %s: %s", config.URL, err)
+		return
+	}
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0")
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		log.Printf("Error fetching %s: %s", config.URL, err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		log.Printf("Non-200 status for %s: %d", config.URL, resp.StatusCode)
 		return
 	}
 
-	img, summary, popularWords := getExtraFields(lastArticle, client)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf("Error reading body from %s: %s", config.URL, err)
+		return
+	}
 
-	blogs <- NewBlogUpdate(lastArticle.Title, lastArticle.Link, img, summary, popularWords)
+	items, err := Extract(config, body)
+	if err != nil {
+		log.Printf("Error extracting items from %s: %s", config.URL, err)
+		return
+	}
+
+	if len(items) == 0 {
+		log.Printf("No items found for %s", config.URL)
+		return
+	}
+
+	// Generate RSS feed from scraped items
+	rssBytes, err := GenerateRSS(items, config.URL, config.URL, "Scraped feed")
+	if err != nil {
+		log.Printf("Error generating RSS for %s: %s", config.URL, err)
+		return
+	}
+
+	// Save RSS for debugging if environment variable is set
+	if os.Getenv("BLOG_DEBUG_RSS") == "1" {
+		if err := SaveRSSToFile(rssBytes, config.URL); err != nil {
+			log.Printf("Error saving RSS debug file for %s: %s", config.URL, err)
+		}
+	}
+
+	// Parse the generated RSS with gofeed parser
+	feed, err := parser.ParseString(string(rssBytes))
+	if err != nil {
+		log.Printf("Error parsing generated RSS for %s: %s", config.URL, err)
+		return
+	}
+
+	if len(feed.Items) == 0 {
+		log.Printf("No items in generated RSS for %s", config.URL)
+		return
+	}
+
+	// Use the first item (RSS items are sorted by date descending)
+	processFeedItem(feed.Items[0], client, blogs)
 }
 
 func isArticlePublishedYesterday(article *gofeed.Item) bool {
-	return article.PublishedParsed.After(time.Now().Add(-24 * time.Hour))
+	if article.PublishedParsed == nil {
+		return false
+	}
+	return isArticlePublishedYesterdayTime(*article.PublishedParsed)
 }
 
 func isInBlacklist(article *gofeed.Item) bool {
@@ -114,18 +198,50 @@ func containsInBlacklistKeywords(s string) bool {
 	return false
 }
 
-func getExtraFields(article *gofeed.Item, client *utils.ChatGptService) (string, string, string) {
-	doc, err := utils.GetDoc(article.Link)
+func isArticlePublishedYesterdayTime(published time.Time) bool {
+	return !published.IsZero() && published.After(time.Now().Add(-24*time.Hour))
+}
+
+func isTitleInBlacklist(title string) bool {
+	return containsInBlacklistKeywords(title)
+}
+
+func shouldIncludeArticle(date time.Time, title string) bool {
+	if isTitleInBlacklist(title) {
+		return false
+	}
+	// If date is zero, we cannot determine if it's recent, so include it
+	if date.IsZero() {
+		return true
+	}
+	return isArticlePublishedYesterdayTime(date)
+}
+
+func getExtraFieldsFromLink(link string, client *utils.ChatGptService) (string, string, string) {
+	doc, err := utils.GetDoc(link)
 	if err != nil {
-		log.Printf("Error in getting blog extra data for %s: %s", article.Link, err)
+		log.Printf("Error in getting blog extra data for %s: %s", link, err)
 		return "", "", ""
 	}
 	img := getImage(doc)
 	summary, popularWords, err := getSummaryAndSaveStats(doc, client)
 	if err != nil {
-		log.Printf("Error is during generating a summary for %s: %s", article.Link, err)
+		log.Printf("Error is during generating a summary for %s: %s", link, err)
 	}
 	return img, summary, popularWords
+}
+
+func getExtraFieldsFromDoc(doc *goquery.Document, client *utils.ChatGptService) (string, string, string) {
+	img := getImage(doc)
+	summary, popularWords, err := getSummaryAndSaveStats(doc, client)
+	if err != nil {
+		log.Printf("Error is during generating a summary: %s", err)
+	}
+	return img, summary, popularWords
+}
+
+func getExtraFields(article *gofeed.Item, client *utils.ChatGptService) (string, string, string) {
+	return getExtraFieldsFromLink(article.Link, client)
 }
 
 func getImage(doc *goquery.Document) string {
