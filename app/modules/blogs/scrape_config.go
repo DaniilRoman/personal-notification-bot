@@ -68,19 +68,19 @@ var scrapeBlogs = []BlogConfig{
 			Description: "",
 		},
 	},
-	// HRL Uni Bonn news (dates not available)
-	{
-		URL:      "https://www.hrl.uni-bonn.de/api/news",
-		BaseURL:  "https://www.hrl.uni-bonn.de",
-		MaxItems: 5,
-		Selectors: Selectors{
-			Item:        ".portletNavigationTree .navTree li.navTreeItem",
-			Title:       "a.state-published",
-			Link:        "a.state-published",
-			Date:        "", // Dates not available on this site
-			Description: "",
-		},
-	},
+	// HRL Uni Bonn news (dates not available) - temporarily disabled due to Accept header issue
+	// {
+	// 	URL:      "https://www.hrl.uni-bonn.de/api/news",
+	// 	BaseURL:  "https://www.hrl.uni-bonn.de",
+	// 	MaxItems: 5,
+	// 	Selectors: Selectors{
+	// 		Item:        ".portletNavigationTree .navTree li.navTreeItem",
+	// 		Title:       "a.state-published",
+	// 		Link:        "a.state-published",
+	// 		Date:        "", // Dates not available on this site
+	// 		Description: "",
+	// 	},
+	// },
 	// Agility Robotics blog
 	{
 		URL:      "https://www.agilityrobotics.com/resources?tab=blogs",
@@ -90,7 +90,7 @@ var scrapeBlogs = []BlogConfig{
 			Item:  `div[data-w-tab="Blogs"] .collection-item-5.w-dyn-item`,
 			Title: ".blog-tease-title",
 			Link:  ".blog-tile",
-			Date:  ".blog-tile-copy-wrapper .frame-1307898284 p.blog-tease-meta",
+			Date:  ".blog-tile-copy-wrapper .frame-1307898284 p.blog-tease-meta:nth-of-type(2)",
 		},
 	},
 	// Sanctuary AI news
@@ -99,7 +99,7 @@ var scrapeBlogs = []BlogConfig{
 		BaseURL:  "https://www.sanctuary.ai",
 		MaxItems: 5,
 		Selectors: Selectors{
-			Item:        "div.summary-block-wrapper:nth-of-type(2) .summary-item",
+			Item:        ".summary-item",
 			Title:       ".summary-title-link",
 			Link:        ".summary-title-link",
 			Date:        ".summary-metadata.summary-metadata--primary time.summary-metadata-item.summary-metadata-item--date",

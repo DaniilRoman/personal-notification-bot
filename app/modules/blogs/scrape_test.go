@@ -116,6 +116,7 @@ func TestAllScrapeConfigs(t *testing.T) {
 				t.Skipf("Failed to create request for %s: %v", config.URL, err)
 			}
 			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0")
+			req.Header.Set("Accept", "application/json")
 
 			resp, err := client.Do(req)
 			if err != nil {
