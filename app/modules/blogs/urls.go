@@ -81,6 +81,18 @@ var blogsUrls = []string{
 	"https://deepmind.google/blog/rss.xml",
 	"https://developer.nvidia.com/blog/rss",
 
+	// Google
+	"https://blog.google/products-and-platforms/products/search/rss/",
+	"https://blog.google/products-and-platforms/products/maps/rss/",
+	"https://blog.google/products-and-platforms/platforms/android/rss/",
+	"https://blog.google/products-and-platforms/products/education/rss/",
+	"https://blog.google/innovation-and-ai/models-and-research/google-deepmind/rss/",
+	"https://blog.google/innovation-and-ai/models-and-research/google-research/rss/",
+	"https://blog.google/innovation-and-ai/models-and-research/google-labs/rss/",
+	"https://blog.google/innovation-and-ai/models-and-research/gemini-models/rss/",
+	"https://blog.google/innovation-and-ai/models-and-research/quantum-computing/rss/",
+	"https://blog.google/innovation-and-ai/infrastructure-and-cloud/global-network/rss/",
+
 	// Tech
 	"https://www.cncf.io/blog/feed/",
 	"https://www.technologyreview.com/feed",
