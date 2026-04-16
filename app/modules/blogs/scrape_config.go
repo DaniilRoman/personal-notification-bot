@@ -106,4 +106,69 @@ var scrapeBlogs = []BlogConfig{
 			Description: ".summary-excerpt",
 		},
 	},
+	// Agile Robots news
+	{
+		URL:      "https://www.agile-robots.com/en/news/",
+		BaseURL:  "https://www.agile-robots.com",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        ".article-list-teaser-element",
+			Title:       "h3.title",
+			Link:        "a[href]",
+			Date:        "time[datetime]",
+			Description: "",
+		},
+	},
+	// DFKI Robotics Innovation Center news
+	{
+		URL:      "https://robotik.dfki-bremen.de/en/startpage",
+		BaseURL:  "https://robotik.dfki-bremen.de",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        ".news-teaser-item",
+			Title:       "h4.news-teaser-title a",
+			Link:        "h4.news-teaser-title a[href]",
+			Date:        "time[datetime]",
+			Description: "",
+		},
+	},
+	// TUM MIRMI news
+	{
+		URL:      "https://www.mirmi.tum.de/en/mirmi/news/",
+		BaseURL:  "https://www.mirmi.tum.de",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        ".article.articletype-0",
+			Title:       "h3 a",
+			Link:        "h3 a[href]",
+			Date:        "time[datetime]",
+			Description: ".teaser-text p",
+		},
+	},
+	// Alice & Bob blog
+	{
+		URL:      "https://alice-bob.com/blog/",
+		BaseURL:  "https://alice-bob.com",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        "li.c-archive__article",
+			Title:       "h4.c-post-card__title",
+			Link:        "a.c-post-card__inner[href]",
+			Date:        ".c-post-card__meta-item",
+			Description: "",
+		},
+	},
+	// Quantinuum blog
+	{
+		URL:      "https://www.quantinuum.com/news/blog#",
+		BaseURL:  "https://www.quantinuum.com",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        ".blog_cms_item",
+			Title:       "div[fs-cmsfilter-field='heading']",
+			Link:        "a.textlink[href]",
+			Date:        ".eyebrow_content_contain > .blog_eyebrow",
+			Description: ".blog-content-filter p:first-child",
+		},
+	},
 }
