@@ -18,7 +18,6 @@ var scrapeBlogs = []BlogConfig{
 	// 	},
 	// },
 
-	
 	// Boston Dynamics blog (no RSS feed)
 	{
 		URL:      "https://bostondynamics.com/blog/",
@@ -43,30 +42,68 @@ var scrapeBlogs = []BlogConfig{
 			Date:  "p.text-caption",
 		},
 	},
+	// Figure AI news (dates in datetime attribute)
+	{
+		URL:      "https://www.figure.ai/news",
+		BaseURL:  "https://www.figure.ai",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        "a.article-list-item",
+			Title:       "h1.article-list-item__heading",
+			Link:        "a.article-list-item",
+			Date:        "time.article-list-item__publication-date",
+			Description: "",
+		},
+	},
+	// NEURA Robotics news (dates in time element)
+	{
+		URL:      "https://neura-robotics.com/news/",
+		BaseURL:  "https://neura-robotics.com",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        ".swiper-slide.e-loop-item",
+			Title:       "h2.elementor-heading-title a",
+			Link:        "h2.elementor-heading-title a",
+			Date:        "time",
+			Description: "",
+		},
+	},
+	// HRL Uni Bonn news (dates not available)
+	{
+		URL:      "https://www.hrl.uni-bonn.de/api/news",
+		BaseURL:  "https://www.hrl.uni-bonn.de",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        ".portletNavigationTree .navTree li.navTreeItem",
+			Title:       "a.state-published",
+			Link:        "a.state-published",
+			Date:        "", // Dates not available on this site
+			Description: "",
+		},
+	},
 	// Agility Robotics blog
-	// {
-	// 	URL:      "https://www.agilityrobotics.com/resources?tab=blogs",
-	// 	BaseURL:  "https://www.agilityrobotics.com",
-	// 	MaxItems: 5,
-	// 	Selectors: Selectors{
-	// 		Item:  `div[data-w-tab="Blogs"] .collection-item-5.w-dyn-item`,
-	// 		Title: ".blog-tease-title",
-	// 		Link:  ".blog-tile",
-	// 		Date:  ".frame-1307898284 p.blog-tease-meta:nth-child(2)",
-	// 	},
-	// },
-	
+	{
+		URL:      "https://www.agilityrobotics.com/resources?tab=blogs",
+		BaseURL:  "https://www.agilityrobotics.com",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:  `div[data-w-tab="Blogs"] .collection-item-5.w-dyn-item`,
+			Title: ".blog-tease-title",
+			Link:  ".blog-tile",
+			Date:  ".blog-tile-copy-wrapper .frame-1307898284 p.blog-tease-meta",
+		},
+	},
 	// Sanctuary AI news
-	// {
-	// 	URL:      "https://www.sanctuary.ai/news/",
-	// 	BaseURL:  "https://www.sanctuary.ai",
-	// 	MaxItems: 5,
-	// 	Selectors: Selectors{
-	// 		Item:        "div.summary-block-wrapper:nth-of-type(2) .summary-item",
-	// 		Title:       ".summary-title-link",
-	// 		Link:        ".summary-title-link",
-	// 		Date:        ".summary-metadata-item--date",
-	// 		Description: ".summary-excerpt",
-	// 	},
-	// },
+	{
+		URL:      "https://www.sanctuary.ai/news/",
+		BaseURL:  "https://www.sanctuary.ai",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        "div.summary-block-wrapper:nth-of-type(2) .summary-item",
+			Title:       ".summary-title-link",
+			Link:        ".summary-title-link",
+			Date:        ".summary-metadata.summary-metadata--primary time.summary-metadata-item.summary-metadata-item--date",
+			Description: ".summary-excerpt",
+		},
+	},
 }
