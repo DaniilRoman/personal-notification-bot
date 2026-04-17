@@ -171,4 +171,56 @@ var scrapeBlogs = []BlogConfig{
 			Description: ".blog-content-filter p:first-child",
 		},
 	},
+	// Pasqal blog
+	{
+		URL:      "https://www.pasqal.com/blog/",
+		BaseURL:  "https://www.pasqal.com",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        "div.featured-post",
+			Title:       "h2.post-title",
+			Link:        "a.post-card",
+			Date:        "time.entry-date",
+			Description: "",
+		},
+	},
+	// Waymo blog (latest posts)
+	{
+		URL:      "https://waymo.com/blog/",
+		BaseURL:  "https://waymo.com",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        "li._postItem_1n64j_107",
+			Title:       "h2._postTitle_1n64j_120",
+			Link:        "a._postLink_1n64j_400",
+			Date:        "p._postDate_1n64j_378",
+			Description: "div._postSummary_1n64j_133",
+		},
+	},
+	// Covariant AI blog
+	{
+		URL:      "https://covariant.ai/resources/blog/",
+		BaseURL:  "https://covariant.ai",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        `a.sanity-cta.internal.custom:not(.mini)`,
+			Title:       `.info .upper .title`,
+			Link:        `a.sanity-cta.internal.custom:not(.mini)`,
+			Date:        "", // Date not present in listing
+			Description: `.info .upper .excerpt`,
+		},
+	},
+	// Starship Technologies newsroom
+	{
+		URL:      "https://www.starship.xyz/newsroom/",
+		BaseURL:  "https://www.starship.xyz",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:        ".news-card",
+			Title:       ".news-card__title a",
+			Link:        ".news-card__title a",
+			Date:        ".news-card__date",
+			Description: "",
+		},
+	},
 }
