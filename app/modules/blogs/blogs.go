@@ -3,7 +3,6 @@ package blogs
 import (
 	"context"
 	"crypto/tls"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -100,48 +99,14 @@ func processFeedItem(item *gofeed.Item, client *utils.ChatGptService, blogs chan
 func scrapeLastArticle(config BlogConfig, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService, httpClient *http.Client) {
 	defer wg.Done()
 
-	req, err := http.NewRequest("GET", config.URL, nil)
+	scraper := NewScraper(httpClient)
+	rssBytes, items, err := scraper.ScrapeToRSS(config)
 	if err != nil {
-		log.Printf("Error creating request for %s: %s", config.URL, err)
+		log.Printf("Error scraping %s: %s", config.URL, err)
 		return
 	}
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0")
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		log.Printf("Error fetching %s: %s", config.URL, err)
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		log.Printf("Non-200 status for %s: %d", config.URL, resp.StatusCode)
-		return
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Printf("Error reading body from %s: %s", config.URL, err)
-		return
-	}
-
-	items, err := Extract(config, body)
-	if err != nil {
-		log.Printf("Error extracting items from %s: %s", config.URL, err)
-		return
-	}
-
 	if len(items) == 0 {
 		log.Printf("No items found for %s", config.URL)
-		return
-	}
-
-	// Fetch missing dates from article pages
-	items = fetchMissingDates(items)
-	// Generate RSS feed from scraped items
-	rssBytes, err := GenerateRSS(items, config.URL, config.URL, "Scraped feed")
-	if err != nil {
-		log.Printf("Error generating RSS for %s: %s", config.URL, err)
 		return
 	}
 

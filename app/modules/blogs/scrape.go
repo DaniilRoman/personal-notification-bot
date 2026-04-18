@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -37,6 +38,69 @@ type ScrapedItem struct {
 	Link        string
 	Date        time.Time
 	Description string
+}
+
+type Scraper struct {
+	Client    *http.Client
+	UserAgent string
+}
+
+func NewScraper(client *http.Client) *Scraper {
+	if client == nil {
+		client = &http.Client{Timeout: 15 * time.Second}
+	}
+	return &Scraper{
+		Client:    client,
+		UserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0",
+	}
+}
+
+func (s *Scraper) fetchDoc(url string) (*goquery.Document, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("User-Agent", s.UserAgent)
+
+	resp, err := s.Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("status code %d", resp.StatusCode)
+	}
+
+	return goquery.NewDocumentFromReader(resp.Body)
+}
+
+func (s *Scraper) ScrapeToRSS(config BlogConfig) ([]byte, []ScrapedItem, error) {
+	doc, err := s.fetchDoc(config.URL)
+	if err != nil {
+		return nil, nil, fmt.Errorf("fetching %s: %w", config.URL, err)
+	}
+
+	// Get HTML body bytes for Extract
+	html, err := doc.Html()
+	if err != nil {
+		return nil, nil, fmt.Errorf("getting HTML: %w", err)
+	}
+
+	items, err := Extract(config, []byte(html))
+	if err != nil {
+		return nil, nil, fmt.Errorf("extracting items: %w", err)
+	}
+
+	// Fetch missing dates using scraper's fetchDoc
+	items = fetchMissingDatesWithFetcher(items, s.fetchDoc)
+
+	rssBytes, err := GenerateRSS(items, config.URL, config.URL, "Scraped feed")
+	if err != nil {
+		return nil, nil, fmt.Errorf("generating RSS: %w", err)
+	}
+
+	return rssBytes, items, nil
 }
 
 func Extract(config BlogConfig, body []byte) ([]ScrapedItem, error) {
@@ -255,7 +319,7 @@ func ExtractDateFromDoc(doc *goquery.Document) time.Time {
 	return time.Time{}
 }
 
-func fetchMissingDates(items []ScrapedItem) []ScrapedItem {
+func fetchMissingDatesWithFetcher(items []ScrapedItem, fetchDoc func(string) (*goquery.Document, error)) []ScrapedItem {
 	updated := make([]ScrapedItem, len(items))
 	for i, item := range items {
 		updated[i] = item
@@ -266,7 +330,7 @@ func fetchMissingDates(items []ScrapedItem) []ScrapedItem {
 			continue
 		}
 		log.Printf("Fetching date from article page: %s", item.Link)
-		doc, err := utils.GetDoc(item.Link)
+		doc, err := fetchDoc(item.Link)
 		if err != nil {
 			log.Printf("Failed to fetch article page %s: %v", item.Link, err)
 			continue
@@ -280,6 +344,10 @@ func fetchMissingDates(items []ScrapedItem) []ScrapedItem {
 		log.Printf("Found date %v for %s", date, item.Title)
 	}
 	return updated
+}
+
+func fetchMissingDates(items []ScrapedItem) []ScrapedItem {
+	return fetchMissingDatesWithFetcher(items, utils.GetDoc)
 }
 
 func GenerateRSS(items []ScrapedItem, feedTitle, feedLink, feedDescription string) ([]byte, error) {

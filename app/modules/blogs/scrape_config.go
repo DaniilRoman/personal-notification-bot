@@ -8,7 +8,7 @@ var scrapeBlogs = []BlogConfig{
 	// {
 	// 	URL:      "https://example.com/blog",
 	// 	BaseURL:  "https://example.com",
-	// 	MaxItems: 10,
+	// 	MaxItems: 3,
 	// 	Selectors: Selectors{
 	// 		Item:        "article",
 	// 		Title:       "h2 a",
@@ -22,7 +22,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://bostondynamics.com/blog/",
 		BaseURL:  "https://bostondynamics.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:  "article.PostAjaxFilter-card",
 			Title: "p.PostAjaxFilter-card-title a",
@@ -34,7 +34,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.ibm.com/quantum/blog",
 		BaseURL:  "https://www.ibm.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:  `a[href^="/quantum/blog/"]`,
 			Title: "h2, h5",
@@ -46,7 +46,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.figure.ai/news",
 		BaseURL:  "https://www.figure.ai",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        "a.article-list-item",
 			Title:       "h1.article-list-item__heading",
@@ -59,7 +59,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://neura-robotics.com/news/",
 		BaseURL:  "https://neura-robotics.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        ".swiper-slide.e-loop-item",
 			Title:       "h2.elementor-heading-title a",
@@ -72,7 +72,7 @@ var scrapeBlogs = []BlogConfig{
 	// {
 	// 	URL:      "https://www.hrl.uni-bonn.de/api/news",
 	// 	BaseURL:  "https://www.hrl.uni-bonn.de",
-	// 	MaxItems: 5,
+	// 	MaxItems: 3,
 	// 	Selectors: Selectors{
 	// 		Item:        ".portletNavigationTree .navTree li.navTreeItem",
 	// 		Title:       "a.state-published",
@@ -85,7 +85,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.agilityrobotics.com/resources?tab=blogs",
 		BaseURL:  "https://www.agilityrobotics.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:  `div[data-w-tab="Blogs"] .collection-item-5.w-dyn-item`,
 			Title: ".blog-tease-title",
@@ -97,7 +97,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.sanctuary.ai/news/",
 		BaseURL:  "https://www.sanctuary.ai",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        ".summary-item",
 			Title:       ".summary-title-link",
@@ -110,7 +110,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.agile-robots.com/en/news/",
 		BaseURL:  "https://www.agile-robots.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        ".article-list-teaser-element",
 			Title:       "h3.title",
@@ -123,7 +123,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://robotik.dfki-bremen.de/en/startpage",
 		BaseURL:  "https://robotik.dfki-bremen.de",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        ".news-teaser-item",
 			Title:       "h4.news-teaser-title a",
@@ -136,7 +136,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.mirmi.tum.de/en/mirmi/news/",
 		BaseURL:  "https://www.mirmi.tum.de",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        ".article.articletype-0",
 			Title:       "h3 a",
@@ -149,7 +149,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://alice-bob.com/blog/",
 		BaseURL:  "https://alice-bob.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        "li.c-archive__article",
 			Title:       "h4.c-post-card__title",
@@ -162,7 +162,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.quantinuum.com/news/blog#",
 		BaseURL:  "https://www.quantinuum.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        ".blog_cms_item",
 			Title:       "div[fs-cmsfilter-field='heading']",
@@ -175,7 +175,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.pasqal.com/blog/",
 		BaseURL:  "https://www.pasqal.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        "div.featured-post",
 			Title:       "h2.post-title",
@@ -188,7 +188,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://waymo.com/blog/",
 		BaseURL:  "https://waymo.com",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        "li._postItem_1n64j_107",
 			Title:       "h2._postTitle_1n64j_120",
@@ -201,7 +201,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://covariant.ai/resources/blog/",
 		BaseURL:  "https://covariant.ai",
-		MaxItems: 4,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        `a.sanity-cta.internal.custom:not(.mini):has(figure.sanity-img)`,
 			Title:       `.info .upper .title`,
@@ -214,7 +214,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://www.starship.xyz/newsroom/",
 		BaseURL:  "https://www.starship.xyz",
-		MaxItems: 5,
+		MaxItems: 3,
 		Selectors: Selectors{
 			Item:        ".news-card",
 			Title:       ".news-card__title a",

@@ -2,13 +2,13 @@ package blogs
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/mmcdole/gofeed"
 )
 
 func TestExtractDateFromDoc(t *testing.T) {
@@ -48,60 +48,6 @@ func TestExtractDateFromDoc(t *testing.T) {
 	}
 }
 
-func TestExtractBostonDynamics(t *testing.T) {
-	if testing.Short() {
-		t.Skip("Skipping integration test in short mode")
-	}
-	// This test actually fetches the live page; use sparingly
-	config := BlogConfig{
-		URL:      "https://bostondynamics.com/blog/",
-		BaseURL:  "https://bostondynamics.com",
-		MaxItems: 2,
-		Selectors: Selectors{
-			Item:  "article.PostAjaxFilter-card",
-			Title: "p.PostAjaxFilter-card-title a",
-			Link:  "p.PostAjaxFilter-card-title a",
-		},
-	}
-
-	client := &http.Client{Timeout: 10 * time.Second}
-	req, _ := http.NewRequest("GET", config.URL, nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0")
-	resp, err := client.Do(req)
-	if err != nil {
-		t.Skipf("Network error, skipping: %v", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		t.Fatalf("Failed to read body: %v", err)
-	}
-
-	items, err := Extract(config, body)
-	if err != nil {
-		t.Fatalf("Extract failed: %v", err)
-	}
-
-	print(fmt.Sprintf("%v", items))
-
-	if len(items) == 0 {
-		t.Error("Expected at least one item, got zero")
-	}
-
-	for _, item := range items {
-		if item.Title == "" {
-			t.Error("Item title is empty")
-		}
-		if item.Link == "" {
-			t.Error("Item link is empty")
-		}
-		if !strings.HasPrefix(item.Link, "http") {
-			t.Errorf("Item link is not absolute: %s", item.Link)
-		}
-	}
-}
-
 func TestAllScrapeConfigs(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration test in short mode")
@@ -111,40 +57,16 @@ func TestAllScrapeConfigs(t *testing.T) {
 
 	for i, config := range scrapeBlogs {
 		t.Run(config.URL, func(t *testing.T) {
-			req, err := http.NewRequest("GET", config.URL, nil)
+			scraper := NewScraper(client)
+			rssBytes, items, err := scraper.ScrapeToRSS(config)
 			if err != nil {
-				t.Skipf("Failed to create request for %s: %v", config.URL, err)
-			}
-			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0")
-			req.Header.Set("Accept", "application/json")
-
-			resp, err := client.Do(req)
-			if err != nil {
-				t.Skipf("Network error fetching %s, skipping: %v", config.URL, err)
-			}
-			defer resp.Body.Close()
-
-			if resp.StatusCode != 200 {
-				t.Skipf("Non-200 status for %s: %d", config.URL, resp.StatusCode)
-			}
-
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				t.Skipf("Failed to read body from %s: %v", config.URL, err)
-			}
-
-			items, err := Extract(config, body)
-			if err != nil {
-				t.Skipf("Extract failed for %s: %v", config.URL, err)
+				t.Skipf("ScrapeToRSS failed for %s: %v", config.URL, err)
 			}
 
 			if len(items) == 0 {
 				t.Errorf("No items extracted for %s", config.URL)
 				return
 			}
-
-			// Fetch missing dates from article pages (mirrors production flow)
-			items = fetchMissingDates(items)
 
 			// Verify all items have title, link, and date
 			for _, item := range items {
@@ -162,9 +84,13 @@ func TestAllScrapeConfigs(t *testing.T) {
 				}
 			}
 
-			rssBytes, err := GenerateRSS(items, config.URL, config.URL, "Scraped feed")
+			// Validate RSS parses correctly
+			parser := gofeed.NewParser()
+			feed, err := parser.ParseString(string(rssBytes))
 			if err != nil {
-				t.Skipf("GenerateRSS failed for %s: %v", config.URL, err)
+				t.Errorf("Generated RSS doesn't parse: %v", err)
+			} else if len(feed.Items) != len(items) {
+				t.Errorf("RSS item count mismatch: expected %d, got %d", len(items), len(feed.Items))
 			}
 
 			fmt.Printf("\n=== RSS Feed %d: %s ===\n", i+1, config.URL)
