@@ -201,7 +201,7 @@ var scrapeBlogs = []BlogConfig{
 	{
 		URL:      "https://covariant.ai/resources/blog/",
 		BaseURL:  "https://covariant.ai",
-		MaxItems: 5,
+		MaxItems: 4,
 		Selectors: Selectors{
 			Item:        `a.sanity-cta.internal.custom:not(.mini):has(figure.sanity-img)`,
 			Title:       `.info .upper .title`,
