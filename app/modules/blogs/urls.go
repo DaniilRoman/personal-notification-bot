@@ -32,7 +32,6 @@ var blogsUrls = []string{
 	"https://medium.com/feed/tovieai",
 	"https://medium.com/feed/adevinta-tech-blog",
 
-	"https://slack.engineering/feed/",
 	"https://engineering.atspotify.com/feed/",
 	"https://netflixtechblog.com/feed",
 	"https://eng.lyft.com/feed",
@@ -62,6 +61,7 @@ var blogsUrls = []string{
 	"https://kubernetes.io/feed.xml",
 	"https://debezium.io/blog.atom",
 	"https://www.elastic.co/blog/feed",
+	"https://www.elastic.co/search-labs/rss/feed",
 	"https://blog.healthchecks.io/feed/",
 	"https://constructor.com/blog/atom.xml",
 
@@ -76,7 +76,6 @@ var blogsUrls = []string{
 	"https://www.microsoft.com/en-us/research/feed/",
 	"https://bair.berkeley.edu/blog/feed",
 	"https://www.amazon.science/index.rss",
-	"https://www.elastic.co/search-labs/rss/feed",
 	"https://www.jina.ai/feed.rss",
 	"https://deepmind.google/blog/rss.xml",
 	"https://developer.nvidia.com/blog/rss",
@@ -113,7 +112,6 @@ var blogsUrls = []string{
 	"https://doordash.engineering/category/backend/feed/",
 	"https://doordash.engineering/category/data-platform/feed/",
 	"https://doordash.engineering/category/data-science-and-machine-learning/feed/",
-	"https://www.elastic.co/search-labs/rss/feed",
 	"https://weaviate.io/blog/rss.xml",
 	"https://tech.olx.com/feed",
 	"https://medium.com/feed/walmartglobaltech",
