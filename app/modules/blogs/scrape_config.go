@@ -203,9 +203,9 @@ var scrapeBlogs = []BlogConfig{
 		BaseURL:  "https://covariant.ai",
 		MaxItems: 5,
 		Selectors: Selectors{
-			Item:        `a.sanity-cta.internal.custom:not(.mini)`,
+			Item:        `a.sanity-cta.internal.custom:not(.mini):has(figure.sanity-img)`,
 			Title:       `.info .upper .title`,
-			Link:        `a.sanity-cta.internal.custom:not(.mini)`,
+			Link:        `a.sanity-cta.internal.custom:not(.mini):has(figure.sanity-img)`,
 			Date:        "", // Date not present in listing
 			Description: `.info .upper .excerpt`,
 		},

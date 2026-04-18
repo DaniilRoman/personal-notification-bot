@@ -6,16 +6,16 @@ import (
 )
 
 type BlogUpdateData struct {
-	Blogs []blogUpdate 
+	Blogs []blogUpdate
 }
 
 type blogUpdate struct {
-	Title string
-	Link string
-	Img string
-	Summary string
+	Title        string
+	Link         string
+	Img          string
+	Summary      string
 	PopularWords string
-	Author string
+	Author       string
 }
 
 func NewBlogUpdate(title string, link string, img string, summary string, popularWords string) blogUpdate {
@@ -30,16 +30,16 @@ func (blogs *BlogUpdateData) String() string {
 	for i, blog := range blogs.Blogs {
 		blogStrings[i] = blog.String()
 	}
-    return "Blogs updates:\n\n" + 
-	strings.Join(blogStrings, "\n\n") + 
-	"\n\n[Html page](https://daniilroman.github.io/personal-notification-bot/)"
+	return "Blogs updates:\n\n" +
+		strings.Join(blogStrings, "\n\n") +
+		"\n\n[Html page](https://daniilroman.github.io/personal-notification-bot/)"
 }
 
 func (blogs *BlogUpdateData) GetUpdateStrings() []string {
 	if blogs == nil || len(blogs.Blogs) == 0 {
 		return []string{}
 	}
-	
+
 	updateStrings := make([]string, len(blogs.Blogs))
 	for i, blog := range blogs.Blogs {
 		updateStrings[i] = blog.String()
@@ -68,18 +68,18 @@ func websiteName(link string) string {
 	if strings.Contains(link, "medium.com") {
 		urlParts := strings.Split(link, "/")
 		if len(urlParts) > 3 {
-		  return urlParts[3]
+			return urlParts[3]
 		}
 	}
 	if strings.Contains(link, "habr.com") {
 		urlParts := strings.Split(link, "/")
 		if len(urlParts) > 5 {
-		  return urlParts[5]
+			return urlParts[5]
 		}
 	}
 	return substractedUrl(link)
 }
 
 func substractedUrl(link string) string {
-	return  strings.Split(strings.TrimPrefix(strings.TrimPrefix(link, "https://"), "http://"), "/")[0]
+	return strings.Split(strings.TrimPrefix(strings.TrimPrefix(link, "https://"), "http://"), "/")[0]
 }

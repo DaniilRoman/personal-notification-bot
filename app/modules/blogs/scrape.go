@@ -134,6 +134,10 @@ var dateFormats = []string{
 	"2006-01-02 15:04",
 	"2006-01-02",
 	"2006.01.02",
+	"02.01.2006",
+	"2.1.2006",
+	"02.01.06",
+	"2.1.06",
 	"January 2, 2006",
 	"Jan 2, 2006",
 	"Jan 2, 2006 3:04 PM",
@@ -201,8 +205,12 @@ func ExtractDateFromDoc(doc *goquery.Document) time.Time {
 		`meta[property="og:published_time"]`,
 		`meta[name="datePublished"]`,
 		`meta[property="datePublished"]`,
+		`meta[property="og:updated_time"]`,
+		`meta[name="publish_date"]`,
 		`time[datetime]`,
 		`time`,
+		`span.sanity-date`,
+		`[class*="date"]`,
 	}
 	for _, sel := range selectors {
 		selection := doc.Find(sel).First()

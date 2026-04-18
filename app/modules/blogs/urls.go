@@ -36,7 +36,7 @@ var blogsUrls = []string{
 	"https://engineering.atspotify.com/feed/",
 	"https://netflixtechblog.com/feed",
 	"https://eng.lyft.com/feed",
-// 	"https://stackoverflow.blog/feed",
+	// 	"https://stackoverflow.blog/feed",
 	"https://medium.com/feed/tinder",
 	"https://medium.com/feed/bbc-product-technology",
 	"https://open.nytimes.com/feed",
@@ -58,7 +58,7 @@ var blogsUrls = []string{
 
 	// Tech products
 	"https://github.blog/feed/",
-// 	"https://circleci.com/blog/feed.xml",
+	// 	"https://circleci.com/blog/feed.xml",
 	"https://kubernetes.io/feed.xml",
 	"https://debezium.io/blog.atom",
 	"https://www.elastic.co/blog/feed",

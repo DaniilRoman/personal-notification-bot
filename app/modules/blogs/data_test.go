@@ -1,8 +1,8 @@
 package blogs
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func Test_websiteName(t *testing.T) {
@@ -27,11 +27,11 @@ func Test_GetUpdateStrings(t *testing.T) {
 	// Test with nil BlogUpdateData
 	var nilData *BlogUpdateData
 	assert.Empty(t, nilData.GetUpdateStrings())
-	
+
 	// Test with empty BlogUpdateData
 	emptyData := &BlogUpdateData{Blogs: []blogUpdate{}}
 	assert.Empty(t, emptyData.GetUpdateStrings())
-	
+
 	// Test with blog updates
 	blogData := &BlogUpdateData{
 		Blogs: []blogUpdate{
@@ -45,7 +45,7 @@ func Test_GetUpdateStrings(t *testing.T) {
 			},
 		},
 	}
-	
+
 	updateStrings := blogData.GetUpdateStrings()
 	assert.Len(t, updateStrings, 2)
 	assert.Equal(t, "- Test Blog 1 {[example.com](https://example.com/blog1)}", updateStrings[0])
