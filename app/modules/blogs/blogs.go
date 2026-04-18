@@ -10,6 +10,8 @@ import (
 	"sync"
 	"time"
 
+	"main/modules/blogs/data"
+	"main/modules/blogs/scrape"
 	"main/utils"
 
 	"github.com/PuerkitoBio/goquery"
@@ -17,7 +19,12 @@ import (
 	"jaytaylor.com/html2text"
 )
 
-func BlogUpdates(client *utils.ChatGptService) *BlogUpdateData {
+type (
+	BlogUpdateData = data.BlogUpdateData
+	BlogUpdate     = data.BlogUpdate
+)
+
+func BlogUpdates(client *utils.ChatGptService) *data.BlogUpdateData {
 	blogUpdateData, err := blogUpdates(client)
 	if err != nil {
 		log.Printf("Error in blogs updates module: %s", err)
@@ -25,9 +32,9 @@ func BlogUpdates(client *utils.ChatGptService) *BlogUpdateData {
 	return blogUpdateData
 }
 
-func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
+func blogUpdates(client *utils.ChatGptService) (*data.BlogUpdateData, error) {
 	var wg sync.WaitGroup
-	blogsChannel := make(chan blogUpdate)
+	blogsChannel := make(chan data.BlogUpdate)
 	parser := gofeed.NewParser()
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -38,12 +45,12 @@ func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
 	}
 	parser.Client = httpClient
 
-	totalFeeds := len(blogsUrls) + len(scrapeBlogs)
+	totalFeeds := len(blogsUrls) + len(scrape.ScrapeBlogs)
 	wg.Add(totalFeeds)
 	for _, url := range blogsUrls {
 		go parseLastArticle(url, parser, blogsChannel, &wg, client)
 	}
-	for _, config := range scrapeBlogs {
+	for _, config := range scrape.ScrapeBlogs {
 		go scrapeLastArticle(config, parser, blogsChannel, &wg, client, httpClient)
 	}
 
@@ -52,16 +59,16 @@ func blogUpdates(client *utils.ChatGptService) (*BlogUpdateData, error) {
 		close(blogsChannel)
 	}()
 
-	titles := []blogUpdate{}
+	titles := []data.BlogUpdate{}
 	for title := range blogsChannel {
 		titles = append(titles, title)
 	}
 	log.Println("Finished all: ", titles)
 
-	return &BlogUpdateData{titles}, nil
+	return &data.BlogUpdateData{titles}, nil
 }
 
-func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService) {
+func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- data.BlogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService) {
 	defer wg.Done()
 	// log.Println("Starting: " + url)
 	// defer log.Println("Finished: " + url)
@@ -83,7 +90,7 @@ func parseLastArticle(url string, parser *gofeed.Parser, blogs chan<- blogUpdate
 	processFeedItem(lastArticle, client, blogs)
 }
 
-func processFeedItem(item *gofeed.Item, client *utils.ChatGptService, blogs chan<- blogUpdate) bool {
+func processFeedItem(item *gofeed.Item, client *utils.ChatGptService, blogs chan<- data.BlogUpdate) bool {
 	var date time.Time
 	if item.PublishedParsed != nil {
 		date = *item.PublishedParsed
@@ -92,14 +99,14 @@ func processFeedItem(item *gofeed.Item, client *utils.ChatGptService, blogs chan
 		return false
 	}
 	img, summary, popularWords := getExtraFields(item, client)
-	blogs <- NewBlogUpdate(item.Title, item.Link, img, summary, popularWords)
+	blogs <- data.NewBlogUpdate(item.Title, item.Link, img, summary, popularWords)
 	return true
 }
 
-func scrapeLastArticle(config BlogConfig, parser *gofeed.Parser, blogs chan<- blogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService, httpClient *http.Client) {
+func scrapeLastArticle(config scrape.BlogConfig, parser *gofeed.Parser, blogs chan<- data.BlogUpdate, wg *sync.WaitGroup, client *utils.ChatGptService, httpClient *http.Client) {
 	defer wg.Done()
 
-	scraper := NewScraper(httpClient)
+	scraper := scrape.NewScraper(httpClient)
 	rssBytes, items, err := scraper.ScrapeToRSS(config)
 	if err != nil {
 		log.Printf("Error scraping %s: %s", config.URL, err)
@@ -112,7 +119,7 @@ func scrapeLastArticle(config BlogConfig, parser *gofeed.Parser, blogs chan<- bl
 
 	// Save RSS for debugging if environment variable is set
 	if os.Getenv("BLOG_DEBUG_RSS") == "1" {
-		if err := SaveRSSToFile(rssBytes, config.URL); err != nil {
+		if err := scrape.SaveRSSToFile(rssBytes, config.URL); err != nil {
 			log.Printf("Error saving RSS debug file for %s: %s", config.URL, err)
 		}
 	}

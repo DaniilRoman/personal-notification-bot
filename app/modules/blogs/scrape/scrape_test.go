@@ -1,4 +1,4 @@
-package blogs
+package scrape
 
 import (
 	"fmt"
@@ -55,7 +55,7 @@ func TestAllScrapeConfigs(t *testing.T) {
 
 	client := &http.Client{Timeout: 15 * time.Second}
 
-	for i, config := range scrapeBlogs {
+	for i, config := range ScrapeBlogs {
 		t.Run(config.URL, func(t *testing.T) {
 			scraper := NewScraper(client)
 			rssBytes, items, err := scraper.ScrapeToRSS(config)

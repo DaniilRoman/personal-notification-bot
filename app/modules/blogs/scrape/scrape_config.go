@@ -1,6 +1,6 @@
-package blogs
+package scrape
 
-var scrapeBlogs = []BlogConfig{
+var ScrapeBlogs = []BlogConfig{
 	// Add your non-RSS blog configurations here
 	// To debug generated RSS feeds, set environment variable BLOG_DEBUG_RSS=1
 	// Generated RSS files will be saved to ./debug_rss/[domain].xml

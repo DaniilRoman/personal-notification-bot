@@ -1,4 +1,4 @@
-package blogs
+package data
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -29,12 +29,12 @@ func Test_GetUpdateStrings(t *testing.T) {
 	assert.Empty(t, nilData.GetUpdateStrings())
 
 	// Test with empty BlogUpdateData
-	emptyData := &BlogUpdateData{Blogs: []blogUpdate{}}
+	emptyData := &BlogUpdateData{Blogs: []BlogUpdate{}}
 	assert.Empty(t, emptyData.GetUpdateStrings())
 
 	// Test with blog updates
 	blogData := &BlogUpdateData{
-		Blogs: []blogUpdate{
+		Blogs: []BlogUpdate{
 			{
 				Title: "Test Blog 1",
 				Link:  "https://example.com/blog1",

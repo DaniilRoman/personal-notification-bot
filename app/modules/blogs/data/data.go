@@ -1,4 +1,4 @@
-package blogs
+package data
 
 import (
 	"fmt"
@@ -6,10 +6,10 @@ import (
 )
 
 type BlogUpdateData struct {
-	Blogs []blogUpdate
+	Blogs []BlogUpdate
 }
 
-type blogUpdate struct {
+type BlogUpdate struct {
 	Title        string
 	Link         string
 	Img          string
@@ -18,8 +18,8 @@ type blogUpdate struct {
 	Author       string
 }
 
-func NewBlogUpdate(title string, link string, img string, summary string, popularWords string) blogUpdate {
-	return blogUpdate{title, link, img, summary, popularWords, substractedUrl(link)}
+func NewBlogUpdate(title string, link string, img string, summary string, popularWords string) BlogUpdate {
+	return BlogUpdate{title, link, img, summary, popularWords, substractedUrl(link)}
 }
 
 func (blogs *BlogUpdateData) String() string {
@@ -58,7 +58,7 @@ func (blogs *BlogUpdateData) PopularWords() string {
 	return strings.Join(popularWords, ",")
 }
 
-func (b *blogUpdate) String() string {
+func (b *BlogUpdate) String() string {
 	websiteName := websiteName(b.Link)
 	resArticleStr := fmt.Sprintf("- %s {[%s](%s)}", b.Title, websiteName, b.Link)
 	return resArticleStr

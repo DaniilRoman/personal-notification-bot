@@ -1,4 +1,4 @@
-package blogs
+package scrape
 
 import (
 	"bytes"
