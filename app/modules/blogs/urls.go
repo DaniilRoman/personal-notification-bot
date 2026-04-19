@@ -25,6 +25,7 @@ var blogsUrls = []string{
 	"https://spinscale.de/index.xml",
 	"https://blog.wilsonl.in/rss.xml",
 	"https://softwaredoug.com/feed.xml",
+	"https://blog.colinbreck.com/rss/",
 
 	// Interesting company blogs
 	"https://medium.com/feed/netcracker",
