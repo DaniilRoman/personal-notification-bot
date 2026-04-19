@@ -151,4 +151,17 @@ var blogsUrls = []string{
 	"https://blog.jetbrains.com/kotlin/category/server/feed/",
 	"https://in.relation.to/blog.atom", // Hibernate
 	"https://www.hashicorp.com/blog/categories/products-technology/feed.xml",
+
+	// Substack
+	"https://nixiesearch.substack.com/feed",
+	"https://www.20percent.berlin/feed",
+	"https://handpickedberlin.com/rss.xml",
+	"https://unchartedterritories.tomaspueyo.com/feed",
+	"https://softwarearchitectureweekly.substack.com/feed",
+	"https://newsletter.pragmaticengineer.com/feed",
+	"https://martinkl.substack.com/feed",
+	"https://dblthink.substack.com/feed",
+	"https://blog.dataexpert.io/feed",
+	"https://www.ctologic.pro/feed",
+	"https://bundesletter.substack.com/feed",
 }
