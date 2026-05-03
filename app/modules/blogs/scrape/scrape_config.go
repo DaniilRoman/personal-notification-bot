@@ -210,6 +210,18 @@ var ScrapeBlogs = []BlogConfig{
 			Description: `.info .upper .excerpt`,
 		},
 	},
+	// Perplexity Research blog (Framer-built site)
+	{
+		URL:      "https://research.perplexity.ai/",
+		BaseURL:  "https://research.perplexity.ai",
+		MaxItems: 5,
+		Selectors: Selectors{
+			Item:  `a[href^="./articles/"]`,
+			Title: "h3, h5",
+			Link:  `a[href^="./articles/"]`,
+			Date:  "", // Date extracted from article page
+		},
+	},
 	// Starship Technologies newsroom
 	{
 		URL:      "https://www.starship.xyz/newsroom/",

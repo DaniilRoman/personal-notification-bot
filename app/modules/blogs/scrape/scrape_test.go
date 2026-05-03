@@ -11,43 +11,6 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func TestExtractDateFromDoc(t *testing.T) {
-	tests := []struct {
-		name     string
-		html     string
-		expected time.Time
-	}{
-		{
-			name:     "article published meta",
-			html:     `<meta property="article:published_time" content="2026-04-14T17:37:25+00:00">`,
-			expected: time.Date(2026, 4, 14, 17, 37, 25, 0, time.UTC),
-		},
-		{
-			name:     "datetime attribute",
-			html:     `<time datetime="2026-04-14">April 14, 2026</time>`,
-			expected: time.Date(2026, 4, 14, 0, 0, 0, 0, time.UTC),
-		},
-		{
-			name:     "no date",
-			html:     `<div>No date here</div>`,
-			expected: time.Time{},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			doc, err := goquery.NewDocumentFromReader(strings.NewReader(tt.html))
-			if err != nil {
-				t.Fatalf("Failed to parse HTML: %v", err)
-			}
-			got := ExtractDateFromDoc(doc)
-			if !got.Equal(tt.expected) {
-				t.Errorf("ExtractDateFromDoc() = %v, want %v", got, tt.expected)
-			}
-		})
-	}
-}
-
 func TestAllScrapeConfigs(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration test in short mode")
@@ -96,6 +59,43 @@ func TestAllScrapeConfigs(t *testing.T) {
 			fmt.Printf("\n=== RSS Feed %d: %s ===\n", i+1, config.URL)
 			fmt.Println(string(rssBytes))
 			fmt.Printf("=== End RSS Feed %d ===\n\n", i+1)
+		})
+	}
+}
+
+func TestExtractDateFromDoc(t *testing.T) {
+	tests := []struct {
+		name     string
+		html     string
+		expected time.Time
+	}{
+		{
+			name:     "article published meta",
+			html:     `<meta property="article:published_time" content="2026-04-14T17:37:25+00:00">`,
+			expected: time.Date(2026, 4, 14, 17, 37, 25, 0, time.UTC),
+		},
+		{
+			name:     "datetime attribute",
+			html:     `<time datetime="2026-04-14">April 14, 2026</time>`,
+			expected: time.Date(2026, 4, 14, 0, 0, 0, 0, time.UTC),
+		},
+		{
+			name:     "no date",
+			html:     `<div>No date here</div>`,
+			expected: time.Time{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			doc, err := goquery.NewDocumentFromReader(strings.NewReader(tt.html))
+			if err != nil {
+				t.Fatalf("Failed to parse HTML: %v", err)
+			}
+			got := ExtractDateFromDoc(doc)
+			if !got.Equal(tt.expected) {
+				t.Errorf("ExtractDateFromDoc() = %v, want %v", got, tt.expected)
+			}
 		})
 	}
 }
