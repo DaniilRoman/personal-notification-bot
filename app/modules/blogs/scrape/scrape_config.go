@@ -190,11 +190,11 @@ var ScrapeBlogs = []BlogConfig{
 		BaseURL:  "https://waymo.com",
 		MaxItems: 3,
 		Selectors: Selectors{
-			Item:        "li._postItem_1n64j_107",
-			Title:       "h2._postTitle_1n64j_120",
-			Link:        "a._postLink_1n64j_400",
-			Date:        "p._postDate_1n64j_378",
-			Description: "div._postSummary_1n64j_133",
+			Item:        `li[class*="_postItem_"]`,
+			Title:       `h2[class*="_postTitle_"]`,
+			Link:        `a[class*="_postLink_"]`,
+			Date:        `p[class*="_postDate_"]`,
+			Description: `div[class*="_postSummary_"]`,
 		},
 	},
 	// Covariant AI blog
