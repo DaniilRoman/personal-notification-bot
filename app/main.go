@@ -4,6 +4,7 @@ import (
 	blogs "main/modules/blogs"
 	currency "main/modules/currency"
 	expenses "main/modules/expenses"
+	gmailreader "main/modules/gmailReader"
 	hertha "main/modules/herthaTickets"
 	justAiNews "main/modules/justAiNews"
 	mobilenumber "main/modules/mobileNumber"
@@ -32,16 +33,15 @@ var OPENAI_ORGANIZATION = os.Getenv("OPENAI_ORGANIZATION")
 
 var APP_SCRIPT_ID = os.Getenv("APP_SCRIPT_ID")
 
-func sendBlogUpdatesSeparately(blogsData *blogs.BlogUpdateData) {
-	if blogsData == nil {
-		return
-	}
+type separatedSender interface {
+	GetUpdateStrings() []string
+}
 
-	updateStrings := blogsData.GetUpdateStrings()
+func sendSeparately(data separatedSender) {
+	updateStrings := data.GetUpdateStrings()
 	if len(updateStrings) == 0 {
 		return
 	}
-
 	for _, updateStr := range updateStrings {
 		utils.SendToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, updateStr)
 	}
@@ -52,7 +52,7 @@ func main() {
 	chatGptService := utils.NewChatGptService(OPENAI_ACCESS_KEY)
 
 	var wg sync.WaitGroup
-	wg.Add(10)
+	wg.Add(11)
 	weatherChan := make(chan *weather.WeatherData, 1)
 	currencyChan := make(chan *currency.CurrencyData, 1)
 	wordOfTheDayChan := make(chan *word.WordOfTheDayData, 1)
@@ -60,6 +60,7 @@ func main() {
 	unionBerlinTicketsChan := make(chan *union.UnionBerlinTicketsData, 1)
 	mobileNumberChan := make(chan *mobilenumber.MobileNumberData, 1)
 	blogsChan := make(chan *blogs.BlogUpdateData, 1)
+	gmailReaderChan := make(chan *gmailreader.GmailReaderData, 1)
 	justAiNewsChan := make(chan *justAiNews.JustAiNewsData, 1)
 	expensesTotalChan := make(chan *expenses.MonthlyTotalData, 1)
 
@@ -99,6 +100,11 @@ func main() {
 	}()
 
 	go func() {
+		gmailReaderChan <- gmailreader.GmailReader()
+		wg.Done()
+	}()
+
+	go func() {
 		justAiNewsChan <- justAiNews.JustAiNews(dynamodb)
 		wg.Done()
 	}()
@@ -121,13 +127,15 @@ func main() {
 	weatherData := <-weatherChan
 	currencyData := <-currencyChan
 	blogsUpdatesData := <-blogsChan
+	gmailReaderData := <-gmailReaderChan
 	mobileNimberData := <-mobileNumberChan
 	justAiNewsData := <-justAiNewsChan
 	expensesTotal := <-expensesTotalChan
 
 	utils.SendImagesToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
 
-	sendBlogUpdatesSeparately(blogsUpdatesData)
+	sendSeparately(blogsUpdatesData)
+	sendSeparately(gmailReaderData)
 
 	utils.SendToTelegramWithInterface(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
 		weatherData,

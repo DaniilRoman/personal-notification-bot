@@ -24,7 +24,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21.4'
+          go-version: '1.25'
           cache-dependency-path: |
              app/go.sum
 
@@ -47,6 +47,10 @@ jobs:
           OPENAI_ORGANIZATION: ${{ secrets.OPENAI_ORGANIZATION }}
           APP_SCRIPT_ID: ${{ secrets.APP_SCRIPT_ID }}
           MONTHLY_TOTAL_URL: ${{ secrets.MONTHLY_TOTAL_URL }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GMAIL_SENDER_EMAIL: ${{ secrets.GMAIL_SENDER_EMAIL }}
           
 
       - name: Setup Pages
