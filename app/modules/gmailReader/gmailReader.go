@@ -89,8 +89,8 @@ func gmailReader(clientID, clientSecret, refreshToken string, senders []string) 
 
 		body := strings.TrimSpace(item.Description)
 		runes := []rune(body)
-		if len(runes) > 500 {
-			body = string(runes[:500]) + "..."
+		if len(runes) > 1000 {
+			body = string(runes[:1000]) + "..."
 		}
 
 		messages = append(messages, GmailMessage{
