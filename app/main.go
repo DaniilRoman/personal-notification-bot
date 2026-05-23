@@ -134,7 +134,9 @@ func main() {
 
 	utils.SendImagesToTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
 
-	sendSeparately(blogsUpdatesData)
+	for _, blog := range blogsUpdatesData.Blogs {
+		utils.SendToTelegramWithButton(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, blog.String(), "Summarize", "summarize")
+	}
 	sendSeparately(gmailReaderData)
 
 	utils.SendToTelegramWithInterface(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,

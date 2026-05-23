@@ -58,6 +58,27 @@ func SendToTelegram(token string, chatId int64, data ...string) {
 	}
 }
 
+func SendToTelegramWithButton(token string, chatId int64, message string, buttonText string, callbackData string) {
+	if message == "" {
+		return
+	}
+	bot, err := tgbotapi.NewBotAPI(token)
+	if err != nil {
+		log.Fatal("Couldn't initialise Telegram bot Api", err)
+		return
+	}
+	msg := tgbotapi.NewMessage(chatId, message)
+	msg.ParseMode = "Markdown"
+	msg.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData(buttonText, callbackData),
+		),
+	)
+	if _, err := bot.Send(msg); err != nil {
+		log.Fatal("Couldn't send a message to Telegram", err)
+	}
+}
+
 func SendToTelegramWithInterface(token string, chatId int64, data ...toString) {
 	message := telegramData(data...)
 	if message == "" {
