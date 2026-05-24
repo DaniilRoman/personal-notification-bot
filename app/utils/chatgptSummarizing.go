@@ -45,14 +45,19 @@ func (service *ChatGptService) CommonSummaryFromSeveralNews(text string) string 
 
 func (service *ChatGptService) BlogsPodcastSummary(text string) string {
 	model := "gpt-5.4-mini"
-	prompt := "You are preparing a morning audio briefing that will be read out loud by a smart home assistant. " +
-		"I'll listen to it as my daily morning tech summary, like a short tech podcast segment. " +
-		"Below is a list of today's tech blog posts with their titles, descriptions, and links.\n\n" +
-		"Write a natural, conversational spoken summary in the style of a friendly morning news host. " +
-		"It should take 2 to 3 minutes to read aloud. " +
-		"Do NOT use URLs, markdown, bullet points, headers, or any formatting — only plain spoken sentences. " +
-		"Group related topics where it makes sense. Focus on what is most interesting or significant.\n\n" +
-		"Today's blog posts:\n"
+	prompt := `Ты готовишь утренний аудио-брифинг, который будет зачитываться вслух умным домашним помощником. 
+		Я буду слушать его как свою ежедневную утреннюю сводку о технологиях — как короткий сегмент техно-подкаста. 
+		Ниже приведён список сегодняшних постов из технологических блогов с их заголовками, описаниями и ссылками.
+
+		Напиши естественное, разговорное устное резюме в стиле дружелюбного ведущего утренних новостей. 
+		Текст должен занимать примерно 2–3 минуты при чтении вслух. 
+		НЕ используй URL-адреса, markdown, списки, заголовки или какое-либо форматирование — только обычные разговорные предложения. 
+		Где это уместно, объединяй связанные темы. 
+		Сосредоточься на самых интересных и значимых новостях.
+
+		ВАЖНО: отвечай только на русском языке.
+
+		Сегодняшние посты из блогов:`
 
 	modelLimit := 16000
 	if len(text) > modelLimit {
