@@ -43,6 +43,45 @@ func (service *ChatGptService) CommonSummaryFromSeveralNews(text string) string 
 	return service.chatCompletionRequest(text, prompt)
 }
 
+func (service *ChatGptService) BlogsPodcastSummary(text string) string {
+	model := "gpt-5.4-mini"
+	prompt := "You are preparing a morning audio briefing that will be read out loud by a smart home assistant. " +
+		"I'll listen to it as my daily morning tech summary, like a short tech podcast segment. " +
+		"Below is a list of today's tech blog posts with their titles, descriptions, and links.\n\n" +
+		"Write a natural, conversational spoken summary in the style of a friendly morning news host. " +
+		"It should take 2 to 3 minutes to read aloud. " +
+		"Do NOT use URLs, markdown, bullet points, headers, or any formatting — only plain spoken sentences. " +
+		"Group related topics where it makes sense. Focus on what is most interesting or significant.\n\n" +
+		"Today's blog posts:\n"
+
+	modelLimit := 16000
+	if len(text) > modelLimit {
+		text = text[:modelLimit]
+	}
+	inputText := prompt + text
+
+	request := openai.ChatCompletionRequest{
+		Model: model,
+		Messages: []openai.ChatCompletionMessage{
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: inputText,
+			},
+		},
+
+		Temperature: 0.7,
+		MaxTokens:   3000,
+	}
+
+	resp, err := service.client.CreateChatCompletion(context.Background(), request)
+	if err != nil {
+		log.Println("Couldn't generate podcast summary:", err)
+		return ""
+	}
+
+	return strings.TrimSpace(resp.Choices[0].Message.Content)
+}
+
 func (service *ChatGptService) chatCompletionRequest(text string, prompt string) string {
     modelLimit := 16000
     if len(text) > modelLimit {

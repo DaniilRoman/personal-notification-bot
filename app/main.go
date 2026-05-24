@@ -2,6 +2,7 @@ package main
 
 import (
 	blogs "main/modules/blogs"
+	blogssummary "main/modules/blogssummary"
 	currency "main/modules/currency"
 	expenses "main/modules/expenses"
 	gmailreader "main/modules/gmailReader"
@@ -127,6 +128,7 @@ func main() {
 	weatherData := <-weatherChan
 	currencyData := <-currencyChan
 	blogsUpdatesData := <-blogsChan
+	blogssummary.GenerateAndSave(blogsUpdatesData, chatGptService, dynamodb)
 	gmailReaderData := <-gmailReaderChan
 	mobileNimberData := <-mobileNumberChan
 	justAiNewsData := <-justAiNewsChan

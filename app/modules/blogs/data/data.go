@@ -12,14 +12,15 @@ type BlogUpdateData struct {
 type BlogUpdate struct {
 	Title        string
 	Link         string
+	Description  string
 	Img          string
 	Summary      string
 	PopularWords string
 	Author       string
 }
 
-func NewBlogUpdate(title string, link string, img string, summary string, popularWords string) BlogUpdate {
-	return BlogUpdate{title, link, img, summary, popularWords, substractedUrl(link)}
+func NewBlogUpdate(title, link, description, img, summary, popularWords string) BlogUpdate {
+	return BlogUpdate{title, link, description, img, summary, popularWords, substractedUrl(link)}
 }
 
 func (blogs *BlogUpdateData) String() string {

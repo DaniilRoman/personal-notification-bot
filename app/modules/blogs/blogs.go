@@ -99,7 +99,7 @@ func processFeedItem(item *gofeed.Item, client *utils.ChatGptService, blogs chan
 		return false
 	}
 	img, summary, popularWords := getExtraFields(item, client)
-	blogs <- data.NewBlogUpdate(item.Title, item.Link, img, summary, popularWords)
+	blogs <- data.NewBlogUpdate(item.Title, item.Link, item.Description, img, summary, popularWords)
 	return true
 }
 
