@@ -69,8 +69,8 @@ func (service *ChatGptService) BlogsPodcastSummary(text string) string {
 			},
 		},
 
-		Temperature: 0.7,
-		MaxTokens:   3000,
+		Temperature:         0.7,
+		MaxCompletionTokens: 3000,
 	}
 
 	resp, err := service.client.CreateChatCompletion(context.Background(), request)
